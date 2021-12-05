@@ -5,12 +5,12 @@
 
 <div class="mt-2 flex flex-col items-center">
 	<div class="flex flex-col items-center">
-		<h1>No1yz Warehouse</h1>
+		<a class="title" href="/">No1yz Warehouse</a>
 		<div class="line flex-1"></div>
 	</div>
 	<nav class="mt-4">
 		<a href="/gallery">Gallery</a>
-		<a href="/Music">Music</a>
+		<a href="/music">Music</a>
 		<a href="/socials">Socials</a>
 	</nav>
 </div>
@@ -19,7 +19,7 @@
 
 
 <style>
-	h1 {
+	.title {
 		font-size: 48px;
 	}
 
