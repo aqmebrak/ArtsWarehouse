@@ -1,2 +1,9 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<div class="flex flex-col items-center mt-20">
+    <h1>Welcome to No1yz warehouse !</h1>
+    <p>Here you can find all my creations, from music to paintings</p>
+</div>
+
+
+<style>
+
+</style>

@@ -1,0 +1,17 @@
+/* Write your global styles here, in PostCSS syntax */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --background-color: #ABABAB;
+    --font-color: #322659;
+    --font-color-secondary: #6B46C1;
+
+    background-color: var(--background-color);
+}
+
+body, div, p, span {
+    color: var(--font-color);
+}
+
