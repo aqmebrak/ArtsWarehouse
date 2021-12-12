@@ -5,5 +5,7 @@
 
 
 <style>
-
+    h1 {
+        font-size: 1.2rem;
+    }
 </style>

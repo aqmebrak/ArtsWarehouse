@@ -20,7 +20,7 @@
 
 <style>
 	.title {
-		font-size: 48px;
+		font-size: 3rem;
 	}
 
 	.line{
@@ -33,7 +33,7 @@
 	}
 
 	nav > a {
-		font-size: 20px;
+		font-size: 1.4rem;
 		letter-spacing: 4px;
 		padding: 0 10px 0 10px;
 	}
