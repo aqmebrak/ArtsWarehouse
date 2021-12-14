@@ -1,43 +1,24 @@
 <script lang="ts">
-   import images from '$src/images';
+   import Gallery from 'svelte-image-gallery';
 
+   import images from '$src/images';
     
 </script>
 
 
-<div class="container">
+<div class="lg:m-20 sm:m-4 m-1">
+  <Gallery gap={40} maxColumnWidth={450}>
     {#each images as image}
-    <figure>
-        <img src={image} alt="img1"/>        
-    </figure>
+        <img src={image} alt="img1" class=""/>        
     {/each}
+
+  </Gallery>
+    
 </div>
 
 
 <style>
-img {
-  max-width: 100%;
-  display: block;
-}
+  :global(img) { opacity: .9; transition: all .2s }
+	:global(img):hover { opacity: 1; transform: scale(1.04) }
 
-figure {
-  margin: 0;
-  margin-top: 2rem;
-  display: grid;
-  grid-template-rows: 1fr auto;
-  break-inside: avoid;
-}
-
-figure > img {
-  grid-row: 1 / -1;
-  grid-column: 1;
-}
-
-.container {
-    margin: auto;
-  column-count: 3;
-  column-gap: 2rem;
-  margin-top: 4rem;
-}
-    
 </style>
