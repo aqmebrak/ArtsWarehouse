@@ -3,7 +3,12 @@ const config = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {
+			colors: {
+				primary: '#322659',
+				secondary: '#6B46C1',
+			}
+		}
 	},
 
 	plugins: []
