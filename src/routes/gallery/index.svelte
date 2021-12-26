@@ -24,6 +24,5 @@
 
 <style>
   :global(img) { opacity: .9; transition: all .2s }
-	:global(img):hover { opacity: 1; transform: scale(1.04) }
 
 </style>
