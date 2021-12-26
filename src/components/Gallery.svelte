@@ -18,7 +18,6 @@
 	onMount(Draw);
 
 	function handleClick(url: string) {
-		console.log('gallery click update', url);
 		const rex = /\/src(.*)/g;
 		const id = rex.exec(url)[0];
 		modals.update((modalsPrev) => ({ ...modalsPrev, [id]: true }));
