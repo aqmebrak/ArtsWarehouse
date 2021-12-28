@@ -1,3 +1,4 @@
+import type { Song } from 'src/types';
 import Centurion from './Centurion - (King Buffalo cover).mp3';
 
 export default [
@@ -5,6 +6,6 @@ export default [
     {
         title: 'Centurion',
         artist: 'King Buffalo',
-        file: Centurion,
+        src: Centurion,
     },
-]
+] as Song[]
