@@ -28,7 +28,7 @@
 
 {#if song != null}
 	<div class="fixed bottom-0 left-0 w-screen">
-		<div class="p-2 m-3 flex justify-start items-center border-2 border-secondary">
+		<div class="p-2 m-3 mx-8 flex justify-start items-center border-2 border-secondary">
 			<button on:click={togglePlayPause}>
 				{#if playerState.status === PlayerStatus.PLAY}
 					<Icon name="pause" className="h-12 w-12" />
