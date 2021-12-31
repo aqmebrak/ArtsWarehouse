@@ -63,21 +63,24 @@
 </script>
 
 <div class="mt-10 flex justify-center h-[36rem]">
-	<div class="bg-gray-300 rounded overflow-auto ">
+	<div class="bg-periwinkleCrayola rounded-l overflow-auto ">
 		{#each songs as song}
 			<div
-				class="my-10 border-y-2 border-y-gray-400 bg-gray-400 cursor-pointer p-6 py-3"
+				class={selectedSong === song
+					? 'bg-plumpPurple cursor-pointer p-6 py-3'
+					: 'bg-plumpPurpleLight cursor-pointer p-6 py-3'}
 				on:click={() => handleSelection(song)}
 			>
-				<div class="text-lg text-zinc-200">{song.title}</div>
-				<div class="text-sm text-zinc-300">{song.artist}</div>
-				<div class="text-sm text-zinc-300">{song.date}</div>
+				<div class={selectedSong === song ? 'text-lg text-white' : 'text-lg'}>{song.title}</div>
+				<div class={selectedSong === song ? 'text-sm text-white' : 'text-sm'}>{song.artist}</div>
+				<div class={selectedSong === song ? 'text-sm text-white' : 'text-sm'}>{song.date}</div>
 			</div>
+			<div class="mb-1" />
 		{/each}
 	</div>
-	<div class="bg-gray-300 rounded-r w-96">
+	<div class="bg-periwinkleCrayola rounded-r w-96">
 		<div class="p-2 flex flex-col justify-center items-start ">
-			<div class="w-0 h-4 bg-primary progress" id="progress" />
+			<div class="w-0 h-4 bg-secondary progress" id="progress" />
 			<div class="w-full flex justify-around items-center">
 				<div>
 					<button on:click={handlePreviousSong}>
