@@ -16,6 +16,8 @@
 </div>
 
 <slot />
+<!-- svelte-ignore a11y-missing-attribute -->
+<img src="https://app.piratepx.com/ship?p=f174aa78-4b94-4857-a367-cc1a1c89a61f" />
 
 
 <style>
