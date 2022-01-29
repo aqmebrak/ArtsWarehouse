@@ -45,7 +45,12 @@
 	/**
 	 * Actions
 	 */
-	const handleSelection = (song: Song) => (selectedSong = song);
+	const handleSelection = (song: Song, index: number) => {
+		selectedSong = song
+		playerState.audioElement.play();
+		playerState.status = PlayerStatus.PLAY;
+		playerState.currentPosition = index;
+	};
 
 	const togglePlayPause = () => {
 		if (playerState.status === PlayerStatus.PAUSE) {
@@ -57,19 +62,39 @@
 		}
 	};
 
-	const handleNextSong = () => {};
+	const handleNextSong = () => {
+		const nextPositionToPlay = songs.length === playerState.currentPosition +1 ? 
+		0 : playerState.currentPosition +1;
 
-	const handlePreviousSong = () => {};
+		selectedSong = songs[nextPositionToPlay];
+		setTimeout(() => playerState.audioElement.play(), 500);
+		playerState.status = PlayerStatus.PLAY;
+		playerState.currentPosition = nextPositionToPlay;
+	};
+
+	const handlePreviousSong = () => {
+		const nextPositionToPlay = playerState.currentPosition -1 <= 0 ? 
+		songs.length-1 : playerState.currentPosition - 1;
+
+		selectedSong = songs[nextPositionToPlay];
+		setTimeout(() => playerState.audioElement.play(), 500);
+		playerState.status = PlayerStatus.PLAY;
+		playerState.currentPosition = nextPositionToPlay;
+	};
 </script>
+
+{playerState.audioElement}
+{playerState.currentPosition}
+{selectedSong?.title}
 
 <div class="mt-10 flex justify-center h-[36rem]">
 	<div class="bg-periwinkleCrayola rounded-l overflow-auto ">
-		{#each songs as song}
+		{#each songs as song, index}
 			<div
 				class={selectedSong === song
 					? 'bg-plumpPurple cursor-pointer p-6 py-3'
 					: 'bg-plumpPurpleLight cursor-pointer p-6 py-3'}
-				on:click={() => handleSelection(song)}
+				on:click={() => handleSelection(song, index)}
 			>
 				<div class={selectedSong === song ? 'text-lg text-white' : 'text-lg'}>{song.title}</div>
 				<div class={selectedSong === song ? 'text-sm text-white' : 'text-sm'}>{song.artist}</div>
