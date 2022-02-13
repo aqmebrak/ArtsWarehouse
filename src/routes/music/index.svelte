@@ -47,7 +47,8 @@
 	 */
 	const handleSelection = (song: Song, index: number) => {
 		selectedSong = song
-		playerState.audioElement.play();
+		setTimeout(() => playerState.audioElement.play(), 500);
+		
 		playerState.status = PlayerStatus.PLAY;
 		playerState.currentPosition = index;
 	};
@@ -73,7 +74,7 @@
 	};
 
 	const handlePreviousSong = () => {
-		const nextPositionToPlay = playerState.currentPosition -1 <= 0 ? 
+		const nextPositionToPlay = playerState.currentPosition -1 < 0 ? 
 		songs.length-1 : playerState.currentPosition - 1;
 
 		selectedSong = songs[nextPositionToPlay];
@@ -82,10 +83,6 @@
 		playerState.currentPosition = nextPositionToPlay;
 	};
 </script>
-
-{playerState.audioElement}
-{playerState.currentPosition}
-{selectedSong?.title}
 
 <div class="mt-10 flex justify-center h-[36rem]">
 	<div class="bg-periwinkleCrayola rounded-l overflow-auto ">
