@@ -48,7 +48,6 @@
 	});
 
 	var updateBar = function (y: number, vol?: number) {
-		console.log(' updateBar', y, sliderContainer.offsetHeight, sliderContainer.clientHeight);
 		var percentage;
 		//if only volume have specificed
 		//then direct update volume
@@ -65,8 +64,6 @@
 		if (percentage < 0) {
 			percentage = 0;
 		}
-
-		console.log(percentage);
 
 		//update volume bar and video volume
 		slider.style.height = percentage + '%';
@@ -117,9 +114,11 @@
 		playerState.currentPosition = nextPositionToPlay;
 	};
 
-	const openVolumeSlider = () => {
-		console.log('clic');
+	const openVolumeSlider = async () => {
 		isSliderOpen = !isSliderOpen;
+		await tick();
+		if(slider)
+			slider.style.height = playerState.audioElement.volume * 100 + '%';
 	};
 </script>
 
