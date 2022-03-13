@@ -18,7 +18,7 @@
 		audioElement: null
 	};
 	let isSliderOpen = false;
-	let slider, sliderContainer;
+	let slider, sliderContainer, progressContainer;
 	let drag = false;
 
 	onMount(() => {
@@ -47,6 +47,11 @@
 		selectedSong = songs[0];
 	});
 
+	const moveTimer = (pageX) => {
+		clearTimeout(timer);
+		playerState.audioElement.currentTime = pageX - progressContainer.offsetWidth - 138;
+	};
+
 	var updateBar = function (y: number, vol?: number) {
 		var percentage;
 		//if only volume have specificed
@@ -54,7 +59,7 @@
 		if (vol) {
 			percentage = vol * 100;
 		} else {
-			var position = y - sliderContainer.offsetHeight -130;
+			var position = y - sliderContainer.offsetHeight - 130;
 			percentage = (100 * position) / sliderContainer.clientHeight;
 		}
 
@@ -117,8 +122,7 @@
 	const openVolumeSlider = async () => {
 		isSliderOpen = !isSliderOpen;
 		await tick();
-		if(slider)
-			slider.style.height = playerState.audioElement.volume * 100 + '%';
+		if (slider) slider.style.height = playerState.audioElement.volume * 100 + '%';
 	};
 </script>
 
@@ -140,7 +144,18 @@
 	</div>
 	<div class="bg-periwinkleCrayola rounded-r w-96">
 		<div class="p-2 flex flex-col justify-center items-start ">
-			<div class="w-0 h-4 bg-secondary progress" id="progress" />
+			<!-- fake progress bar full width to click on it -->
+			<div
+				class="w-full h-4 cursor-pointer"
+				on:click={(ev) => {
+					moveTimer(ev.pageX);
+				}}
+				bind:this={progressContainer}
+			>
+				<!-- progress bar -->
+				<div class="w-0 h-4 bg-secondary progress rounded" id="progress" />
+			</div>
+
 			<div class="w-full flex justify-around items-center">
 				<div>
 					<button on:click={handlePreviousSong}>
@@ -219,6 +234,6 @@
 		height: 50%;
 		width: 100%;
 		position: absolute;
-		background-color:  var(--font-color);
+		background-color: var(--font-color);
 	}
 </style>
