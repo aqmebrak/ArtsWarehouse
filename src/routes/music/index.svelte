@@ -5,14 +5,20 @@
 	import { onMount, tick } from 'svelte';
 
 	enum PlayerStatus {
-		PLAY = 'PLAY',
-		PAUSE = 'PAUSE'
+		PLAY,
+		PAUSE
+	}
+
+	type PlayerState = {
+		status: PlayerStatus;
+		currentPosition: number;
+		audioElement: HTMLAudioElement | null;
 	}
 
 	let selectedSong;
 	let timer;
 	let percent = 0;
-	let playerState = {
+	let playerState: PlayerState = {
 		status: PlayerStatus.PAUSE,
 		currentPosition: 0,
 		audioElement: null
@@ -26,9 +32,14 @@
 			let duration = _event.target.duration;
 			advance(duration, playerState.audioElement);
 		});
-		playerState.audioElement.addEventListener('pause', function (_event) {
+		playerState.audioElement.addEventListener('pause', function () {
 			clearTimeout(timer);
 		});
+		playerState.audioElement.addEventListener('ended', function () {
+			clearTimeout(timer);
+			playerState.status = PlayerStatus.PAUSE;
+
+		})
 		const advance = (duration, element) => {
 			let progress = document.getElementById('progress');
 			let increment = 10 / duration;
@@ -47,9 +58,11 @@
 		selectedSong = songs[0];
 	});
 
-	const moveTimer = (pageX) => {
+	const moveTimer = (e) => {
 		clearTimeout(timer);
-		playerState.audioElement.currentTime = pageX - progressContainer.offsetWidth - 138;
+		var rect = e.target.getBoundingClientRect();
+		var x = e.clientX - rect.left;
+		playerState.audioElement.currentTime = (x / progressContainer.getBoundingClientRect().width) * playerState.audioElement.duration;
 	};
 
 	var updateBar = function (y: number, vol?: number) {
@@ -139,7 +152,7 @@
 				<div class={selectedSong === song ? 'text-sm text-white' : 'text-sm'}>{song.artist}</div>
 				<div class={selectedSong === song ? 'text-sm text-white' : 'text-sm'}>{song.date}</div>
 			</div>
-			<div class="mb-1" />
+			<div class="mb-1" ></div>
 		{/each}
 	</div>
 	<div class="bg-periwinkleCrayola rounded-r w-96">
@@ -147,13 +160,11 @@
 			<!-- fake progress bar full width to click on it -->
 			<div
 				class="w-full h-4 cursor-pointer"
-				on:click={(ev) => {
-					moveTimer(ev.pageX);
-				}}
+				on:click={moveTimer}
 				bind:this={progressContainer}
 			>
 				<!-- progress bar -->
-				<div class="w-0 h-4 bg-secondary progress rounded" id="progress" />
+				<div class="w-0 h-4 bg-secondary progress rounded" id="progress" ></div>
 			</div>
 
 			<div class="w-full flex justify-around items-center">
@@ -198,7 +209,7 @@
 								drag = false;
 							}}
 						>
-							<span class="volume-slider" bind:this={slider} />
+							<span class="volume-slider" bind:this={slider} ></span>
 						</div>
 					{/if}
 				</div>
@@ -216,7 +227,7 @@
 			{/if}
 		</div>
 	</div>
-	<audio bind:this={playerState.audioElement} src={selectedSong?.src} />
+	<audio bind:this={playerState.audioElement} src={selectedSong?.src} ></audio>
 </div>
 
 <style>
