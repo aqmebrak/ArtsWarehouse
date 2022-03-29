@@ -2,7 +2,6 @@
   import Gallery from '$src/components/Gallery.svelte';
   import images from '$src/images';
   import Modal from '$src/components/Modal.svelte';
-  import { modals } from '$src/store/modals';
 
 </script>
 
