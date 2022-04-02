@@ -1,6 +1,6 @@
 <script lang="ts">
 	import songs from '$src/songs';
-	import type { Song } from '$src/types';
+	import { Song } from '$src/types';
 	import { tick } from 'svelte';
 	import Player from '../../components/Player.svelte';
 	import { playerState, PlayerStatus, selectedSong, audioElement } from '../../store/playerState';
@@ -9,7 +9,7 @@
 	 * Actions
 	 */
 	const handleSelection = async (song: Song, index: number) => {
-		selectedSong.update(() => song);
+		selectedSong.set(song);
 		await tick();
 		$audioElement.play();
 
@@ -34,7 +34,7 @@
 				<div class={$selectedSong === song ? 'text-sm text-white' : 'text-sm'}>{song.artist}</div>
 				<div class={$selectedSong === song ? 'text-sm text-white' : 'text-sm'}>{song.date}</div>
 			</div>
-			<div class="mb-1"></div>
+			<div class="mb-1" />
 		{/each}
 	</div>
 	<Player />

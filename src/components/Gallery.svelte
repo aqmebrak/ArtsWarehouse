@@ -10,7 +10,6 @@
 	let galleryWidth = 0;
 	let columnCount = 0;
 
-
 	$: columnCount = parseInt(galleryWidth / maxColumnWidth) || 1;
 	$: columnCount && Draw();
 	$: galleryStyle = `grid-template-columns: repeat(${columnCount}, 1fr); --gap: ${gap}px`;
@@ -61,9 +60,9 @@
 {/if}
 
 <style>
-    img {
-        cursor: pointer;
-    }
+	img {
+		cursor: pointer;
+	}
 	#slotHolder {
 		display: none;
 	}

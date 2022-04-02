@@ -1,7 +1,12 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
 	import Icon from '$src/components/Icon.svelte';
-	import { playerState, PlayerStatus, selectedSong, audioElement as audioElementStore } from '../store/playerState';
+	import {
+		playerState,
+		PlayerStatus,
+		selectedSong,
+		audioElement as audioElementStore
+	} from '../store/playerState';
 	import songs from '../songs';
 
 	let isSliderOpen = false;
@@ -14,7 +19,7 @@
 	let audioElement = null;
 
 	$: {
-		if(audioElement != null){
+		if (audioElement != null) {
 			audioElementStore.update(() => audioElement);
 		}
 	}
@@ -56,7 +61,8 @@
 		clearTimeout(timer);
 		var rect = e.target.getBoundingClientRect();
 		var x = e.clientX - rect.left;
-		audioElement.currentTime= (x / progressContainer.getBoundingClientRect().width) * audioDuration
+		audioElement.currentTime =
+			(x / progressContainer.getBoundingClientRect().width) * audioDuration;
 	};
 	var updateBar = function (y: number, vol?: number) {
 		var percentage;
@@ -140,7 +146,7 @@
 		<!-- fake progress bar full width to click on it -->
 		<div class="w-full h-4 cursor-pointer" on:click={moveTimer} bind:this={progressContainer}>
 			<!-- progress bar -->
-			<div class="w-0 h-4 bg-secondary progress rounded" id="progress"></div>
+			<div class="w-0 h-4 bg-secondary progress rounded" id="progress" />
 		</div>
 
 		<div class="w-full flex justify-around items-center">
@@ -185,7 +191,7 @@
 							drag = false;
 						}}
 					>
-						<span class="volume-slider" bind:this={slider}></span>
+						<span class="volume-slider" bind:this={slider} />
 					</div>
 				{/if}
 			</div>
@@ -208,7 +214,8 @@
 	bind:this={audioElement}
 	bind:volume={audioVolume}
 	bind:duration={audioDuration}
-	src={$selectedSong?.src}></audio>
+	src={$selectedSong?.src}
+/>
 
 <style>
 	.progress {
