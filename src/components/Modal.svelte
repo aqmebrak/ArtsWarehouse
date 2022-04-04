@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { modals } from '$src/store/modals';
+	import { modals } from 'src/store/modals';
 
 	export let id = '';
 
@@ -13,7 +13,7 @@
 	let transitionBgProps = { duration: 250 };
 	let transitionWindow = transitionBg;
 
-	const unsubscribe = modals.subscribe((m) => {
+	modals.subscribe((m) => {
 		modalsState = m[id];
 	});
 
@@ -80,13 +80,12 @@
 
 	.window-wrap {
 		position: relative;
-		margin: 2rem;
-		max-height: 100%;
+		margin: auto;
+		max-height: 100vh;
 	}
 
 	.window {
 		position: relative;
-		width: 50rem;
 		max-width: 100%;
 		max-height: 100%;
 		margin: 2rem auto;
@@ -97,7 +96,6 @@
 	.content {
 		position: relative;
 		padding: 1rem;
-		max-height: calc(100vh - 2rem);
 		overflow: auto;
 	}
 
