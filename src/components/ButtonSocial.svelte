@@ -19,7 +19,7 @@
 		cursor: pointer;
 		flex-direction: row;
 		align-items: center;
-		background-color: var(--queen-pink);
+		background-color: var(--periwinkle-crayola);
 		color: var(--plump-purple);
 		border-radius: 5px;
 		border-width: 1px;
@@ -29,6 +29,9 @@
 	}
 	a svg {
 		margin-bottom: 12px;
+	}
+	a span {
+		color: var(--plump-purple);
 	}
 
 </style>
