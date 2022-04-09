@@ -4,9 +4,10 @@
 	export let icon;
 	export let label;
 	export let url;
+	export let classNames;
 </script>
 
-<div class="flex justify-center mt-8">
+<div class={`${classNames} flex`}>
 	<a href={url} target="_blank">
 		<Icon name={icon} className="h-4 w-4" />
 		<span class="pl-1">{label}</span>
@@ -33,5 +34,4 @@
 	a span {
 		color: var(--plump-purple);
 	}
-
 </style>
