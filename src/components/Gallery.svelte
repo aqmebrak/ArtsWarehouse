@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
-	import { modals } from '$src/store/modals';
+	import { modals } from 'src/store/modals';
 
 	export let gap = 10;
 	export let maxColumnWidth = 250;
@@ -10,16 +10,15 @@
 	let galleryWidth = 0;
 	let columnCount = 0;
 
-
-	$: columnCount = parseInt(galleryWidth / maxColumnWidth) || 1;
+	$: columnCount = parseInt(String(galleryWidth / maxColumnWidth)) || 1;
 	$: columnCount && Draw();
 	$: galleryStyle = `grid-template-columns: repeat(${columnCount}, 1fr); --gap: ${gap}px`;
 
 	onMount(Draw);
 
 	function handleClick(url: string) {
-		const rex = /\/src(.*)/g;
-		const id = rex.exec(url)[0];
+		const rex = /(.*)\/(.*)(.jpg|.png)/g;
+		const id = rex.exec(url)[2];
 		modals.update((modalsPrev) => ({ ...modalsPrev, [id]: true }));
 	}
 
@@ -50,7 +49,7 @@
 
 {#if columns}
 	<div id="gallery" bind:clientWidth={galleryWidth} style={galleryStyle}>
-		{#each columns as column}
+		{#each columns as column, indexCol}
 			<div class="column">
 				{#each column as url}
 					<img src={url} alt="" on:click={() => handleClick(url)} />
@@ -61,9 +60,9 @@
 {/if}
 
 <style>
-    img {
-        cursor: pointer;
-    }
+	img {
+		cursor: pointer;
+	}
 	#slotHolder {
 		display: none;
 	}

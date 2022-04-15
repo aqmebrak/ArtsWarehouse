@@ -21,125 +21,125 @@ import Theme from './theme.mp3';
 import Violet from './Violet.mp3';
 
 export default [
-    // Centurion
-    {
-        title: 'Centurion',
-        artist: 'King Buffalo',
-        date: '',
-        src: Centurion,
-    },
-    {
-        title: 'Arpinator',
-        artist: 'No1yz',
-        date: '',
-        src: Arpinator,
-    },
-    {
-        title: 'Aurora',
-        artist: 'No1yz',
-        date: '',
-        src: Aurora,
-    },
-    {
-        title: 'Capo',
-        artist: 'No1yz',
-        date: '',
-        src: Capo,
-    },
-    {
-        title: 'Desert Island Disk',
-        artist: 'Radiohead',
-        date: '',
-        src: DesertIslandDisk,
-    },
-    {
-        title: 'Drums',
-        artist: 'No1yz',
-        date: '',
-        src: Drums,
-    },
-    {
-        title: 'Entrance Song',
-        artist: 'The Black Angels',
-        date: '',
-        src: EntranceSong,
-    },
-    {
-        title: 'Go With The Flow',
-        artist: 'Queens of the Stone Age',
-        date: '',
-        src: GoWithTheFlow,
-    },
-    {
-        title: 'Hotline',
-        artist: 'No1yz',
-        date: '',
-        src: Hotline,
-    },
-    {
-        title: 'Ice',
-        artist: 'No1yz',
-        date: '',
-        src: Ice,
-    },
-    {
-        title: 'Leaves Of Yggdrasil',
-        artist: 'Myrkur',
-        date: '',
-        src: LeavesOfYggdrasil,
-    },
-    {
-        title: 'Mosquito Song',
-        artist: 'Queens of the Stone Age',
-        date: '',
-        src: MosquitoSong,
-    },
-    {
-        title: 'Orchid',
-        artist: 'No1yz',
-        date: '',
-        src: Orchid,
-    },
-    {
-        title: 'PassingThrough',
-        artist: 'Cult of Luna',
-        date: '',
-        src: PassingThrough,
-    },
-    {
-        title: 'Piano',
-        artist: 'No1yz',
-        date: '',
-        src: Piano,
-    },
-    {
-        title: 'Run',
-        artist: 'No1yz',
-        date: '',
-        src: Run,
-    },
-    {
-        title: 'Stellar Trip',
-        artist: 'No1yz',
-        date: '',
-        src: StellarTrip,
-    },
-    {
-        title: 'Ternaire',
-        artist: 'No1yz',
-        date: '',
-        src: Ternaire,
-    },
-    {
-        title: 'Theme',
-        artist: 'No1yz',
-        date: '',
-        src: Theme,
-    },
-    {
-        title: 'Violet',
-        artist: 'No1yz',
-        date: '',
-        src: Violet,
-    }
-] as Song[]
+	// Centurion
+	{
+		title: 'Centurion',
+		artist: 'King Buffalo',
+		date: '',
+		src: Centurion
+	},
+	{
+		title: 'Arpinator',
+		artist: 'No1yz',
+		date: '',
+		src: Arpinator
+	},
+	{
+		title: 'Aurora',
+		artist: 'No1yz',
+		date: '',
+		src: Aurora
+	},
+	{
+		title: 'Capo',
+		artist: 'No1yz',
+		date: '',
+		src: Capo
+	},
+	{
+		title: 'Desert Island Disk',
+		artist: 'Radiohead',
+		date: '',
+		src: DesertIslandDisk
+	},
+	{
+		title: 'Drums',
+		artist: 'No1yz',
+		date: '',
+		src: Drums
+	},
+	{
+		title: 'Entrance Song',
+		artist: 'The Black Angels',
+		date: '',
+		src: EntranceSong
+	},
+	{
+		title: 'Go With The Flow',
+		artist: 'Queens of the Stone Age',
+		date: '',
+		src: GoWithTheFlow
+	},
+	{
+		title: 'Hotline',
+		artist: 'No1yz',
+		date: '',
+		src: Hotline
+	},
+	{
+		title: 'Ice',
+		artist: 'No1yz',
+		date: '',
+		src: Ice
+	},
+	{
+		title: 'Leaves Of Yggdrasil',
+		artist: 'Myrkur',
+		date: '',
+		src: LeavesOfYggdrasil
+	},
+	{
+		title: 'Mosquito Song',
+		artist: 'Queens of the Stone Age',
+		date: '',
+		src: MosquitoSong
+	},
+	{
+		title: 'Orchid',
+		artist: 'No1yz',
+		date: '',
+		src: Orchid
+	},
+	{
+		title: 'PassingThrough',
+		artist: 'Cult of Luna',
+		date: '',
+		src: PassingThrough
+	},
+	{
+		title: 'Piano',
+		artist: 'No1yz',
+		date: '',
+		src: Piano
+	},
+	{
+		title: 'Run',
+		artist: 'No1yz',
+		date: '',
+		src: Run
+	},
+	{
+		title: 'Stellar Trip',
+		artist: 'No1yz',
+		date: '',
+		src: StellarTrip
+	},
+	{
+		title: 'Ternaire',
+		artist: 'No1yz',
+		date: '',
+		src: Ternaire
+	},
+	{
+		title: 'Theme',
+		artist: 'No1yz',
+		date: '',
+		src: Theme
+	},
+	{
+		title: 'Violet',
+		artist: 'No1yz',
+		date: '',
+		src: Violet
+	}
+] as Song[];

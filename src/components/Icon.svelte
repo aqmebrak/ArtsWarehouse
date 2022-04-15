@@ -5,7 +5,7 @@
 
 	export let name = 'close';
 	export let direction = 'n';
-    export let className = 'h-5 w-5';
+	export let className = 'h-5 w-5';
 
 	$: paths = pathsByName[name] || [];
 	$: rotation = directions.indexOf(direction) * 45;
