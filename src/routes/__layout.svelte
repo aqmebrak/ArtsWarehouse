@@ -8,9 +8,9 @@
 		<div class="line flex-1" />
 	</div>
 	<nav class="mt-4">
-		<a href="/gallery">Gallery</a>
+		<a href="/gallery">Paintings</a>
 		<a href="/music">Music</a>
-		<a href="/socials">Socials</a>
+		<a href="/socials">Links</a>
 	</nav>
 </div>
 
