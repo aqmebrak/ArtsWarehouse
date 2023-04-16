@@ -1,5 +1,5 @@
 <script lang="ts">
-	import ButtonSocial from 'src/components/ButtonSocial.svelte';
+	import ButtonSocial from '../../components/ButtonSocial.svelte';
 </script>
 
 <div class="mt-10 button-spacer">

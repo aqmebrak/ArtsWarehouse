@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
-	import Icon from 'src/components/Icon.svelte';
+	import Icon from '../components/Icon.svelte';
 	import {
 		playerState,
 		PlayerStatus,

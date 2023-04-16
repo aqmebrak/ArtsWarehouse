@@ -1,11 +1,11 @@
 <script lang="ts">
-	import Gallery from 'src/components/Gallery.svelte';
-	import images from 'src/images';
-	import Modal from 'src/components/Modal.svelte';
+	import Gallery from '../../components/Gallery.svelte';
+	import images from '../../images';
+	import Modal from '../../components/Modal.svelte';
 
 	const assignId = (image) => {
-		return /(.*)\/(.*)(.jpg|.png)/g.exec(image)[2]
-	}
+		return /(.*)\/(.*)(.jpg|.png)/g.exec(image)[2];
+	};
 </script>
 
 <div class="lg:m-20 sm:m-4 m-1">
@@ -18,7 +18,7 @@
 	</Gallery>
 
 	{#each images as image}
-		<Modal id={assignId(image)}><img src={image} alt="img1" style='height: 80vh' /></Modal>
+		<Modal id={assignId(image)}><img src={image} alt="img1" style="height: 80vh" /></Modal>
 	{/each}
 </div>
 <!-- svelte-ignore a11y-missing-attribute -->

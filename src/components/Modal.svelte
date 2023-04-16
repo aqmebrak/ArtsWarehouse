@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	import { modals } from 'src/store/modals';
+	import { modals } from '../store/modals';
 
 	export let id = '';
 
