@@ -33,6 +33,6 @@
 	"type": "module",
 	"dependencies": {
 		"layercake": "^7.3.1",
-		"lottie-web": "5.9.2"
+		"lottie-web": "5.11.0"
 	}
 }
