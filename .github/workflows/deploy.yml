@@ -1,0 +1,18 @@
+name: Upload build to Syn
+
+on: [push]
+jobs:
+  rsync:
+    runs-on: ubuntu-latest
+    steps:
+      # Must checkout first, otherwise it would show empty folder, see https://github.com/actions/checkout
+      - uses: actions/checkout@v2
+      # Modify `master` to valid version, see https://github.com/marketplace/actions/action-rsync
+      - uses: up9cloud/action-rsync@master
+        env:
+          HOST: ${{secrets.HOST}}
+          KEY: ${{secrets.SSH_KEY}}
+          PORT: ${{secrets.PORT}}
+          USER: ${{secrets.USERNAME}}
+          TARGET: /test_folder/
+          VERBOSE: true
