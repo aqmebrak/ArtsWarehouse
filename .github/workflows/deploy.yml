@@ -1,6 +1,9 @@
 name: Upload build to Syn
 
-on: [push]
+on:
+  push:
+    tags: ["*"]
+
 jobs:
   rsync:
     runs-on: ubuntu-latest
