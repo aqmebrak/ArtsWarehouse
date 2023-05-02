@@ -59,19 +59,19 @@
 
 	const moveTimer = (e) => {
 		clearTimeout(timer);
-		var rect = e.target.getBoundingClientRect();
-		var x = e.clientX - rect.left;
+		const rect = e.target.getBoundingClientRect();
+		const x = e.clientX - rect.left;
 		audioElement.currentTime =
 			(x / progressContainer.getBoundingClientRect().width) * audioDuration;
 	};
-	var updateBar = function (y: number, vol?: number) {
-		var percentage;
+	const updateBar = function (y: number, vol?: number) {
+		let percentage;
 		//if only volume have specificed
 		//then direct update volume
 		if (vol) {
 			percentage = vol * 100;
 		} else {
-			var position = y - sliderContainer.offsetHeight - 130;
+			const position = y - sliderContainer.offsetHeight - 130;
 			percentage = (100 * position) / sliderContainer.clientHeight;
 		}
 
@@ -142,7 +142,7 @@
 </script>
 
 <div class="bg-periwinkleCrayola rounded-r w-96">
-	<div class="p-2 flex flex-col justify-center items-start ">
+	<div class="p-2 flex flex-col justify-center items-start">
 		<!-- fake progress bar full width to click on it -->
 		<div class="w-full h-4 cursor-pointer" on:click={moveTimer} bind:this={progressContainer}>
 			<!-- progress bar -->

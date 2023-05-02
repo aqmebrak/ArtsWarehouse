@@ -1,0 +1,70 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        default: patch
+        required: true
+        description: "Version (major, minor, patch, ou au format 1.2.3)"
+
+jobs:
+  # NPM version update if package.json detected
+  NpmVersionUpdate:
+    name: Check (& Update) package.json
+    runs-on: ubuntu-latest
+    outputs:
+      NEW_VERSION: ${{ steps.NewVersion.outputs.NEW_VERSION }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: export new version (+commit package.json bump)
+        id: NewVersion
+        shell: bash
+        run: |
+          export PACKAGE_JSON_HIT=$(find package.json)
+
+          if [ ! -z $PACKAGE_JSON_HIT ]; then
+            echo "package json detected --> NPM VERSION"
+            git config --global user.name "${{ github.actor }}"
+            git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+            git config --global color.ui true
+            git pull
+            npm version ${{ inputs.VERSION }} --no-git-tag-version 
+            NEW_VERSION=$(jq -r .version package.json)
+            git commit -am "Update to version: $NEW_VERSION"
+            git push
+            echo "::notice title="npm version"::package.json detected --> update on version v$NEW_VERSION"
+            echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
+          
+          else
+            echo "::notice title="version"::No package.json detected --> we only trigger a new tag"
+            echo "NEW_VERSION=${{ inputs.VERSION }}" >> $GITHUB_OUTPUT
+          fi
+  # Push a tag
+  Tag:
+    name: Tag
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    needs: NpmVersionUpdate
+    steps:
+      - uses: actions/checkout@v3
+
+      # Git pull in case of npm version update before. To be sure to get the very last version of the source code
+      - name: Pull
+        shell: bash
+        run: git pull
+
+      - name: Tag
+        uses: ./.github/actions/tag
+        with:
+          tag: ${{ needs.NpmVersionUpdate.outputs.NEW_VERSION }}
+
+      - name: Push the tag
+        run: |
+          git push --follow-tags
+
+      - name: Notice
+        run: |
+          echo "::notice title="Tag creation":: Tag creation on version v${{ needs.NpmVersionUpdate.outputs.NEW_VERSION }}"

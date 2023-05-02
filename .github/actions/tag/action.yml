@@ -1,0 +1,27 @@
+name: Tag the current commit with the next semver tag
+description: |
+  Tag the current commit with the next semver tag.
+  Note: you will need to `push --follow-tags` yourself. This action doesn't do it since most
+  of the time you will want to:
+    1) set the tag
+    2) build the app
+    3) push the tag if the build has succeeded
+inputs:
+  tag:
+    required: true
+    description: either minor, major or patch to bump the respective parts of the version, or a specific version in the format 1.2.3
+
+runs:
+  using: "composite"
+
+  steps:
+    - name: Tag
+      shell: bash
+      run: |
+        # fetch only the tags so we can increment the version
+        git fetch origin 'refs/tags/*:refs/tags/*'
+        git config --global user.name "${{ github.actor }}"
+        git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+        chmod +x ${{ github.action_path }}/bump.sh
+        ${{ github.action_path }}/bump.sh "${{ inputs.tag }}"
