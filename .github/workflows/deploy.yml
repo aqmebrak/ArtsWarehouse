@@ -14,5 +14,24 @@ jobs:
           KEY: ${{secrets.SSH_KEY}}
           PORT: ${{secrets.PORT}}
           USER: ${{secrets.USERNAME}}
-          TARGET: /test_folder/
+          SOURCE: ./build/
+          TARGET: /volume1/homes/akme/no1yz.art/build/
           VERBOSE: true
+#      - uses: up9cloud/action-rsync@master
+#        env:
+#          HOST: ${{secrets.HOST}}
+#          KEY: ${{secrets.SSH_KEY}}
+#          PORT: ${{secrets.PORT}}
+#          USER: ${{secrets.USERNAME}}
+#          SOURCE: ./node_modules/
+#          TARGET: /volume1/homes/akme/no1yz.art/node_modules/
+#          VERBOSE: true
+#      - uses: up9cloud/action-rsync@master
+#        env:
+#          HOST: ${{secrets.HOST}}
+#          KEY: ${{secrets.SSH_KEY}}
+#          PORT: ${{secrets.PORT}}
+#          USER: ${{secrets.USERNAME}}
+#          SOURCE: ./package.json
+#          TARGET: /volume1/homes/akme/no1yz.art/package.json
+#          VERBOSE: true
