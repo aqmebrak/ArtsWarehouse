@@ -2,7 +2,8 @@ name: Upload build to Syn
 
 on:
   push:
-    tags: ["*"]
+    tags:
+      - '*'
 
 jobs:
   rsync:
