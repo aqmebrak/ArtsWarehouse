@@ -1,11 +1,7 @@
 name: Upload build to Syn
 
 on:
-  push:
-    tags: ['*']
-
-env:
-  GITHUB_TOKEN: ${{secrets.SSH_KEY}}
+  workflow_dispatch:
 
 jobs:
   rsync:
