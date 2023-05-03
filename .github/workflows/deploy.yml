@@ -2,8 +2,10 @@ name: Upload build to Syn
 
 on:
   push:
-    tags:
-      - '*'
+    tags: ['*']
+
+env:
+  GITHUB_TOKEN: ${{secrets.SSH_KEY}}
 
 jobs:
   rsync:
