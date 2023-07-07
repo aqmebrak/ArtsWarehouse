@@ -1,6 +1,6 @@
 export type Song = {
-	title: string;
+	name: string;
 	artist: string;
 	date: string;
-	src: string;
+	url: string;
 };

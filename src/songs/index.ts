@@ -20,126 +20,131 @@ import Ternaire from './Ternaire.mp3';
 import Theme from './theme.mp3';
 import Violet from './Violet.mp3';
 
+// "name": "Song Name 1",
+// 	"artist": "Artist Name",
+// 	"album": "Album Name",
+// 	"url": "/song/url.mp3",
+// 	"cover_art_url": "/cover/art/url.jpg"
 export default [
 	// Centurion
 	{
-		title: 'Centurion',
+		name: 'Centurion',
 		artist: 'King Buffalo',
 		date: '',
-		src: Centurion
+		url: Centurion
 	},
 	{
-		title: 'Arpinator',
+		name: 'Arpinator',
 		artist: 'No1yz',
 		date: '',
-		src: Arpinator
+		url: Arpinator
 	},
 	{
-		title: 'Aurora',
+		name: 'Aurora',
 		artist: 'No1yz',
 		date: '',
-		src: Aurora
+		url: Aurora
 	},
 	{
-		title: 'Capo',
+		name: 'Capo',
 		artist: 'No1yz',
 		date: '',
-		src: Capo
+		url: Capo
 	},
 	{
-		title: 'Desert Island Disk',
+		name: 'Desert Island Disk',
 		artist: 'Radiohead',
 		date: '',
-		src: DesertIslandDisk
+		url: DesertIslandDisk
 	},
 	{
-		title: 'Drums',
+		name: 'Drums',
 		artist: 'No1yz',
 		date: '',
-		src: Drums
+		url: Drums
 	},
 	{
-		title: 'Entrance Song',
+		name: 'Entrance Song',
 		artist: 'The Black Angels',
 		date: '',
-		src: EntranceSong
+		url: EntranceSong
 	},
 	{
-		title: 'Go With The Flow',
+		name: 'Go With The Flow',
 		artist: 'Queens of the Stone Age',
 		date: '',
-		src: GoWithTheFlow
+		url: GoWithTheFlow
 	},
 	{
-		title: 'Hotline',
+		name: 'Hotline',
 		artist: 'No1yz',
 		date: '',
-		src: Hotline
+		url: Hotline
 	},
 	{
-		title: 'Ice',
+		name: 'Ice',
 		artist: 'No1yz',
 		date: '',
-		src: Ice
+		url: Ice
 	},
 	{
-		title: 'Leaves Of Yggdrasil',
+		name: 'Leaves Of Yggdrasil',
 		artist: 'Myrkur',
 		date: '',
-		src: LeavesOfYggdrasil
+		url: LeavesOfYggdrasil
 	},
 	{
-		title: 'Mosquito Song',
+		name: 'Mosquito Song',
 		artist: 'Queens of the Stone Age',
 		date: '',
-		src: MosquitoSong
+		url: MosquitoSong
 	},
 	{
-		title: 'Orchid',
+		name: 'Orchid',
 		artist: 'No1yz',
 		date: '',
-		src: Orchid
+		url: Orchid
 	},
 	{
-		title: 'PassingThrough',
+		name: 'PassingThrough',
 		artist: 'Cult of Luna',
 		date: '',
-		src: PassingThrough
+		url: PassingThrough
 	},
 	{
-		title: 'Piano',
+		name: 'Piano',
 		artist: 'No1yz',
 		date: '',
-		src: Piano
+		url: Piano
 	},
 	{
-		title: 'Run',
+		name: 'Run',
 		artist: 'No1yz',
 		date: '',
-		src: Run
+		url: Run
 	},
 	{
-		title: 'Stellar Trip',
+		name: 'Stellar Trip',
 		artist: 'No1yz',
 		date: '',
-		src: StellarTrip
+		url: StellarTrip
 	},
 	{
-		title: 'Ternaire',
+		name: 'Ternaire',
 		artist: 'No1yz',
 		date: '',
-		src: Ternaire
+		url: Ternaire
 	},
 	{
-		title: 'Theme',
+		name: 'Theme',
 		artist: 'No1yz',
 		date: '',
-		src: Theme
+		url: Theme
 	},
 	{
-		title: 'Violet',
+		name: 'Violet',
 		artist: 'No1yz',
 		date: '',
-		src: Violet
+		url: Violet
 	}
 ] as Song[];
