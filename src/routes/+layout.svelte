@@ -16,6 +16,7 @@
 	<nav class="mt-4">
 		<a href="/gallery">Paintings</a>
 		<a href="/music">Music</a>
+		<a href="/respirax">Respire</a>
 	</nav>
 </div>
 
