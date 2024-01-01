@@ -2,10 +2,10 @@
 	"compilerOptions": {
 		"paths": {
 			"src": [
-				"../src"
+				"../../../../../src"
 			],
 			"src/*": [
-				"../src/*"
+				"../../../../../src/*"
 			]
 		},
 		"rootDirs": [
