@@ -1,5 +1,5 @@
-<script>
-	import ButtonSocial from "../components/ButtonSocial.svelte";
+<script lang="ts">
+	import ButtonSocial from "src/components/ButtonSocial.svelte";
 </script>
 
 <div class="flex flex-col items-center mt-12">

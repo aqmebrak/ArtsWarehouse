@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
-	import { modals } from '../store/modals';
+	import { modals } from 'src/store/modals';
 
 	export let gap = 10;
 	export let maxColumnWidth = 250;

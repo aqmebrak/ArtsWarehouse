@@ -1,5 +1,5 @@
 <script>
-	import '../app.css';
+	import 'src/app.css';
 </script>
 
 <div class="mt-2 flex flex-col items-center">

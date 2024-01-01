@@ -1,8 +1,8 @@
 <script lang="ts">
-	import Gallery from '../../components/Gallery.svelte';
-	import images from '../../images';
-	import Modal from '../../components/Modal.svelte';
-	import ButtonSocial from "../../components/ButtonSocial.svelte";
+	import Gallery from 'src/components/Gallery.svelte';
+	import images from 'src/images';
+	import Modal from 'src/components/Modal.svelte';
+	import ButtonSocial from "src/components/ButtonSocial.svelte";
 
 	const assignId = (image) => {
 		return /(.*)\/(.*)(.jpg|.png)/g.exec(image)[2];

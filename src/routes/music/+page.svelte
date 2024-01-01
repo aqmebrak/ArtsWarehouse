@@ -1,9 +1,10 @@
 <script lang="ts">
-	import songs from '../../songs';
-	import type { Song } from '../../types';
 	import { tick } from 'svelte';
-	import Player from '../../components/Player.svelte';
-	import { playerState, PlayerStatus, selectedSong, audioElement } from '../../store/playerState';
+
+	import songs from 'src/songs';
+	import type { Song } from 'src/types';
+	import Player from 'src/components/Player.svelte';
+	import { playerState, PlayerStatus, selectedSong, audioElement } from 'src/store/playerState';
 
 	/**
 	 * Actions
