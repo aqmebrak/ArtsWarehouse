@@ -1,5 +1,8 @@
 <script>
 	import 'src/app.css';
+	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
+
+	injectSpeedInsights();
 </script>
 
 <div class="mt-2 flex flex-col items-center">
