@@ -31,8 +31,6 @@
 		<Modal id={assignId(image)}><img src={image} alt="img1" style="height: 80vh" /></Modal>
 	{/each}
 </div>
-<!-- svelte-ignore a11y-missing-attribute -->
-<img src="https://app.piratepx.com/ship?p=90a6a93d-7cd5-49f1-ac23-0c2505f23d94" />
 
 <style>
 	:global(img) {
