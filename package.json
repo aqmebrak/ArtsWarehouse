@@ -40,6 +40,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@vercel/analytics": "^1.1.1",
 		"@vercel/speed-insights": "^1.0.2",
 		"amplitudejs": "5.3.2"
 	}
