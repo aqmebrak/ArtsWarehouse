@@ -1,8 +1,13 @@
-<script>
+<script lang="ts">
 	import '../app.css';
 	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 
 	inject({ mode: dev ? 'development' : 'production' });
 	injectSpeedInsights();
@@ -20,7 +25,7 @@
 	</nav>
 </div>
 
-<slot />
+{@render children?.()}
 
 <style>
 	.title {

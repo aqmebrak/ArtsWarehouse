@@ -1,10 +1,12 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
 
-	export let icon;
-	export let label;
-	export let url;
-	export let classNames;
+	let {
+		icon,
+		label,
+		url,
+		classNames
+	} = $props();
 </script>
 
 <div class={`${classNames} flex`}>

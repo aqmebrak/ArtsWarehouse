@@ -35,7 +35,7 @@
 				class={$selectedSong === song
 					? 'cursor-pointer bg-plumpPurple p-6 py-3'
 					: 'cursor-pointer bg-plumpPurpleLight p-6 py-3'}
-				on:click={() => handleSelection(song, index)}
+				onclick={() => handleSelection(song, index)}
 			>
 				<div class={$selectedSong === song ? 'text-lg text-white' : 'text-lg'}>{song.title}</div>
 				<div class={$selectedSong === song ? 'text-sm text-white' : 'text-sm'}>{song.artist}</div>

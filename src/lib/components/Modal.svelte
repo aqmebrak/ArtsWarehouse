@@ -2,12 +2,17 @@
 	import { fade } from 'svelte/transition';
 	import { modals } from '$lib/store/modals';
 
-	export let id = '';
+	interface Props {
+		id?: string;
+		children?: import('svelte').Snippet;
+	}
 
-	let modalsState;
+	let { id = '', children }: Props = $props();
+
+	let modalsState = $state();
 	let outerClickTarget;
-	let background;
-	let wrap;
+	let background = $state();
+	let wrap = $state();
 	//transition
 	let transitionBg = fade;
 	let transitionBgProps = { duration: 250 };
@@ -38,13 +43,13 @@
 	};
 </script>
 
-<svelte:window on:keydown={handleKeydown} />
+<svelte:window onkeydown={handleKeydown} />
 
 {#if modalsState}
 	<div
 		class="bg"
-		on:mousedown={handleOuterMousedown}
-		on:mouseup={handleOuterMouseup}
+		onmousedown={handleOuterMousedown}
+		onmouseup={handleOuterMouseup}
 		bind:this={background}
 		transition:transitionBg={transitionBgProps}
 	>
@@ -56,9 +61,9 @@
 				transition:transitionWindow={transitionBgProps}
 			>
 				<div class="content">
-					<slot />
+					{@render children?.()}
 				</div>
-				<button on:click={close} class="close" />
+				<button onclick={close} class="close"></button>
 			</div>
 		</div>
 	</div>

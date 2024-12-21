@@ -10,20 +10,22 @@
 	import songs from '../songs';
 	import { ariaKeyDownA11yHandler } from '$lib/utils/a11y';
 
-	let isSliderOpen = false;
-	let slider, sliderContainer, progressContainer;
-	let drag = false;
-	let timer;
-	let percent = 0;
-	let audioVolume;
-	let audioDuration;
-	let audioElement = null;
+	let isSliderOpen = $state(false);
+	let slider = $state(),
+		sliderContainer = $state(),
+		progressContainer = $state();
+	let drag = $state(false);
+	let timer = $state(null);
+	let percent = $state(0);
+	let audioVolume = $state();
+	let audioDuration = $state();
+	let audioElement = $state(null);
 
-	$: {
+	$effect(() => {
 		if (audioElement != null) {
 			audioElementStore.update(() => audioElement);
 		}
-	}
+	});
 
 	onMount(() => {
 		audioElement.addEventListener('playing', function (_event) {
@@ -150,7 +152,7 @@
 			tabindex="0"
 			role="button"
 			class="h-4 w-full cursor-pointer"
-			on:click={moveTimer}
+			onclick={moveTimer}
 			bind:this={progressContainer}
 		>
 			<!-- progress bar -->
@@ -159,12 +161,12 @@
 
 		<div class="flex w-full items-center justify-around">
 			<div>
-				<button on:click={handlePreviousSong}>
+				<button onclick={handlePreviousSong}>
 					<Icon name="cheveronDoubleLeft" className="h-12 w-12" />
 				</button>
 			</div>
 			<div>
-				<button on:click={togglePlayPause}>
+				<button onclick={togglePlayPause}>
 					{#if $playerState.status === PlayerStatus.PLAY}
 						<Icon name="pause" className="h-12 w-12" />
 					{:else}
@@ -173,12 +175,12 @@
 				</button>
 			</div>
 			<div>
-				<button on:click={handleNextSong}>
+				<button onclick={handleNextSong}>
 					<Icon name="cheveronDoubleRight" className="h-12 w-12" />
 				</button>
 			</div>
 			<div>
-				<button on:click={openVolumeSlider}>
+				<button onclick={openVolumeSlider}>
 					<Icon name="volumeUp" className="h-6 w-6" />
 				</button>
 				{#if isSliderOpen}
@@ -187,17 +189,17 @@
 						role="button"
 						class="volume-slider-con"
 						bind:this={sliderContainer}
-						on:mousemove={(ev) => {
+						onmousemove={(ev) => {
 							if (drag) {
 								updateBar(ev.pageY);
 							}
 						}}
-						on:mousedown={async (ev) => {
+						onmousedown={async (ev) => {
 							drag = true;
 							await tick();
 							updateBar(ev.pageY);
 						}}
-						on:mouseup={() => {
+						onmouseup={() => {
 							drag = false;
 						}}
 					>
