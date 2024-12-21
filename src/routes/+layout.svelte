@@ -1,5 +1,5 @@
 <script>
-	import 'src/app.css';
+	import '../app.css';
 	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
@@ -11,7 +11,7 @@
 <div class="mt-2 flex flex-col items-center">
 	<div class="flex flex-col items-center">
 		<a class="title" href="/">No1yz.art</a>
-		<div class="line flex-1" />
+		<div class="line flex-1"></div>
 	</div>
 	<nav class="mt-4">
 		<a href="/gallery">Paintings</a>

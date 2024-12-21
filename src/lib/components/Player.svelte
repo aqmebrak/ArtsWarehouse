@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, tick } from 'svelte';
-	import Icon from 'src/components/Icon.svelte';
+	import Icon from '$lib/components/Icon.svelte';
 	import {
 		playerState,
 		PlayerStatus,
@@ -8,6 +8,7 @@
 		audioElement as audioElementStore
 	} from '../store/playerState';
 	import songs from '../songs';
+	import { ariaKeyDownA11yHandler } from '$lib/utils/a11y';
 
 	let isSliderOpen = false;
 	let slider, sliderContainer, progressContainer;
@@ -141,15 +142,22 @@
 	};
 </script>
 
-<div class="bg-periwinkleCrayola rounded-r w-96">
-	<div class="p-2 flex flex-col justify-center items-start">
+<div class="w-96 rounded-r bg-periwinkleCrayola">
+	<div class="flex flex-col items-start justify-center p-2">
 		<!-- fake progress bar full width to click on it -->
-		<div class="w-full h-4 cursor-pointer" on:click={moveTimer} bind:this={progressContainer}>
+		<div
+			{...ariaKeyDownA11yHandler((e) => moveTimer(e))}
+			tabindex="0"
+			role="button"
+			class="h-4 w-full cursor-pointer"
+			on:click={moveTimer}
+			bind:this={progressContainer}
+		>
 			<!-- progress bar -->
-			<div class="w-0 h-4 bg-secondary progress rounded" id="progress" />
+			<div class="progress h-4 w-0 rounded bg-secondary" id="progress"></div>
 		</div>
 
-		<div class="w-full flex justify-around items-center">
+		<div class="flex w-full items-center justify-around">
 			<div>
 				<button on:click={handlePreviousSong}>
 					<Icon name="cheveronDoubleLeft" className="h-12 w-12" />
@@ -175,6 +183,8 @@
 				</button>
 				{#if isSliderOpen}
 					<div
+						tabindex="0"
+						role="button"
 						class="volume-slider-con"
 						bind:this={sliderContainer}
 						on:mousemove={(ev) => {
@@ -191,7 +201,7 @@
 							drag = false;
 						}}
 					>
-						<span class="volume-slider" bind:this={slider} />
+						<span class="volume-slider" bind:this={slider}></span>
 					</div>
 				{/if}
 			</div>
@@ -215,7 +225,7 @@
 	bind:volume={audioVolume}
 	bind:duration={audioDuration}
 	src={$selectedSong?.src}
-/>
+></audio>
 
 <style>
 	.progress {

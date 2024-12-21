@@ -6,7 +6,7 @@ on:
       version:
         default: patch
         required: true
-        description: "Version (major, minor, patch, ou au format 1.2.3)"
+        description: 'Version (major, minor, patch, ou au format 1.2.3)'
 
 jobs:
   # NPM version update if package.json detected
@@ -37,7 +37,7 @@ jobs:
             git push
             echo "::notice title="npm version"::package.json detected --> update on version v$NEW_VERSION"
             echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_OUTPUT
-          
+
           else
             echo "::notice title="version"::No package.json detected --> we only trigger a new tag"
             echo "NEW_VERSION=${{ inputs.VERSION }}" >> $GITHUB_OUTPUT

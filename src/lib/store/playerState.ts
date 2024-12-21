@@ -1,4 +1,4 @@
-import type { Song } from '../types';
+import type { Song } from '$lib/types';
 import { writable } from 'svelte/store';
 
 export enum PlayerStatus {
@@ -16,6 +16,6 @@ export const playerState = writable<PlayerState>({
 	currentPosition: 0
 });
 
-export const selectedSong = writable<Song>(undefined);
+export const selectedSong = writable<Song>();
 
 export const audioElement = writable<HTMLAudioElement | null>(null);

@@ -1,31 +1,31 @@
 <script lang="ts">
-	import ButtonSocial from "src/components/ButtonSocial.svelte";
+	import ButtonSocial from '$lib/components/ButtonSocial.svelte';
 </script>
 
-<div class="flex flex-col items-center mt-12">
+<div class="mt-12 flex flex-col items-center">
 	<div class="text-center">Here you can find all my creations, from music to paintings</div>
 
-	<div class="flex flex-col mt-4 button-spacer items-center">
+	<div class="button-spacer mt-4 flex flex-col items-center">
 		<h2>My bands:</h2>
 		<ButtonSocial
-				classNames="my-2"
-				label="Stories Bones Tell (black metal)"
-				icon="bandcamp"
-				url="https://storiesbonestell.bandcamp.com/releases/"
+			classNames="my-2"
+			label="Stories Bones Tell (black metal)"
+			icon="bandcamp"
+			url="https://storiesbonestell.bandcamp.com/releases/"
 		/>
 		<ButtonSocial
-				classNames="my-2"
-				label="Azimut (post metal)"
-				icon="instagram"
-				url="https://www.instagram.com/weareazimut/"
+			classNames="my-2"
+			label="Azimut (post metal)"
+			icon="instagram"
+			url="https://www.instagram.com/weareazimut/"
 		/>
 
 		<h2 class="mt-4">As a mixing/mastering engineer</h2>
 		<ButtonSocial
-				classNames="my-2"
-				label="Stories Bones Tell - Of Worlds Long Gone"
-				icon="bandcamp"
-				url="https://storiesbonestell.bandcamp.com/album/of-worlds-long-gone"
+			classNames="my-2"
+			label="Stories Bones Tell - Of Worlds Long Gone"
+			icon="bandcamp"
+			url="https://storiesbonestell.bandcamp.com/album/of-worlds-long-gone"
 		/>
 	</div>
 </div>

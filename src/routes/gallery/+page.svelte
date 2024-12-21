@@ -1,24 +1,24 @@
 <script lang="ts">
-	import Gallery from 'src/components/Gallery.svelte';
-	import images from 'src/images';
-	import Modal from 'src/components/Modal.svelte';
-	import ButtonSocial from "src/components/ButtonSocial.svelte";
+	import Gallery from '$lib/components/Gallery.svelte';
+	import images from '$lib/images';
+	import Modal from '$lib/components/Modal.svelte';
+	import ButtonSocial from '$lib/components/ButtonSocial.svelte';
 
-	const assignId = (image) => {
-		return /(.*)\/(.*)(.jpg|.png)/g.exec(image)[2];
+	const assignId = (image: string) => {
+		return /(.*)\/(.*)(.jpg|.png)/g.exec(image)?.[2] ?? '';
 	};
 </script>
 
-<div class="flex justify-center mb-4 sm:mb-0">
+<div class="mb-4 flex justify-center sm:mb-0">
 	<ButtonSocial
-			classNames="mt-5"
-			label="Instagram"
-			icon="instagram"
-			url="https://www.instagram.com/matt_paintings/"
+		classNames="mt-5"
+		label="Instagram"
+		icon="instagram"
+		url="https://www.instagram.com/matt_paintings/"
 	/>
 </div>
 
-<div class="lg:m-20 sm:m-4 m-1">
+<div class="m-1 sm:m-4 lg:m-20">
 	<Gallery gap={40} maxColumnWidth={450}>
 		{#each images as image}
 			<div id="IMG">

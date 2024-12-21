@@ -12,7 +12,7 @@ inputs:
     description: either minor, major or patch to bump the respective parts of the version, or a specific version in the format 1.2.3
 
 runs:
-  using: "composite"
+  using: 'composite'
 
   steps:
     - name: Tag
