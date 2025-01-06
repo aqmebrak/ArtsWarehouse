@@ -1,12 +1,20 @@
 <script lang="ts">
-	import Gallery from '$lib/components/Gallery.svelte';
 	import images from '$lib/images';
-	import Modal from '$lib/components/Modal.svelte';
+	import { modals } from '$lib/store/modals';
 	import ButtonSocial from '$lib/components/ButtonSocial.svelte';
+	import { createDialog, melt } from '@melt-ui/svelte';
+	import { fade } from 'svelte/transition';
 
-	const assignId = (image: string) => {
-		return /(.*)\/(.*)(.jpg|.png)/g.exec(image)?.[2] ?? '';
-	};
+	let selectedImage = $state(null);
+
+	const {
+		elements: { trigger, portalled, overlay, content, close },
+		states: { open }
+	} = createDialog();
+
+	function handleClickImage(url: string) {
+		modals.update((modalsPrev) => ({ ...modalsPrev, [url]: true }));
+	}
 </script>
 
 <div class="mb-4 flex justify-center sm:mb-0">
@@ -18,22 +26,41 @@
 	/>
 </div>
 
-<div class="m-1 sm:m-4 lg:m-20">
-	<Gallery gap={40} maxColumnWidth={450}>
+<div class="m-1 sm:m-4 lg:m-8 xl:m-12">
+	<div class="grid grid-cols-1 gap-4 px-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
 		{#each images as image}
-			<div id="IMG">
-				<img src={image} alt={image} />
+			<div class="flex items-center justify-center">
+				<button
+					use:melt={$trigger}
+					onclick={() => {
+						selectedImage = image;
+					}}
+				>
+					<img class="h-full w-full object-contain" src={image} alt={image} />
+				</button>
 			</div>
 		{/each}
-	</Gallery>
-
-	{#each images as image}
-		<Modal id={assignId(image)}><img src={image} alt="img1" style="height: 80vh" /></Modal>
-	{/each}
+	</div>
 </div>
+{#if $open}
+	<div use:melt={$portalled}>
+		<div
+			use:melt={$overlay}
+			class="fixed inset-0 z-50 bg-black/50"
+			transition:fade={{ duration: 150 }}
+		></div>
+		<div
+			use:melt={$content}
+			class="fixed left-1/2 top-1/2 z-50 flex max-h-[80vh] w-full -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-white p-6 shadow-lg"
+		>
+			<button use:melt={$close} class="absolute right-0 top-0">X</button>
+			<img src={selectedImage} alt="img1" class="h-[80vh]" />
+		</div>
+	</div>
+{/if}
 
 <style>
-	:global(img) {
+	img {
 		opacity: 0.9;
 		transition: all 0.2s;
 	}

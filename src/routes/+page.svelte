@@ -13,12 +13,6 @@
 			icon="bandcamp"
 			url="https://storiesbonestell.bandcamp.com/releases/"
 		/>
-		<ButtonSocial
-			classNames="my-2"
-			label="Azimut (post metal)"
-			icon="instagram"
-			url="https://www.instagram.com/weareazimut/"
-		/>
 
 		<h2 class="mt-4">As a mixing/mastering engineer</h2>
 		<ButtonSocial

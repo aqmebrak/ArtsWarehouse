@@ -2,10 +2,9 @@
 	import P5 from 'p5-svelte';
 	import type { Sketch } from 'p5-svelte';
 
-	let directionUp = true;
-	let startTime = 0;
-
 	const sketch: Sketch = (p5) => {
+		let directionUp = true;
+		let startTime = 0;
 		const canvaH = window.innerHeight - window.innerHeight * 0.2;
 		const canvaW = window.innerWidth - window.innerWidth * 0.5;
 		const circleWidth = 50;

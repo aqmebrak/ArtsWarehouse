@@ -10,7 +10,7 @@
 	let { id = '', children }: Props = $props();
 
 	let modalsState = $state();
-	let outerClickTarget;
+	let outerClickTarget = $state();
 	let background = $state();
 	let wrap = $state();
 	//transition
@@ -24,18 +24,18 @@
 
 	const close = () => modals.update((modalsPrev) => ({ ...modalsPrev, [id]: false }));
 
-	const handleKeydown = (event) => {
+	const handleKeydown = (event: Event) => {
 		if (event.key === 'Escape') {
 			event.preventDefault();
 			close();
 		}
 	};
 
-	const handleOuterMousedown = (event) => {
+	const handleOuterMousedown = (event: Event) => {
 		if (event.target === background || event.target === wrap) outerClickTarget = event.target;
 	};
 
-	const handleOuterMouseup = (event) => {
+	const handleOuterMouseup = (event: Event) => {
 		if (event.target === outerClickTarget) {
 			event.preventDefault();
 			close();
@@ -47,137 +47,26 @@
 
 {#if modalsState}
 	<div
-		class="bg"
+		role="button"
+		tabindex="0"
+		class="fixed left-0 top-0 z-50 flex h-screen w-screen flex-col justify-center bg-black/85"
 		onmousedown={handleOuterMousedown}
 		onmouseup={handleOuterMouseup}
 		bind:this={background}
 		transition:transitionBg={transitionBgProps}
 	>
-		<div class="window-wrap" bind:this={wrap}>
+		<div class="relative m-auto max-h-screen" bind:this={wrap}>
 			<div
-				class="window"
+				class="relative mx-auto my-8 max-h-full max-w-full bg-white text-black"
 				role="dialog"
 				aria-modal="true"
-				transition:transitionWindow={transitionBgProps}
+				transition:transitionBg={transitionBgProps}
 			>
-				<div class="content">
+				<div class="relative overflow-auto p-4">
 					{@render children?.()}
 				</div>
-				<button onclick={close} class="close"></button>
+				<button aria-label="close" onclick={close}>X</button>
 			</div>
 		</div>
 	</div>
 {/if}
-
-<style>
-	.bg {
-		position: fixed;
-		z-index: 1000;
-		top: 0;
-		left: 0;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		width: 100vw;
-		height: 100vh;
-		background: rgba(0, 0, 0, 0.88);
-	}
-
-	.window-wrap {
-		position: relative;
-		margin: auto;
-		max-height: 100vh;
-	}
-
-	.window {
-		position: relative;
-		max-width: 100%;
-		max-height: 100%;
-		margin: 2rem auto;
-		color: black;
-		background: white;
-	}
-
-	.content {
-		position: relative;
-		padding: 1rem;
-		overflow: auto;
-	}
-
-	.close {
-		display: block;
-		box-sizing: border-box;
-		position: absolute;
-		z-index: 1000;
-		top: 0.3rem;
-		right: 0.3rem;
-		margin: 0;
-		padding: 0;
-		width: 1.5rem;
-		height: 1.5rem;
-		border: 0;
-		color: black;
-		border-radius: 1.5rem;
-		background: white;
-		box-shadow: 0 0 0 1px black;
-		transition:
-			transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
-			background 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-		-webkit-appearance: none;
-	}
-
-	.close:before,
-	.close:after {
-		content: '';
-		display: block;
-		box-sizing: border-box;
-		position: absolute;
-		top: 50%;
-		width: 1rem;
-		height: 1px;
-		background: black;
-		transform-origin: center;
-		transition:
-			height 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
-			background 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-	}
-
-	.close:before {
-		-webkit-transform: translate(0, -50%) rotate(45deg);
-		-moz-transform: translate(0, -50%) rotate(45deg);
-		transform: translate(0, -50%) rotate(45deg);
-		left: 0.25rem;
-	}
-
-	.close:after {
-		-webkit-transform: translate(0, -50%) rotate(-45deg);
-		-moz-transform: translate(0, -50%) rotate(-45deg);
-		transform: translate(0, -50%) rotate(-45deg);
-		left: 0.25rem;
-	}
-
-	.close:hover {
-		background: black;
-	}
-
-	.close:hover:before,
-	.close:hover:after {
-		height: 2px;
-		background: white;
-	}
-
-	.close:focus {
-		border-color: #3399ff;
-		box-shadow: 0 0 0 2px #3399ff;
-	}
-
-	.close:active {
-		transform: scale(0.9);
-	}
-
-	.close:hover,
-	.close:focus,
-	.close:active {
-		outline: none;
-	}
-</style>
