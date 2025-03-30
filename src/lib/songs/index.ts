@@ -1,4 +1,4 @@
-import type { Song } from '$lib/types';
+import type { Song } from '../types';
 
 import Centurion from './Centurion - (King Buffalo cover).mp3';
 import Arpinator from './Arpinator.mp3';
