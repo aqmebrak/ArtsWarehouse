@@ -47,6 +47,7 @@
 	"dependencies": {
 		"@vercel/analytics": "1.5.0",
 		"@vercel/speed-insights": "1.2.0",
-		"p5": "1.11.3"
+		"p5": "1.11.3",
+		"phaser": "^3.88.2"
 	}
 }

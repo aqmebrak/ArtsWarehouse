@@ -22,6 +22,7 @@
 		<a href="/gallery">Paintings</a>
 		<a href="/music">Music</a>
 		<a href="/respire">Respire</a>
+		<a href="/game">Game</a>
 	</nav>
 </div>
 
