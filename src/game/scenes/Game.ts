@@ -8,6 +8,8 @@ export class Game extends Scene {
 	cursorKeys: any;
 	trees: any;
 	rocks: any;
+	walls: any;
+	doors: any;
 	playerDirection: string = 'down'; // Track player direction for animations
 	isPlayerMoving: boolean = false;
 
@@ -30,13 +32,38 @@ export class Game extends Scene {
 		// Create rocks group with physics
 		this.rocks = this.physics.add.staticGroup();
 
-		// Set world center to (0, 0) and define clear radius around the player
+		// Create walls group with physics
+		this.walls = this.physics.add.staticGroup();
+
+		// Create doors group with physics
+		this.doors = this.physics.add.staticGroup();
+
+		// Set world center
 		const centerX = width / 2;
 		const centerY = height / 2;
-		const clearRadius = Math.min(width, height) * 0.2; // Size of the empty area in the middle
+
+		// Define basecamp dimensions
+		const basecampWidth = 224;
+		const basecampHeight = 128;
+		const clearPadding = 32; // Additional clear area around the basecamp
+
+		// Calculate clear area boundaries
+		const clearAreaLeft = centerX - (basecampWidth / 2) - clearPadding;
+		const clearAreaRight = centerX + (basecampWidth / 2) + clearPadding;
+		const clearAreaTop = centerY - (basecampHeight / 2) - clearPadding;
+		const clearAreaBottom = centerY + (basecampHeight / 2) + clearPadding;
+
+		// Create basecamp in the center
+		this.createBasecamp(centerX, centerY);
+
+		// Helper function to check if position is in the clear area
+		const isInsideClearArea = (x, y) => {
+			return x >= clearAreaLeft && x <= clearAreaRight &&
+				y >= clearAreaTop && y <= clearAreaBottom;
+		};
 
 		// Place only a few trees randomly across the map
-		const numberOfTrees = 50; // Adjust this number to control tree density
+		const numberOfTrees = 60; // Adjust this number to control tree density
 		const worldBoundsX = width;
 		const worldBoundsY = height;
 
@@ -45,12 +72,9 @@ export class Game extends Scene {
 			const x = Phaser.Math.Between(0, worldBoundsX);
 			const y = Phaser.Math.Between(0, worldBoundsY);
 
-			// Calculate distance from world center
-			const distance = Phaser.Math.Distance.Between(x, y, centerX, centerY);
-
-			// Only place trees outside the clear radius (middle area)
-			// If position is inside clear radius, try again
-			if (distance <= clearRadius) {
+			// Only place trees outside the clear rectangular area
+			// If position is inside clear area, try again
+			if (isInsideClearArea(x, y)) {
 				i--; // Try again
 				continue;
 			}
@@ -62,18 +86,15 @@ export class Game extends Scene {
 		}
 
 		// Place some rocks across the map
-		const numberOfRocks = 23; // Adjust as needed
+		const numberOfRocks = 35; // Adjust as needed
 
 		for (let i = 0; i < numberOfRocks; i++) {
 			// Generate random positions within the world bounds
 			const x = Phaser.Math.Between(0, worldBoundsX);
 			const y = Phaser.Math.Between(0, worldBoundsY);
 
-			// Calculate distance from world center
-			const distance = Phaser.Math.Distance.Between(x, y, centerX, centerY);
-
-			// Only place rocks outside the clear radius (middle area)
-			if (distance <= clearRadius) {
+			// Only place rocks outside the clear rectangular area
+			if (isInsideClearArea(x, y)) {
 				i--; // Try again
 				continue;
 			}
@@ -88,21 +109,22 @@ export class Game extends Scene {
 		}
 
 		// Create player at the center of the game world
-		this.player = this.physics.add.sprite(centerX, centerY, 'player');
+		this.player = this.physics.add.sprite(centerX, centerY + 100, 'player');
 		this.player.setCollideWorldBounds(true);
-
-		// Adjust the player's hitbox to better match the character sprite
-		// The actual character occupies only a small portion of the frame
-		// Creating a smaller hitbox centered in the frame
-		this.player.body.setSize(24, 30); // Set to approximately half the frame size
-		this.player.body.setOffset(12, 20); // Center the hitbox in the lower part of the sprite
+		this.player.setOrigin(0.5, 1.0); // Set origin to bottom center of the sprite
+		this.player.setDepth(1); // Set depth to ensure player is above other objects
+		this.player.setSize(16, 24); // Set player size to match sprite dimensions
+		this.player.setOffset(16, 21); // Offset the hitbox to position it correctly relative to the visible sprite
+		this.player.setAlpha(1); // Set player alpha to fully visible
+		this.player.setTint(0xffffff); // Set player tint to white (no tint)
+		this.player.setVisible(true); // Ensure player is visible	
 
 		// Create player animations based on spritesheet rows with 6 frames per row
 		// Row 1: Idle animations
 		this.anims.create({
 			key: 'idle-down',
 			frames: this.anims.generateFrameNumbers('player', { start: 0, end: 5 }),
-			frameRate: 5,
+			frameRate: 6,
 			repeat: -1
 		});
 
@@ -110,14 +132,14 @@ export class Game extends Scene {
 		this.anims.create({
 			key: 'move-right',
 			frames: this.anims.generateFrameNumbers('player', { start: 6, end: 11 }),
-			frameRate: 10,
+			frameRate: 6,
 			repeat: -1
 		});
 
 		this.anims.create({
 			key: 'move-left',
 			frames: this.anims.generateFrameNumbers('player', { start: 6, end: 11 }),
-			frameRate: 10,
+			frameRate: 6,
 			repeat: -1
 		});
 
@@ -125,7 +147,7 @@ export class Game extends Scene {
 		this.anims.create({
 			key: 'move-up',
 			frames: this.anims.generateFrameNumbers('player', { start: 12, end: 17 }),
-			frameRate: 10,
+			frameRate: 6,
 			repeat: -1
 		});
 
@@ -133,7 +155,7 @@ export class Game extends Scene {
 		this.anims.create({
 			key: 'move-down',
 			frames: this.anims.generateFrameNumbers('player', { start: 18, end: 23 }),
-			frameRate: 10,
+			frameRate: 6,
 			repeat: -1
 		});
 
@@ -142,6 +164,9 @@ export class Game extends Scene {
 
 		// Enable collision between player and rocks
 		this.physics.add.collider(this.player, this.rocks);
+
+		// Enable collision between player and walls
+		this.physics.add.collider(this.player, this.walls);
 
 		// Add virtual joystick
 		const rexPlugin = this.plugins.get('rexvirtualjoystickplugin') as any;
@@ -158,6 +183,77 @@ export class Game extends Scene {
 		// this.dumpJoyStickState();
 
 		EventBus.emit('current-scene-ready', this);
+	}
+
+	createBasecamp(centerX: number, centerY: number) {
+		// Define basecamp dimensions
+		const basecampWidth = 224;
+		const basecampHeight = 128;
+		const wallThickness = 16;
+		const doorWidth = 32;
+
+		// Calculate basecamp boundaries
+		const left = centerX - basecampWidth / 2;
+		const right = centerX + basecampWidth / 2;
+		const top = centerY - basecampHeight / 2;
+		const bottom = centerY + basecampHeight / 2;
+
+		// Create walls
+		// Top wall (with door in the middle)
+		// Left section - horizontal wall
+		for (let x = left; x < centerX - doorWidth / 2; x += 48) {
+			const width = Math.min(48, centerX - doorWidth / 2 - x);
+			this.walls.create(x, top, 'wall').setOrigin(0, 0).refreshBody()
+		}
+
+		// Right section - horizontal wall
+		for (let x = centerX + doorWidth / 2; x < right; x += 48) {
+			const width = Math.min(48, right - x);
+			this.walls.create(x, top, 'wall').setOrigin(0, 0).refreshBody()
+		}
+
+		// Bottom wall (with door in the middle)
+		// Left section - horizontal wall
+		for (let x = left; x < centerX - doorWidth / 2; x += 48) {
+			const width = Math.min(48, centerX - doorWidth / 2 - x);
+			this.walls.create(x, bottom - wallThickness, 'wall').setOrigin(0, 0).refreshBody()
+		}
+
+		// Right section - horizontal wall
+		for (let x = centerX + doorWidth / 2; x < right; x += 48) {
+			const width = Math.min(48, right - x);
+			this.walls.create(x, bottom - wallThickness, 'wall').setOrigin(0, 0).refreshBody()
+		}
+
+		// Left wall (no door) - vertical wall
+		for (let y = top + wallThickness; y < bottom - wallThickness; y += 48) {
+			const height = Math.min(48, bottom - wallThickness - y);
+			this.walls.create(left, y, 'wall-vertical').setOrigin(0, 0).refreshBody()
+		}
+
+		// Right wall (no door) - vertical wall
+		for (let y = top + wallThickness; y < bottom - wallThickness; y += 48) {
+			const height = Math.min(48, bottom - wallThickness - y);
+			this.walls.create(right - wallThickness, y, 'wall-vertical').setOrigin(0, 0).refreshBody()
+		}
+
+		// Create doors
+		this.createDoor(centerX, top + wallThickness / 2); // Top door
+		this.createDoor(centerX, bottom - wallThickness / 2); // Bottom door
+
+		// Add a label for the basecamp
+		const text = this.add.text(centerX, top - 30, 'BASECAMP', {
+			fontFamily: 'Arial',
+			fontSize: '24px',
+			color: '#000000'
+		}).setOrigin(0.5);
+	}
+
+	createDoor(x, y) {
+		const door = this.doors.create(x, y, 'door');
+		// door.setOrigin(0.5);
+		door.width = 32;
+		door.refreshBody(); // Required after resize to update physics body
 	}
 
 	update() {
