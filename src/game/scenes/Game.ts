@@ -57,7 +57,7 @@ export class Game extends Scene {
 		this.createBasecamp(centerX, centerY);
 
 		// Helper function to check if position is in the clear area
-		const isInsideClearArea = (x, y) => {
+		const isInsideClearArea = (x: number, y: number) => {
 			return x >= clearAreaLeft && x <= clearAreaRight &&
 				y >= clearAreaTop && y <= clearAreaBottom;
 		};
@@ -80,9 +80,11 @@ export class Game extends Scene {
 			}
 
 			// Add some natural-looking variation to tree size
-			const scale = Phaser.Math.FloatBetween(1, 1.4);
 			const tree = this.trees.create(x, y, 'tree');
-			tree.setScale(scale);
+			tree.setScale(1 / 3);            // Scale down from 48x48 to 16x16
+			tree.setOrigin(0.5, 0.5);      // Center the sprite
+			tree.setSize(16, 16);          // Set physics body size
+			tree.refreshBody();            // Update physics body
 		}
 
 		// Place some rocks across the map
@@ -249,7 +251,7 @@ export class Game extends Scene {
 		}).setOrigin(0.5);
 	}
 
-	createDoor(x, y) {
+	createDoor(x: number, y: number) {
 		const door = this.doors.create(x, y, 'door');
 		// door.setOrigin(0.5);
 		door.width = 32;
@@ -258,7 +260,7 @@ export class Game extends Scene {
 
 	update() {
 		// Player speed
-		const speed = 200;
+		const speed = 100;
 
 		// Reset velocity and track if player is moving
 		this.player.setVelocity(0);

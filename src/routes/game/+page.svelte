@@ -28,18 +28,18 @@
 
 		const scene = phaserRef.scene as Game;
 
-		if (scene)
-		{
+		// if (scene)
+		// {
 
-			// Get the update logo position
-			(scene as Game).moveLogo(({ x, y }) => {
+		// 	// Get the update logo position
+		// 	(scene as Game).moveLogo(({ x, y }) => {
 
-				spritePosition.x = x;
-				spritePosition.y = y;
+		// 		spritePosition.x = x;
+		// 		spritePosition.y = y;
 
-			});
+		// 	});
 
-		}
+		// }
 
 	}
 
