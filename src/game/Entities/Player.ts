@@ -1,11 +1,18 @@
 import type { Game } from '../scenes/Game';
+import type { Slime } from './Slime';
 
 export class Player {
     private scene: Game;
     private player: Phaser.Physics.Arcade.Sprite;
-    private playerDirection: string = 'down';
     private isPlayerMoving: boolean = false;
     private speed = 100;
+
+    // Attack properties
+    private attackRange: number = 24; // Range in pixels for automatic attack
+    private attackDamage: number = 5; // Damage per attack
+    private attackCooldown: number = 400; // Cooldown between attacks in milliseconds
+    private canAttack: boolean = true; // Flag to track if player can attack
+    private lastAttackTime: number = 0; // Timestamp of the last attack
 
     constructor(scene: Game, x: number, y: number) {
         this.scene = scene;
@@ -66,15 +73,59 @@ export class Player {
                 frameRate: 6,
                 repeat: -1
             });
+
+            // Add attack animations
+            // Bottom attack (row 7)
+            this.scene.anims.create({
+                key: 'attack-down',
+                frames: this.scene.anims.generateFrameNumbers('player', { start: 36, end: 39 }),
+                frameRate: 14,
+                repeat: 0
+            });
+
+            // Right attack (row 8)
+            this.scene.anims.create({
+                key: 'attack-right',
+                frames: this.scene.anims.generateFrameNumbers('player', { start: 42, end: 45 }),
+                frameRate: 14,
+                repeat: 0
+            });
+
+            // Left attack (row 8)
+            this.scene.anims.create({
+                key: 'attack-left',
+                frames: this.scene.anims.generateFrameNumbers('player', { start: 42, end: 45 }),
+                frameRate: 14,
+                repeat: 0
+            });
+
+            // Top attack (row 9)
+            this.scene.anims.create({
+                key: 'attack-up',
+                frames: this.scene.anims.generateFrameNumbers('player', { start: 48, end: 51 }),
+                frameRate: 14,
+                repeat: 0
+            });
         }
     }
 
-    update(controls: { velocityX: number, velocityY: number }, cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys) {
-        const { velocityX, velocityY } = controls;
+    update() {
+        let velocityX = 0;
+        let velocityY = 0;
+
+        // Process joystick input
+        if (this.scene.joystick && this.scene.joystick.force > 0) {
+            const angleRad = Phaser.Math.DegToRad(this.scene.joystick.angle);
+            velocityX = Math.cos(angleRad) * this.speed;
+            velocityY = Math.sin(angleRad) * this.speed;
+        }
         this.isPlayerMoving = velocityX !== 0 || velocityY !== 0;
 
         this.player.setVelocity(velocityX, velocityY);
-        this.updateAnimation(velocityX, velocityY, cursorKeys);
+        this.updateAnimation(velocityX, velocityY, this.scene.cursorKeys);
+
+        // Check for nearby enemies to attack
+        this.checkForAttack();
     }
 
     updateAnimation(velocityX: number, velocityY: number, cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys) {
@@ -122,12 +173,10 @@ export class Player {
                 // Moving horizontally
                 if (velocityX > 0) {
                     // Right movement
-                    this.playerDirection = 'right';
                     this.player.setFlipX(false);
                     this.player.anims.play('move-right', true);
                 } else {
                     // Left movement
-                    this.playerDirection = 'left';
                     this.player.setFlipX(true); // Flip sprite horizontally for left movement
                     this.player.anims.play('move-left', true);
                 }
@@ -135,12 +184,10 @@ export class Player {
                 // Moving vertically
                 if (velocityY > 0) {
                     // Down movement
-                    this.playerDirection = 'down';
                     this.player.setFlipX(false);
                     this.player.anims.play('move-down', true);
                 } else {
                     // Up movement
-                    this.playerDirection = 'up';
                     this.player.setFlipX(false);
                     this.player.anims.play('move-up', true);
                 }
@@ -153,7 +200,90 @@ export class Player {
         }
     }
 
+    checkForAttack() {
+        // Check if we're still on cooldown
+        const currentTime = this.scene.time.now;
+        if (!this.canAttack && currentTime - this.lastAttackTime >= this.attackCooldown) {
+            this.canAttack = true;
+        }
+
+        // If we can't attack, don't proceed
+        if (!this.canAttack) return;
+
+        // Get all slimes from the scene
+        const slimes = (this.scene.enemies?.getChildren() || []) as Phaser.Physics.Arcade.Sprite[];
+
+        // Find the closest slime within attack range
+        let closestSlime: Phaser.Physics.Arcade.Sprite | null = null;
+
+        for (const enemySprite of slimes) {
+            const distance = Phaser.Math.Distance.Between(
+                this.player.x, this.player.y,
+                enemySprite.x, enemySprite.y
+            );
+
+            if (distance <= this.attackRange) {
+                closestSlime = enemySprite;
+                continue;
+            }
+        }
+
+        // If we found a slime in range, attack it
+        if (closestSlime) {
+            this.attack(closestSlime);
+        }
+    }
+
+    attack(targetSprite: Phaser.Physics.Arcade.Sprite) {
+        console.log(`attack (${targetSprite.x}, ${targetSprite.y})`);
+
+        // Start cooldown
+        this.canAttack = false;
+        this.lastAttackTime = this.scene.time.now;
+
+        // Determine attack direction based on target position
+        const directionX = targetSprite.x - this.player.x;
+        const directionY = targetSprite.y - this.player.y;
+
+        // Play the appropriate attack animation based on direction
+        if (Math.abs(directionX) > Math.abs(directionY)) {
+            // Horizontal attack
+            if (directionX > 0) {
+                // Right attack
+                this.player.setFlipX(false);
+                this.player.anims.play('attack-right', true);
+            } else {
+                // Left attack (use right animation, but flip)
+                this.player.setFlipX(true);
+                this.player.anims.play('attack-left', true);
+            }
+        } else {
+            // Vertical attack
+            if (directionY > 0) {
+                // Down attack
+                this.player.anims.play('attack-down', true);
+            } else {
+                // Up attack
+                this.player.anims.play('attack-up', true);
+            }
+        }
+
+        // After animation completes, trigger the event to notify Game scene
+        this.player.once('animationcomplete', () => {
+            // Emit attack event with target information
+            this.scene.events.emit('player-attack', targetSprite);
+        });
+    }
+
     getSprite() {
         return this.player;
+    }
+
+    getAttackDamage() {
+        return this.attackDamage;
+    }
+
+    getAttackRange() {
+        return this.attackRange;
     }
 }

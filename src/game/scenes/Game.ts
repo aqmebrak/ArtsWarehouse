@@ -117,6 +117,9 @@ export class Game extends Scene {
 		this.cursorKeys = this.input.keyboard?.createCursorKeys();
 
 		EventBus.emit('current-scene-ready', this);
+
+		// Add player attack event listener
+		this.events.on('player-attack', this.handlePlayerAttack, this);
 	}
 
 	setupSlimeSpawner() {
@@ -208,31 +211,34 @@ export class Game extends Scene {
 	}
 
 	update() {
-		// Calculate movement controls
-		const controls = this.getPlayerControls();
-
 		// Update the player entity with the controls
 		if (this.playerEntity) {
-			this.playerEntity.update(controls, this.cursorKeys);
+			this.playerEntity.update();
 		}
 
 		// Update all slimes to move toward the player
 		this.slimeEntities.forEach(slime => slime.update());
 	}
 
-	// Extract control logic to make update() cleaner
-	getPlayerControls() {
-		const speed = 100;
-		let velocityX = 0;
-		let velocityY = 0;
+	handlePlayerAttack(targetSprite: Phaser.Physics.Arcade.Sprite) {
+		console.log('Player attacked:', targetSprite);
+		if (!this.playerEntity) return;
 
-		// Process joystick input
-		if (this.joystick && this.joystick.force > 0) {
-			const angleRad = Phaser.Math.DegToRad(this.joystick.angle);
-			velocityX = Math.cos(angleRad) * speed;
-			velocityY = Math.sin(angleRad) * speed;
+		// Find the slime entity associated with this sprite
+		const attackedSlime = this.slimeEntities.find(
+			slime => slime.getSprite() === targetSprite
+		);
+
+		if (attackedSlime) {
+			// Apply damage from player to slime
+			attackedSlime.takeDamage(this.playerEntity.getAttackDamage());
+
+			// If the slime was destroyed, remove it from our array
+			if (!targetSprite.active) {
+				this.slimeEntities = this.slimeEntities.filter(
+					slime => slime.getSprite() !== targetSprite
+				);
+			}
 		}
-
-		return { velocityX, velocityY };
 	}
 }

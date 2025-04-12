@@ -6,6 +6,7 @@ export class Slime {
     private slime: Phaser.Physics.Arcade.Sprite;
     private target: Player;
     private speed: number = 40;
+    private health: number = 10; // Initialize slime health to 10 points
 
     constructor(scene: Game, x: number, y: number, target: Player) {
         this.scene = scene;
@@ -49,7 +50,7 @@ export class Slime {
     }
 
     update() {
-        if (!this.slime.active) return;
+        if (!this.slime.active || this.health <= 0) return;
 
         // Get target position
         const targetSprite = this.target.getSprite();
@@ -82,6 +83,25 @@ export class Slime {
 
     getSprite() {
         return this.slime;
+    }
+
+    takeDamage(amount: number) {
+        this.health -= amount;
+        
+        // Flash the slime red when damaged
+        this.slime.setTint(0xff0000);
+        this.scene.time.delayedCall(100, () => {
+            this.slime.clearTint();
+        });
+        
+        // If health drops to zero or below, destroy the slime
+        if (this.health <= 0) {
+            this.destroy();
+        }
+    }
+
+    getHealth() {
+        return this.health;
     }
 
     destroy() {

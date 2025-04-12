@@ -22,7 +22,6 @@ export class Basecamp {
 
         this.createWalls();
         this.createDoors();
-        this.addLabel();
     }
 
     createWalls() {
@@ -94,15 +93,6 @@ export class Basecamp {
         // Create bottom door
         const bottomDoor = new Door(this.scene, this.centerX, bottom - this.wallThickness / 2);
         this.doors.push(bottomDoor);
-    }
-
-    addLabel() {
-        const top = this.centerY - this.height / 2;
-        this.scene.add.text(this.centerX, top - 30, 'BASECAMP', {
-            fontFamily: 'Arial',
-            fontSize: '24px',
-            color: '#000000'
-        }).setOrigin(0.5);
     }
 
     getWalls() {
