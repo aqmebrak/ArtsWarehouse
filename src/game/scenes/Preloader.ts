@@ -46,6 +46,12 @@ export class Preloader extends Scene {
 		this.load.image('grass', 'grass.png');
 		this.load.image('tree', 'oak_tree.png');
 
+		// Load enemy assets
+		this.load.spritesheet('slime', 'slime.png', {
+			frameWidth: 32,
+			frameHeight: 32
+		});
+
 		// Load basecamp assets
 		this.load.spritesheet('wall', 'walls.png', {
 			frameWidth: 48,  // Width of the largest element in the spritesheet
