@@ -1,17 +1,26 @@
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
+import { Player } from '../Entities/Player';
+import { Tree } from '../Entities/Tree';
+import { Rock } from '../Entities/Rock';
+import { Basecamp } from '../Entities/Basecamp';
 
 export class Game extends Scene {
 	// Game variables
-	player: any;
+	private playerEntity: Player | undefined;
 	joystick: any;
 	cursorKeys: any;
-	trees: any;
-	rocks: any;
-	walls: any;
-	doors: any;
-	playerDirection: string = 'down'; // Track player direction for animations
-	isPlayerMoving: boolean = false;
+
+	// Entity collections
+	private treeEntities: Tree[] = [];
+	private rockEntities: Rock[] = [];
+	private basecamp: Basecamp | undefined;
+
+	// Physics groups for collision detection - these need to be public so entities can access them
+	trees: Phaser.Physics.Arcade.StaticGroup;
+	rocks: Phaser.Physics.Arcade.StaticGroup;
+	walls: Phaser.Physics.Arcade.StaticGroup;
+	doors: Phaser.Physics.Arcade.StaticGroup;
 
 	constructor() {
 		super('Game');
@@ -26,35 +35,28 @@ export class Game extends Scene {
 		backgroundImage.setOrigin(0, 0);
 		backgroundImage.setPosition(0, 0);
 
-		// Create trees group with physics
+		// Create physics groups
 		this.trees = this.physics.add.staticGroup();
-
-		// Create rocks group with physics
 		this.rocks = this.physics.add.staticGroup();
-
-		// Create walls group with physics
 		this.walls = this.physics.add.staticGroup();
-
-		// Create doors group with physics
 		this.doors = this.physics.add.staticGroup();
 
 		// Set world center
 		const centerX = width / 2;
 		const centerY = height / 2;
 
-		// Define basecamp dimensions
-		const basecampWidth = 224;
-		const basecampHeight = 128;
+		// Create basecamp and store it
+		this.basecamp = new Basecamp(this, centerX, centerY);
+
+		// Define basecamp dimensions for clear area calculation
+		const basecampDimensions = this.basecamp.getDimensions();
 		const clearPadding = 32; // Additional clear area around the basecamp
 
 		// Calculate clear area boundaries
-		const clearAreaLeft = centerX - (basecampWidth / 2) - clearPadding;
-		const clearAreaRight = centerX + (basecampWidth / 2) + clearPadding;
-		const clearAreaTop = centerY - (basecampHeight / 2) - clearPadding;
-		const clearAreaBottom = centerY + (basecampHeight / 2) + clearPadding;
-
-		// Create basecamp in the center
-		this.createBasecamp(centerX, centerY);
+		const clearAreaLeft = centerX - (basecampDimensions.width / 2) - clearPadding;
+		const clearAreaRight = centerX + (basecampDimensions.width / 2) + clearPadding;
+		const clearAreaTop = centerY - (basecampDimensions.height / 2) - clearPadding;
+		const clearAreaBottom = centerY + (basecampDimensions.height / 2) + clearPadding;
 
 		// Helper function to check if position is in the clear area
 		const isInsideClearArea = (x: number, y: number) => {
@@ -62,113 +64,25 @@ export class Game extends Scene {
 				y >= clearAreaTop && y <= clearAreaBottom;
 		};
 
-		// Place only a few trees randomly across the map
-		const numberOfTrees = 60; // Adjust this number to control tree density
-		const worldBoundsX = width;
-		const worldBoundsY = height;
+		// Place environment objects
+		this.createEnvironment(width, height, isInsideClearArea);
 
-		for (let i = 0; i < numberOfTrees; i++) {
-			// Generate random positions within the world bounds
-			const x = Phaser.Math.Between(0, worldBoundsX);
-			const y = Phaser.Math.Between(0, worldBoundsY);
+		// Create the player entity
+		this.playerEntity = new Player(this, centerX, centerY);
 
-			// Only place trees outside the clear rectangular area
-			// If position is inside clear area, try again
-			if (isInsideClearArea(x, y)) {
-				i--; // Try again
-				continue;
-			}
+		// Get the player sprite for physics collisions
+		const playerSprite = this.playerEntity.getSprite();
 
-			// Add some natural-looking variation to tree size
-			const tree = this.trees.create(x, y, 'tree');
-			tree.setScale(1 / 3);            // Scale down from 48x48 to 16x16
-			tree.setOrigin(0.5, 0.5);      // Center the sprite
-			tree.setSize(16, 16);          // Set physics body size
-			tree.refreshBody();            // Update physics body
-		}
+		// Enable collisions for the player with environment
+		this.physics.add.collider(playerSprite, this.trees);
+		this.physics.add.collider(playerSprite, this.rocks);
+		this.physics.add.collider(playerSprite, this.walls);
 
-		// Place some rocks across the map
-		const numberOfRocks = 35; // Adjust as needed
-
-		for (let i = 0; i < numberOfRocks; i++) {
-			// Generate random positions within the world bounds
-			const x = Phaser.Math.Between(0, worldBoundsX);
-			const y = Phaser.Math.Between(0, worldBoundsY);
-
-			// Only place rocks outside the clear rectangular area
-			if (isInsideClearArea(x, y)) {
-				i--; // Try again
-				continue;
-			}
-
-			// Select a random rock type/frame from the spritesheet
-			const frame = Phaser.Math.Between(0, 3); // Adjust based on actual frames in your spritesheet
-
-			// Add some natural-looking variation to rock size
-			const scale = Phaser.Math.FloatBetween(0.8, 1.2);
-			const rock = this.rocks.create(x, y, 'rocks', frame);
-			rock.setScale(scale);
-		}
-
-		// Create player at the center of the game world
-		this.player = this.physics.add.sprite(centerX, centerY + 100, 'player');
-		this.player.setCollideWorldBounds(true);
-		this.player.setOrigin(0.5, 1.0); // Set origin to bottom center of the sprite
-		this.player.setDepth(1); // Set depth to ensure player is above other objects
-		this.player.setSize(16, 24); // Set player size to match sprite dimensions
-		this.player.setOffset(16, 21); // Offset the hitbox to position it correctly relative to the visible sprite
-		this.player.setAlpha(1); // Set player alpha to fully visible
-		this.player.setTint(0xffffff); // Set player tint to white (no tint)
-		this.player.setVisible(true); // Ensure player is visible	
-
-		// Create player animations based on spritesheet rows with 6 frames per row
-		// Row 1: Idle animations
-		this.anims.create({
-			key: 'idle-down',
-			frames: this.anims.generateFrameNumbers('player', { start: 0, end: 5 }),
-			frameRate: 6,
-			repeat: -1
-		});
-
-		// Row 2: Moving right (and flipped for left)
-		this.anims.create({
-			key: 'move-right',
-			frames: this.anims.generateFrameNumbers('player', { start: 6, end: 11 }),
-			frameRate: 6,
-			repeat: -1
-		});
-
-		this.anims.create({
-			key: 'move-left',
-			frames: this.anims.generateFrameNumbers('player', { start: 6, end: 11 }),
-			frameRate: 6,
-			repeat: -1
-		});
-
-		// Row 3: Moving up
-		this.anims.create({
-			key: 'move-up',
-			frames: this.anims.generateFrameNumbers('player', { start: 12, end: 17 }),
-			frameRate: 6,
-			repeat: -1
-		});
-
-		// Row 4: Moving down
-		this.anims.create({
-			key: 'move-down',
-			frames: this.anims.generateFrameNumbers('player', { start: 18, end: 23 }),
-			frameRate: 6,
-			repeat: -1
-		});
-
-		// Enable collision between player and trees
-		this.physics.add.collider(this.player, this.trees);
-
-		// Enable collision between player and rocks
-		this.physics.add.collider(this.player, this.rocks);
-
-		// Enable collision between player and walls
-		this.physics.add.collider(this.player, this.walls);
+		// Debug: Log the number of objects in each physics group
+		console.log("Trees in group:", this.trees.getChildren().length);
+		console.log("Rocks in group:", this.rocks.getChildren().length);
+		console.log("Walls in group:", this.walls.getChildren().length);
+		console.log("Doors in group:", this.doors.getChildren().length);
 
 		// Add virtual joystick
 		const rexPlugin = this.plugins.get('rexvirtualjoystickplugin') as any;
@@ -182,162 +96,74 @@ export class Game extends Scene {
 
 		// Create cursor keys for desktop controls
 		this.cursorKeys = this.input.keyboard?.createCursorKeys();
-		// this.dumpJoyStickState();
 
 		EventBus.emit('current-scene-ready', this);
 	}
 
-	createBasecamp(centerX: number, centerY: number) {
-		// Define basecamp dimensions
-		const basecampWidth = 224;
-		const basecampHeight = 128;
-		const wallThickness = 16;
-		const doorWidth = 32;
+	createEnvironment(width: number, height: number, isInsideClearArea: (x: number, y: number) => boolean) {
+		// Place trees randomly across the map
+		const numberOfTrees = 25;
+		const worldBoundsX = width;
+		const worldBoundsY = height;
 
-		// Calculate basecamp boundaries
-		const left = centerX - basecampWidth / 2;
-		const right = centerX + basecampWidth / 2;
-		const top = centerY - basecampHeight / 2;
-		const bottom = centerY + basecampHeight / 2;
+		for (let i = 0; i < numberOfTrees; i++) {
+			// Generate random positions within the world bounds
+			const x = Phaser.Math.Between(0, worldBoundsX);
+			const y = Phaser.Math.Between(0, worldBoundsY);
 
-		// Create walls
-		// Top wall (with door in the middle)
-		// Left section - horizontal wall
-		for (let x = left; x < centerX - doorWidth / 2; x += 48) {
-			const width = Math.min(48, centerX - doorWidth / 2 - x);
-			this.walls.create(x, top, 'wall').setOrigin(0, 0).refreshBody()
+			// Only place trees outside the clear area
+			if (isInsideClearArea(x, y)) {
+				i--;
+				continue;
+			}
+
+			// Create tree entity and add to collection
+			const treeEntity = new Tree(this, x, y);
+			this.treeEntities.push(treeEntity);
 		}
 
-		// Right section - horizontal wall
-		for (let x = centerX + doorWidth / 2; x < right; x += 48) {
-			const width = Math.min(48, right - x);
-			this.walls.create(x, top, 'wall').setOrigin(0, 0).refreshBody()
+		// Place rocks randomly across the map
+		const numberOfRocks = 15;
+		for (let i = 0; i < numberOfRocks; i++) {
+			const x = Phaser.Math.Between(0, worldBoundsX);
+			const y = Phaser.Math.Between(0, worldBoundsY);
+
+			if (isInsideClearArea(x, y)) {
+				i--;
+				continue;
+			}
+
+			const frame = Phaser.Math.Between(0, 3);
+
+			// Create rock entity and add to collection
+			const rockEntity = new Rock(this, x, y, frame);
+			this.rockEntities.push(rockEntity);
 		}
-
-		// Bottom wall (with door in the middle)
-		// Left section - horizontal wall
-		for (let x = left; x < centerX - doorWidth / 2; x += 48) {
-			const width = Math.min(48, centerX - doorWidth / 2 - x);
-			this.walls.create(x, bottom - wallThickness, 'wall').setOrigin(0, 0).refreshBody()
-		}
-
-		// Right section - horizontal wall
-		for (let x = centerX + doorWidth / 2; x < right; x += 48) {
-			const width = Math.min(48, right - x);
-			this.walls.create(x, bottom - wallThickness, 'wall').setOrigin(0, 0).refreshBody()
-		}
-
-		// Left wall (no door) - vertical wall
-		for (let y = top + wallThickness; y < bottom - wallThickness; y += 48) {
-			const height = Math.min(48, bottom - wallThickness - y);
-			this.walls.create(left, y, 'wall-vertical').setOrigin(0, 0).refreshBody()
-		}
-
-		// Right wall (no door) - vertical wall
-		for (let y = top + wallThickness; y < bottom - wallThickness; y += 48) {
-			const height = Math.min(48, bottom - wallThickness - y);
-			this.walls.create(right - wallThickness, y, 'wall-vertical').setOrigin(0, 0).refreshBody()
-		}
-
-		// Create doors
-		this.createDoor(centerX, top + wallThickness / 2); // Top door
-		this.createDoor(centerX, bottom - wallThickness / 2); // Bottom door
-
-		// Add a label for the basecamp
-		const text = this.add.text(centerX, top - 30, 'BASECAMP', {
-			fontFamily: 'Arial',
-			fontSize: '24px',
-			color: '#000000'
-		}).setOrigin(0.5);
-	}
-
-	createDoor(x: number, y: number) {
-		const door = this.doors.create(x, y, 'door');
-		// door.setOrigin(0.5);
-		door.width = 32;
-		door.refreshBody(); // Required after resize to update physics body
 	}
 
 	update() {
-		// Player speed
+		// Calculate movement controls
+		const controls = this.getPlayerControls();
+
+		// Update the player entity with the controls
+		if (this.playerEntity) {
+			this.playerEntity.update(controls, this.cursorKeys);
+		}
+	}
+
+	// Extract control logic to make update() cleaner
+	getPlayerControls() {
 		const speed = 100;
-
-		// Reset velocity and track if player is moving
-		this.player.setVelocity(0);
-		this.isPlayerMoving = false;
-
-		// Variables to track movement direction
 		let velocityX = 0;
 		let velocityY = 0;
 
-		// Handle joystick input
-		if (this.joystick.force > 0) {
-			// Convert angle to radians and calculate velocity components
+		// Process joystick input
+		if (this.joystick && this.joystick.force > 0) {
 			const angleRad = Phaser.Math.DegToRad(this.joystick.angle);
 			velocityX = Math.cos(angleRad) * speed;
 			velocityY = Math.sin(angleRad) * speed;
-
-			// Set player velocity based on joystick angle
-			this.player.setVelocity(velocityX, velocityY);
-			this.isPlayerMoving = true;
 		}
 
-		// Handle keyboard input as alternative
-		if (this.cursorKeys.left.isDown) {
-			velocityX = -speed;
-			this.player.setVelocityX(-speed);
-			this.isPlayerMoving = true;
-		} else if (this.cursorKeys.right.isDown) {
-			velocityX = speed;
-			this.player.setVelocityX(speed);
-			this.isPlayerMoving = true;
-		}
-
-		if (this.cursorKeys.up.isDown) {
-			velocityY = -speed;
-			this.player.setVelocityY(-speed);
-			this.isPlayerMoving = true;
-		} else if (this.cursorKeys.down.isDown) {
-			velocityY = speed;
-			this.player.setVelocityY(speed);
-			this.isPlayerMoving = true;
-		}
-
-		// Determine animation based on direction and movement
-		if (this.isPlayerMoving) {
-			// Determine the primary direction of movement
-			if (Math.abs(velocityX) > Math.abs(velocityY)) {
-				// Moving horizontally
-				if (velocityX > 0) {
-					// Right movement
-					this.playerDirection = 'right';
-					this.player.setFlipX(false);
-					this.player.anims.play('move-right', true);
-				} else {
-					// Left movement
-					this.playerDirection = 'left';
-					this.player.setFlipX(true); // Flip sprite horizontally for left movement
-					this.player.anims.play('move-left', true);
-				}
-			} else {
-				// Moving vertically
-				if (velocityY > 0) {
-					// Down movement
-					this.playerDirection = 'down';
-					this.player.setFlipX(false);
-					this.player.anims.play('move-down', true);
-				} else {
-					// Up movement
-					this.playerDirection = 'up';
-					this.player.setFlipX(false);
-					this.player.anims.play('move-up', true);
-				}
-			}
-		} else {
-			// Player is idle - play idle animation based on last direction
-			this.player.anims.play('idle-down', true);
-			// For now we just use the idle-down animation
-			// Later we can add directional idle animations if needed
-		}
+		return { velocityX, velocityY };
 	}
 }
