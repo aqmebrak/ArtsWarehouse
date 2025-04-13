@@ -67,6 +67,12 @@ export class Preloader extends Scene {
 			frameHeight: 16
 		});
 
+		// Load chicken spritesheet
+		this.load.spritesheet('chicken', 'Chicken.png', {
+			frameWidth: 32,
+			frameHeight: 32
+		});
+
 		// Load player spritesheet
 		// With 6 frames per row:
 		// - Row 1 (frames 0-5): Idle animation

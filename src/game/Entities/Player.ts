@@ -337,7 +337,7 @@ export class Player {
     }
 
     getSprite() {
-        return this.player;
+        return this.player
     }
 
     getAttackDamage() {

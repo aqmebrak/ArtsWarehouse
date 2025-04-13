@@ -172,6 +172,13 @@ export class Slime {
     }
 
     destroy() {
+        // Drop a chicken at the slime's position before destroying it
+        if (this.slime.active) {
+            const x = this.slime.x;
+            const y = this.slime.y;
+            this.scene.dropChicken(x, y);
+        }
+
         this.slime.destroy();
     }
 

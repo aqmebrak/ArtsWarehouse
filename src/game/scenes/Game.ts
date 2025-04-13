@@ -6,6 +6,7 @@ import { Rock } from '../Entities/Rock';
 import { Basecamp } from '../Entities/Basecamp';
 import { Door } from '../Entities/Door';
 import { Slime } from '../Entities/Slime';
+import { Chicken } from '../Entities/Chicken';
 
 export class Game extends Scene {
 	// Game variables
@@ -28,6 +29,13 @@ export class Game extends Scene {
 	walls: Phaser.Physics.Arcade.StaticGroup;
 	doors: Phaser.Physics.Arcade.StaticGroup;
 	enemies: Phaser.Physics.Arcade.Group;
+	chickens: Phaser.Physics.Arcade.StaticGroup;
+
+	// Add chickens group and counter
+	private chickenEntities: Chicken[] = [];
+	private chickenCount: number = 0;
+	private chickenText: Phaser.GameObjects.Text;
+	private chickenIcon: Phaser.GameObjects.Image;
 
 	// UI elements
 	private healthText: Phaser.GameObjects.Text;
@@ -51,6 +59,7 @@ export class Game extends Scene {
 		this.walls = this.physics.add.staticGroup();
 		this.doors = this.physics.add.staticGroup();
 		this.enemies = this.physics.add.group();
+		this.chickens = this.physics.add.staticGroup();
 
 		// Set world center
 		const centerX = width / 2;
@@ -88,7 +97,17 @@ export class Game extends Scene {
 		this.physics.add.collider(playerSprite, this.trees);
 		this.physics.add.collider(playerSprite, this.rocks);
 		this.physics.add.collider(playerSprite, this.walls);
-		// this.physics.add.collider(playerSprite, this.doors);
+
+		// Enable collisions for the player with chickens (overlap to trigger collection)
+		this.physics.add.overlap(
+			playerSprite,
+			this.chickens,
+			(player, chicken) => {
+				this.collectChicken(player, chicken);
+			},
+			null,
+			this
+		);
 
 		// Set up slime collisions
 		this.physics.add.collider(this.enemies, this.trees);
@@ -127,6 +146,21 @@ export class Game extends Scene {
 		});
 		this.healthText.setScrollFactor(0); // Fix to camera so it stays on screen
 		this.healthText.setDepth(100); // Make sure it renders on top
+
+		// Add chicken counter and icon
+		this.chickenIcon = this.add.image(16 + 16, 60, 'chicken', 0);  // Use first frame of chicken sprite
+		this.chickenIcon.setScale(0.8);  // Make it slightly smaller
+		this.chickenIcon.setScrollFactor(0);  // Fix to camera
+		this.chickenIcon.setDepth(100);  // Render on top
+
+		this.chickenText = this.add.text(16 + 40, 50, `x ${this.chickenCount}`, {
+			fontSize: '18px',
+			color: '#ffffff',
+			backgroundColor: '#000000',
+			padding: { x: 10, y: 5 }
+		});
+		this.chickenText.setScrollFactor(0);
+		this.chickenText.setDepth(100);
 	}
 
 	setupSlimeSpawner() {
@@ -247,7 +281,45 @@ export class Game extends Scene {
 				this.slimeEntities = this.slimeEntities.filter(
 					slime => slime.getSprite() !== targetSprite
 				);
+
+				// Drop chicken at slime's location
+				this.dropChicken(targetSprite.x, targetSprite.y);
 			}
+		}
+	}
+
+	// Method to drop chicken at location (called by slime when it dies)
+	dropChicken(x: number, y: number) {
+		const chicken = new Chicken(this, x, y);
+		this.chickenEntities.push(chicken);
+	}
+
+	// Method to handle chicken collection
+	collectChicken(playerObj: Phaser.GameObjects.GameObject, chickenObj: Phaser.GameObjects.GameObject) {
+		// Cast the objects back to sprites since we know they are sprites
+		const playerSprite = playerObj as Phaser.Physics.Arcade.Sprite;
+		const chickenSprite = chickenObj as Phaser.Physics.Arcade.Sprite;
+
+		// Find the chicken entity associated with this sprite
+		const collectedChicken = this.chickenEntities.find(
+			chicken => chicken.getSprite() === chickenSprite
+		);
+
+		if (collectedChicken) {
+			// Increment counter and update UI
+			this.chickenCount++;
+			this.chickenText.setText(`x ${this.chickenCount}`);
+
+			// Play collection sound if you have one
+			// this.sound.play('collect');
+
+			// Remove the chicken
+			collectedChicken.collect();
+
+			// Remove from our tracking array
+			this.chickenEntities = this.chickenEntities.filter(
+				chicken => chicken.getSprite() !== chickenSprite
+			);
 		}
 	}
 }
