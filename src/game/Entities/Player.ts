@@ -7,9 +7,14 @@ export class Player {
     private isPlayerMoving: boolean = false;
     private speed = 100;
 
+    // Health properties
+    private health: number = 1000;
+    private isInvulnerable: boolean = false;
+    private invulnerabilityTime: number = 500; // 0.5 seconds of invulnerability after being hit
+
     // Attack properties
     private attackRange: number = 24; // Increased range from 24 to 50
-    private attackDamage: number = 5; // Damage per attack (updated to match slime health)
+    private attackDamage: number = 10; // Damage per attack (updated to match slime health)
     private attackCooldown: number = 400; // 1 second cooldown between attacks
     private canAttack: boolean = true; // Flag to track if player can attack
     private lastAttackTime: number = 0; // Timestamp of the last attack
@@ -293,6 +298,42 @@ export class Player {
 
         // Emit attack event with target information
         this.scene.events.emit('player-attack', targetSprite);
+    }
+
+    takeDamage(amount: number): void {
+        // If player is invulnerable, ignore damage
+        if (this.isInvulnerable) return;
+
+        // Apply damage
+        this.health -= amount;
+        console.log(`Player took ${amount} damage! Health: ${this.health}`);
+
+        // Flash player red to indicate damage
+        this.player.setTint(0xff0000);
+
+        // Make player briefly invulnerable
+        this.isInvulnerable = true;
+
+        // Reset tint and invulnerability after delay
+        this.scene.time.delayedCall(this.invulnerabilityTime, () => {
+            this.player.clearTint();
+            this.isInvulnerable = false;
+        });
+
+        // Check for death
+        if (this.health <= 0) {
+            this.die();
+        }
+    }
+
+    getHealth(): number {
+        return this.health;
+    }
+
+    private die(): void {
+        // Player death logic
+        console.log("Player has died!");
+        // You could trigger game over or respawn logic here
     }
 
     getSprite() {

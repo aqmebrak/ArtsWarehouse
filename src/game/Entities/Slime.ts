@@ -8,6 +8,14 @@ export class Slime {
     private speed: number = 40;
     private health: number = 10; // Initialize slime health to 10 points
 
+    // Attack properties
+    private attackRange: number = 10; // Much lower than player's 24
+    private attackDamage: number = 5; // Damage per attack as requested
+    private attackCooldown: number = 1500; // 1.5 seconds between attacks
+    private canAttack: boolean = true; // Flag to track if slime can attack
+    private lastAttackTime: number = 0; // Timestamp of the last attack
+    private isAttacking: boolean = false; // Flag to indicate if currently attacking
+
     constructor(scene: Game, x: number, y: number, target: Player) {
         this.scene = scene;
         this.target = target;
@@ -59,9 +67,19 @@ export class Slime {
         const directionX = targetSprite.x - this.slime.x;
         const directionY = targetSprite.y - this.slime.y;
 
-        // Normalize the direction vector
-        const length = Math.sqrt(directionX * directionX + directionY * directionY);
+        // Calculate distance to player
+        const distance = Math.sqrt(directionX * directionX + directionY * directionY);
 
+        // Check if within attack range
+        if (distance <= this.attackRange) {
+            this.checkForAttack();
+        } else {
+            // Move toward the player if not in attack range
+            this.moveTowardPlayer(directionX, directionY, distance);
+        }
+    }
+
+    private moveTowardPlayer(directionX: number, directionY: number, length: number) {
         if (length > 0) {
             const normalizedX = directionX / length;
             const normalizedY = directionY / length;
@@ -81,19 +99,68 @@ export class Slime {
         }
     }
 
+    private checkForAttack() {
+        // Don't attack if already attacking
+        if (this.isAttacking) return;
+
+        // Check cooldown
+        const currentTime = this.scene.time.now;
+        if (!this.canAttack && currentTime - this.lastAttackTime >= this.attackCooldown) {
+            this.canAttack = true;
+        }
+
+        // If can attack, do it
+        if (this.canAttack) {
+            this.attack();
+        }
+    }
+
+    private attack() {
+        // Set attacking state and start cooldown
+        this.canAttack = false;
+        this.isAttacking = true;
+        this.lastAttackTime = this.scene.time.now;
+
+        // Flash slime to indicate attack
+        this.slime.setTint(0x00ff00); // Green tint for attack
+
+        // Stop movement during attack
+        this.slime.setVelocity(0, 0);
+
+        // Deal damage to player after a short delay (simulating attack animation)
+        this.scene.time.delayedCall(300, () => {
+            // Only damage player if still active and in range
+            if (this.slime.active) {
+                const targetSprite = this.target.getSprite();
+                const distance = Phaser.Math.Distance.Between(
+                    this.slime.x, this.slime.y,
+                    targetSprite.x, targetSprite.y
+                );
+
+                if (distance <= this.attackRange) {
+                    this.target.takeDamage(this.attackDamage);
+                }
+            }
+
+            // Clear tint and reset attacking state
+            this.slime.clearTint();
+            this.isAttacking = false;
+        });
+    }
+
     getSprite() {
         return this.slime;
     }
 
     takeDamage(amount: number) {
         this.health -= amount;
-        
+
         // Flash the slime red when damaged
         this.slime.setTint(0xff0000);
         this.scene.time.delayedCall(100, () => {
             this.slime.clearTint();
         });
-        
+
         // If health drops to zero or below, destroy the slime
         if (this.health <= 0) {
             this.destroy();
@@ -106,5 +173,13 @@ export class Slime {
 
     destroy() {
         this.slime.destroy();
+    }
+
+    getAttackRange() {
+        return this.attackRange;
+    }
+
+    getAttackDamage() {
+        return this.attackDamage;
     }
 }

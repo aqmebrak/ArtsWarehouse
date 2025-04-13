@@ -29,6 +29,9 @@ export class Game extends Scene {
 	doors: Phaser.Physics.Arcade.StaticGroup;
 	enemies: Phaser.Physics.Arcade.Group;
 
+	// UI elements
+	private healthText: Phaser.GameObjects.Text;
+
 	constructor() {
 		super('Game');
 	}
@@ -114,6 +117,16 @@ export class Game extends Scene {
 
 		// Add player attack event listener
 		this.events.on('player-attack', this.handlePlayerAttack, this);
+
+		// Add health display
+		this.healthText = this.add.text(16, 16, 'Health: 1000', {
+			fontSize: '18px',
+			color: '#ffffff',
+			backgroundColor: '#000000',
+			padding: { x: 10, y: 5 }
+		});
+		this.healthText.setScrollFactor(0); // Fix to camera so it stays on screen
+		this.healthText.setDepth(100); // Make sure it renders on top
 	}
 
 	setupSlimeSpawner() {
@@ -208,6 +221,9 @@ export class Game extends Scene {
 		// Update the player entity with the controls
 		if (this.playerEntity) {
 			this.playerEntity.update();
+
+			// Update health display
+			this.healthText.setText(`Health: ${this.playerEntity.getHealth()}`);
 		}
 
 		// Update all slimes to move toward the player
