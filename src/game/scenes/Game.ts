@@ -97,12 +97,6 @@ export class Game extends Scene {
 		// Start spawning slimes
 		this.setupSlimeSpawner();
 
-		// Debug: Log the number of objects in each physics group
-		console.log("Trees in group:", this.trees.getChildren().length);
-		console.log("Rocks in group:", this.rocks.getChildren().length);
-		console.log("Walls in group:", this.walls.getChildren().length);
-		console.log("Doors in group:", this.doors.getChildren().length);
-
 		// Add virtual joystick
 		const rexPlugin = this.plugins.get('rexvirtualjoystickplugin') as any;
 		this.joystick = rexPlugin.add(this, {
@@ -125,7 +119,7 @@ export class Game extends Scene {
 	setupSlimeSpawner() {
 		// Spawn a slime every 10 seconds
 		this.slimeSpawnTimer = this.time.addEvent({
-			delay: 10000, // 10 seconds
+			delay: 2500, // 10 seconds
 			callback: this.spawnSlime,
 			callbackScope: this,
 			loop: true
@@ -221,7 +215,6 @@ export class Game extends Scene {
 	}
 
 	handlePlayerAttack(targetSprite: Phaser.Physics.Arcade.Sprite) {
-		console.log('Player attacked:', targetSprite);
 		if (!this.playerEntity) return;
 
 		// Find the slime entity associated with this sprite
