@@ -11,7 +11,7 @@ export class Chicken {
         this.chicken = this.scene.physics.add.sprite(x, y, 'chicken');
 
         // Add the sprite to the chickens physics group in the scene
-        if (scene.chickens && scene.chickens instanceof Phaser.Physics.Arcade.StaticGroup) {
+        if (scene.chickens && scene.chickens instanceof Phaser.Physics.Arcade.Group) {
             scene.chickens.add(this.chicken);
         }
 
@@ -24,6 +24,8 @@ export class Chicken {
         this.chicken.setSize(24, 24);  // Set collision size
         this.chicken.setOffset(4, 8);  // Adjust collision box position
         this.chicken.setDepth(0);      // Set depth so it appears under player/slimes
+        this.chicken.setImmovable(true); // Make it immovable so player doesn't push it
+        this.chicken.setBodySize(24, 24); // Ensure body size is properly set
     }
 
     createAnimations() {

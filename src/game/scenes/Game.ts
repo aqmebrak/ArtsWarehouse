@@ -4,15 +4,14 @@ import { Player } from '../Entities/Player';
 import { Tree } from '../Entities/Tree';
 import { Rock } from '../Entities/Rock';
 import { Basecamp } from '../Entities/Basecamp';
-import { Door } from '../Entities/Door';
 import { Slime } from '../Entities/Slime';
 import { Chicken } from '../Entities/Chicken';
 
 export class Game extends Scene {
 	// Game variables
 	private playerEntity: Player | undefined;
-	joystick: any;
-	cursorKeys: any;
+	joystick: never | undefined;
+	cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
 
 	// Entity collections
 	private treeEntities: Tree[] = [];
@@ -21,24 +20,24 @@ export class Game extends Scene {
 	private slimeEntities: Slime[] = [];
 
 	// Timer for slime spawning
-	private slimeSpawnTimer: Phaser.Time.TimerEvent;
+	private slimeSpawnTimer: Phaser.Time.TimerEvent | undefined;
 
 	// Physics groups for collision detection - these need to be public so entities can access them
-	trees: Phaser.Physics.Arcade.StaticGroup;
-	rocks: Phaser.Physics.Arcade.StaticGroup;
-	walls: Phaser.Physics.Arcade.StaticGroup;
-	doors: Phaser.Physics.Arcade.StaticGroup;
-	enemies: Phaser.Physics.Arcade.Group;
-	chickens: Phaser.Physics.Arcade.StaticGroup;
+	trees: Phaser.Physics.Arcade.StaticGroup | undefined;
+	rocks: Phaser.Physics.Arcade.StaticGroup | undefined;
+	walls: Phaser.Physics.Arcade.StaticGroup | undefined;
+	doors: Phaser.Physics.Arcade.StaticGroup | undefined;
+	enemies: Phaser.Physics.Arcade.Group | undefined;
+	chickens: Phaser.Physics.Arcade.Group | undefined; // Changed from StaticGroup to Group
 
 	// Add chickens group and counter
 	private chickenEntities: Chicken[] = [];
 	private chickenCount: number = 0;
-	private chickenText: Phaser.GameObjects.Text;
-	private chickenIcon: Phaser.GameObjects.Image;
+	private chickenText: Phaser.GameObjects.Text | undefined;
+	private chickenIcon: Phaser.GameObjects.Image | undefined;
 
 	// UI elements
-	private healthText: Phaser.GameObjects.Text;
+	private healthText: Phaser.GameObjects.Text | undefined;
 
 	constructor() {
 		super('Game');
@@ -59,7 +58,7 @@ export class Game extends Scene {
 		this.walls = this.physics.add.staticGroup();
 		this.doors = this.physics.add.staticGroup();
 		this.enemies = this.physics.add.group();
-		this.chickens = this.physics.add.staticGroup();
+		this.chickens = this.physics.add.group(); // Changed from staticGroup to group
 
 		// Set world center
 		const centerX = width / 2;
@@ -102,10 +101,10 @@ export class Game extends Scene {
 		this.physics.add.overlap(
 			playerSprite,
 			this.chickens,
-			(player, chicken) => {
-				this.collectChicken(player, chicken);
-			},
-			null,
+			// eslint-disable-next-line
+			// @ts-ignore
+			this.collectChicken,
+			undefined,
 			this
 		);
 
@@ -120,14 +119,19 @@ export class Game extends Scene {
 		this.setupSlimeSpawner();
 
 		// Add virtual joystick
-		const rexPlugin = this.plugins.get('rexvirtualjoystickplugin') as any;
-		this.joystick = rexPlugin.add(this, {
-			x: 100,
-			y: this.cameras.main.height - 100,
-			radius: 60,
-			base: this.add.circle(0, 0, 60, 0x888888, 0.5),
-			thumb: this.add.circle(0, 0, 30, 0xcccccc, 0.8)
-		});
+		// https://github.com/florianvazelle/phaser3-vjoy-plugin
+		const rexPlugin = this.plugins.get('rexvirtualjoystickplugin');
+		if(rexPlugin) {
+			// eslint-disable-next-line
+			// @ts-ignore
+			this.joystick = rexPlugin.add(this, {
+				x: 100,
+				y: this.cameras.main.height - 100,
+				radius: 60,
+				base: this.add.circle(0, 0, 60, 0x888888, 0.5),
+				thumb: this.add.circle(0, 0, 30, 0xcccccc, 0.8)
+			});
+		}
 
 		// Create cursor keys for desktop controls
 		this.cursorKeys = this.input.keyboard?.createCursorKeys();
@@ -139,25 +143,25 @@ export class Game extends Scene {
 
 		// Add health display
 		this.healthText = this.add.text(16, 16, 'Health: 1000', {
-			fontSize: '18px',
+			fontSize: '14px',
 			color: '#ffffff',
 			backgroundColor: '#000000',
-			padding: { x: 10, y: 5 }
+			padding: { x: 4, y: 4 }
 		});
 		this.healthText.setScrollFactor(0); // Fix to camera so it stays on screen
 		this.healthText.setDepth(100); // Make sure it renders on top
 
 		// Add chicken counter and icon
-		this.chickenIcon = this.add.image(16 + 16, 60, 'chicken', 0);  // Use first frame of chicken sprite
+		this.chickenIcon = this.add.image(16 + 8, 50, 'chicken', 0);  // Use first frame of chicken sprite
 		this.chickenIcon.setScale(0.8);  // Make it slightly smaller
 		this.chickenIcon.setScrollFactor(0);  // Fix to camera
 		this.chickenIcon.setDepth(100);  // Render on top
 
-		this.chickenText = this.add.text(16 + 40, 50, `x ${this.chickenCount}`, {
-			fontSize: '18px',
+		this.chickenText = this.add.text(16 + 16 + 8, 40, `x ${this.chickenCount}`, {
+			fontSize: '12px',
 			color: '#ffffff',
 			backgroundColor: '#000000',
-			padding: { x: 10, y: 5 }
+			padding: { x: 4, y: 4 }
 		});
 		this.chickenText.setScrollFactor(0);
 		this.chickenText.setDepth(100);
@@ -253,7 +257,7 @@ export class Game extends Scene {
 
 	update() {
 		// Update the player entity with the controls
-		if (this.playerEntity) {
+		if (this.playerEntity && this.healthText) {
 			this.playerEntity.update();
 
 			// Update health display
@@ -297,7 +301,6 @@ export class Game extends Scene {
 	// Method to handle chicken collection
 	collectChicken(playerObj: Phaser.GameObjects.GameObject, chickenObj: Phaser.GameObjects.GameObject) {
 		// Cast the objects back to sprites since we know they are sprites
-		const playerSprite = playerObj as Phaser.Physics.Arcade.Sprite;
 		const chickenSprite = chickenObj as Phaser.Physics.Arcade.Sprite;
 
 		// Find the chicken entity associated with this sprite
@@ -308,7 +311,8 @@ export class Game extends Scene {
 		if (collectedChicken) {
 			// Increment counter and update UI
 			this.chickenCount++;
-			this.chickenText.setText(`x ${this.chickenCount}`);
+			if(this.chickenText)
+				this.chickenText.setText(`x ${this.chickenCount}`);
 
 			// Play collection sound if you have one
 			// this.sound.play('collect');

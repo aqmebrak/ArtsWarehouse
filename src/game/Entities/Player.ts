@@ -1,5 +1,4 @@
 import type { Game } from '../scenes/Game';
-import type { Slime } from './Slime';
 
 export class Player {
     private scene: Game;
@@ -13,7 +12,7 @@ export class Player {
     private invulnerabilityTime: number = 500; // 0.5 seconds of invulnerability after being hit
 
     // Attack properties
-    private attackRange: number = 24; // Increased range from 24 to 50
+    private attackRange: number = 32; // Increased range from 24 to 50
     private attackDamage: number = 10; // Damage per attack (updated to match slime health)
     private attackCooldown: number = 400; // 1 second cooldown between attacks
     private canAttack: boolean = true; // Flag to track if player can attack
@@ -108,6 +107,15 @@ export class Player {
     }
 
     update() {
+        this.updateAnimation();
+
+        // Check for nearby enemies to attack
+        this.checkForAttack();
+    }
+
+    updateAnimation() {
+        // Reset velocity and track if player is moving
+        // this.player.setVelocity(0);
         let velocityX = 0;
         let velocityY = 0;
 
@@ -120,45 +128,25 @@ export class Player {
         this.isPlayerMoving = velocityX !== 0 || velocityY !== 0;
 
         this.player.setVelocity(velocityX, velocityY);
-        this.updateAnimation(velocityX, velocityY, this.scene.cursorKeys);
 
-        // Check for nearby enemies to attack
-        this.checkForAttack();
-    }
-
-    updateAnimation(velocityX: number, velocityY: number, cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys) {
-        // Reset velocity and track if player is moving
-        this.player.setVelocity(0);
         this.isPlayerMoving = false;
 
-        // Handle joystick input
-        if (this.scene.joystick.force > 0) {
-            // Convert angle to radians and calculate velocity components
-            const angleRad = Phaser.Math.DegToRad(this.scene.joystick.angle);
-            velocityX = Math.cos(angleRad) * this.speed;
-            velocityY = Math.sin(angleRad) * this.speed;
-
-            // Set player velocity based on joystick angle
-            this.player.setVelocity(velocityX, velocityY);
-            this.isPlayerMoving = true;
-        }
-
         // Handle keyboard input as alternative
-        if (cursorKeys.left.isDown) {
+        if (this.scene.cursorKeys.left.isDown) {
             velocityX = -this.speed;
             this.player.setVelocityX(-this.speed);
             this.isPlayerMoving = true;
-        } else if (cursorKeys.right.isDown) {
+        } else if (this.scene.cursorKeys.right.isDown) {
             velocityX = this.speed;
             this.player.setVelocityX(this.speed);
             this.isPlayerMoving = true;
         }
 
-        if (cursorKeys.up.isDown) {
+        if (this.scene.cursorKeys.up.isDown) {
             velocityY = -this.speed;
             this.player.setVelocityY(-this.speed);
             this.isPlayerMoving = true;
-        } else if (cursorKeys.down.isDown) {
+        } else if (this.scene.cursorKeys.down.isDown) {
             velocityY = this.speed;
             this.player.setVelocityY(this.speed);
             this.isPlayerMoving = true;
@@ -306,7 +294,6 @@ export class Player {
 
         // Apply damage
         this.health -= amount;
-        console.log(`Player took ${amount} damage! Health: ${this.health}`);
 
         // Flash player red to indicate damage
         this.player.setTint(0xff0000);

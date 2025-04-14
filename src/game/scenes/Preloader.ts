@@ -36,6 +36,9 @@ export class Preloader extends Scene {
 			true
 		);
 
+		// this.plugins.installScenePlugin('VJoyPlugin', VJoyPlugin, 'vjoy', this);
+
+
 		// Load rocks spritesheet - adjust frameWidth and frameHeight to match your spritesheet
 		this.load.spritesheet('rocks', 'Rocks.png', {
 			frameWidth: 16,  // Adjust to match your rock sprite width
