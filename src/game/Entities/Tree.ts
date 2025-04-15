@@ -20,13 +20,8 @@ export class Tree {
 
     setupPhysics() {
         this.tree.setScale(1 / 3);
-        // this.tree.setOrigin(0.5, 0.5);
         this.tree.setSize(12, 14);  // Set appropriate collision size
         this.tree.setOffset(25, 30); // Offset the hitbox to position it correctly relative to the visible sprite
-        // this.tree.refreshBody();
     }
 
-    getSprite() {
-        return this.tree;
-    }
 }

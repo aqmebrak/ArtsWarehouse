@@ -12,7 +12,7 @@ export class Preloader extends Scene {
 		const barHeight = 32;
 
 		// The outline of the bar
-		const barBg = this.add.rectangle(width / 2, height / 2, barWidth, barHeight)
+		this.add.rectangle(width / 2, height / 2, barWidth, barHeight)
 			.setStrokeStyle(1, 0xffffff);
 
 		// Calculate the left edge position of the background bar
@@ -35,9 +35,6 @@ export class Preloader extends Scene {
 			'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js',
 			true
 		);
-
-		// this.plugins.installScenePlugin('VJoyPlugin', VJoyPlugin, 'vjoy', this);
-
 
 		// Load rocks spritesheet - adjust frameWidth and frameHeight to match your spritesheet
 		this.load.spritesheet('rocks', 'Rocks.png', {

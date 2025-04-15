@@ -167,10 +167,6 @@ export class Slime {
         }
     }
 
-    getHealth() {
-        return this.health;
-    }
-
     destroy() {
         // Drop a chicken at the slime's position before destroying it
         if (this.slime.active) {
@@ -182,11 +178,4 @@ export class Slime {
         this.slime.destroy();
     }
 
-    getAttackRange() {
-        return this.attackRange;
-    }
-
-    getAttackDamage() {
-        return this.attackDamage;
-    }
 }

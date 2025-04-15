@@ -3,11 +3,11 @@ import { Door } from './Door';
 
 export class Basecamp {
     private scene: Game;
-    private walls: Phaser.Physics.Arcade.StaticGroup;
+    private walls: Phaser.Physics.Arcade.StaticGroup | undefined;
     private doors: Door[] = [];
     private centerX: number;
     private centerY: number;
-    private width: number = 224;
+    private width: number = 128;
     private height: number = 128;
     private wallThickness: number = 16;
     private doorWidth: number = 32;
@@ -93,14 +93,6 @@ export class Basecamp {
         // Create bottom door
         const bottomDoor = new Door(this.scene, this.centerX, bottom - this.wallThickness / 2);
         this.doors.push(bottomDoor);
-    }
-
-    getWalls() {
-        return this.walls;
-    }
-
-    getDoorSprites() {
-        return this.doors.map(door => door.getSprite());
     }
 
     getDimensions() {

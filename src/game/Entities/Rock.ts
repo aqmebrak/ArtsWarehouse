@@ -25,7 +25,4 @@ export class Rock {
         this.rock.refreshBody();
     }
 
-    getSprite() {
-        return this.rock;
-    }
 }

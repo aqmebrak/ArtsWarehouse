@@ -49,7 +49,6 @@
 
 		if (scene)
 		{
-
 			// // Add more stars
 			// const x = Phaser.Math.Between(64, scene.scale.width - 64);
 			// const y = Phaser.Math.Between(64, scene.scale.height - 64);
@@ -67,16 +66,13 @@
 			// 	yoyo: true,
 			// 	repeat: -1
 			// });
-
 		}
 
 	}
 
 	// Event emitted from the PhaserGame component
 	const currentScene = (scene: Scene) => {
-
 		// canMoveSprite = (scene.scene.key !== "MainMenu");
-
 	}
 
 </script>

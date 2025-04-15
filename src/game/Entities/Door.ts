@@ -11,7 +11,7 @@ export class Door {
         this.door = this.scene.physics.add.staticSprite(x, y, 'door');
 
         // Add the sprite to the doors physics group in the scene
-        if (scene.doors && scene.doors instanceof Phaser.Physics.Arcade.StaticGroup) {
+        if (scene.doors) {
             scene.doors.add(this.door);
         }
 
@@ -22,9 +22,5 @@ export class Door {
         this.door.width = 32;
         // this.door.setSize(32, 16);  // Set appropriate collision size
         this.door.refreshBody();
-    }
-
-    getSprite() {
-        return this.door;
     }
 }

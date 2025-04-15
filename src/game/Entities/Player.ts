@@ -331,7 +331,4 @@ export class Player {
         return this.attackDamage;
     }
 
-    getAttackRange() {
-        return this.attackRange;
-    }
 }
