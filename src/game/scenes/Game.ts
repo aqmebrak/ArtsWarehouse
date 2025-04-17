@@ -6,11 +6,13 @@ import { Rock } from '../Entities/Rock';
 import { Basecamp } from '../Entities/Basecamp';
 import { Slime } from '../Entities/Slime';
 import { Chicken } from '../Entities/Chicken';
+import type VirtualJoyStick from 'phaser3-rex-plugins/plugins/input/virtualjoystick/VirtualJoyStick';
+
 
 export class Game extends Scene {
 	// Game variables
 	private playerEntity: Player | undefined;
-	joystick: never | undefined;
+	joystick: VirtualJoyStick | undefined;
 	cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys | undefined;
 
 	// Entity collections
@@ -119,22 +121,47 @@ export class Game extends Scene {
 		this.setupSlimeSpawner();
 
 		// Add virtual joystick
-		// https://github.com/florianvazelle/phaser3-vjoy-plugin
-		const rexPlugin = this.plugins.get('rexvirtualjoystickplugin');
-		if(rexPlugin) {
+		const rexPlugin = this.plugins.get('rexVirtualJoystick');
+		if (rexPlugin) {
 			// eslint-disable-next-line
 			// @ts-ignore
 			this.joystick = rexPlugin.add(this, {
-				x: 100,
-				y: this.cameras.main.height - 100,
-				radius: 60,
-				base: this.add.circle(0, 0, 60, 0x888888, 0.5),
-				thumb: this.add.circle(0, 0, 30, 0xcccccc, 0.8)
+				x: 0, // Initial position doesn't matter as it will be hidden
+				y: 0,
+				radius: 30,
+				base: this.add.circle(0, 0, 30, 0x888888, 0.5).setDepth(101), // Ensure joystick is above other UI
+				thumb: this.add.circle(0, 0, 15, 0xcccccc, 0.8).setDepth(101),
+				visible: false // Initially invisible
 			});
+			this.joystick?.setScrollFactor(0); // Ensure joystick stays fixed relative to the camera
 		}
-
 		// Create cursor keys for desktop controls
 		this.cursorKeys = this.input.keyboard?.createCursorKeys();
+
+		// --- Joystick Visibility Handling ---
+		this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+			// Check if the pointer event is within the game canvas bounds
+			if (pointer.x >= 0 && pointer.x <= this.cameras.main.width &&
+				pointer.y >= 0 && pointer.y <= this.cameras.main.height) {
+
+				// Position the joystick at the pointer location (relative to camera)
+				this.joystick?.setPosition(pointer.x, pointer.y);
+				this.joystick?.setVisible(true);
+				this.joystick?.setEnable(true);
+			}
+		});
+
+		this.input.on('pointerup', (pointer: Phaser.Input.Pointer) => {
+
+			console.log('Pointer released', pointer, this.joystick);
+			// If the released pointer is the one the joystick is tracking
+			if (this.joystick?.pointer === pointer) {
+				// Hide and disable the joystick
+				this.joystick.setVisible(false);
+				this.joystick.setEnable(false);
+			}
+		});
+		// --- End Joystick Visibility Handling ---
 
 		EventBus.emit('current-scene-ready', this);
 
@@ -311,7 +338,7 @@ export class Game extends Scene {
 		if (collectedChicken) {
 			// Increment counter and update UI
 			this.chickenCount++;
-			if(this.chickenText)
+			if (this.chickenText)
 				this.chickenText.setText(`x ${this.chickenCount}`);
 
 			// Play collection sound if you have one

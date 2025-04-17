@@ -11,8 +11,7 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write .",
-		"prepare": "husky install"
+		"format": "prettier --write ."
 	},
 	"devDependencies": {
 		"@melt-ui/pp": "^0.3.2",
@@ -48,6 +47,7 @@
 		"@vercel/analytics": "1.5.0",
 		"@vercel/speed-insights": "1.2.0",
 		"p5": "1.11.3",
-		"phaser": "^3.88.2"
+		"phaser": "^3.88.2",
+		"phaser3-rex-plugins": "^1.80.15"
 	}
 }

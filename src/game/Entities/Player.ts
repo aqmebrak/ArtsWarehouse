@@ -30,8 +30,8 @@ export class Player {
         this.player.setCollideWorldBounds(true);
         this.player.setOrigin(0.5, 1.0); // Set origin to bottom center of the sprite
         this.player.setDepth(1); // Set depth to ensure player is above other objects
-        this.player.setSize(16, 24); // Set player size to match sprite dimensions
-        this.player.setOffset(16, 21); // Offset the hitbox to position it correctly relative to the visible sprite
+        this.player.setSize(16, 12); // Set player size to match sprite dimensions
+        this.player.setOffset(16, 32); // Offset the hitbox to position it correctly relative to the visible sprite
         this.player.setAlpha(1); // Set player alpha to fully visible
         this.player.setTint(0xffffff); // Set player tint to white (no tint)
         this.player.setVisible(true); // Ensure player is visible	

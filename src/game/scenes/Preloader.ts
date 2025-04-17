@@ -30,12 +30,6 @@ export class Preloader extends Scene {
 	}
 
 	preload() {
-		// Load joystick plugin
-		this.load.plugin('rexvirtualjoystickplugin',
-			'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexvirtualjoystickplugin.min.js',
-			true
-		);
-
 		// Load rocks spritesheet - adjust frameWidth and frameHeight to match your spritesheet
 		this.load.spritesheet('rocks', 'Rocks.png', {
 			frameWidth: 16,  // Adjust to match your rock sprite width
