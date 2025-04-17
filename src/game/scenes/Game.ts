@@ -1,3 +1,5 @@
+import type VirtualJoyStick from 'phaser3-rex-plugins/plugins/input/virtualjoystick/VirtualJoyStick';
+
 import { EventBus } from '../EventBus';
 import { Scene } from 'phaser';
 import { Player } from '../Entities/Player';
@@ -6,7 +8,9 @@ import { Rock } from '../Entities/Rock';
 import { Basecamp } from '../Entities/Basecamp';
 import { Slime } from '../Entities/Slime';
 import { Chicken } from '../Entities/Chicken';
-import type VirtualJoyStick from 'phaser3-rex-plugins/plugins/input/virtualjoystick/VirtualJoyStick';
+import { Tower } from '../Entities/Tower'; // Import Tower
+import { Projectile } from '../Entities/Projectile'; // Import Projectile
+
 
 
 export class Game extends Scene {
@@ -20,6 +24,7 @@ export class Game extends Scene {
 	private rockEntities: Rock[] = [];
 	private basecamp: Basecamp | undefined;
 	private slimeEntities: Slime[] = [];
+	private towerEntities: Tower[] = []; // Array to hold Tower instances
 
 	// Timer for slime spawning
 	private slimeSpawnTimer: Phaser.Time.TimerEvent | undefined;
@@ -31,12 +36,16 @@ export class Game extends Scene {
 	doors: Phaser.Physics.Arcade.StaticGroup | undefined;
 	enemies: Phaser.Physics.Arcade.Group | undefined;
 	chickens: Phaser.Physics.Arcade.Group | undefined; // Changed from StaticGroup to Group
+	buildSpots: Phaser.Physics.Arcade.StaticGroup | undefined; // Group for tower build spots
+	towers: Phaser.Physics.Arcade.Group | undefined; // Group for active towers (their sprites)
+	projectiles: Phaser.Physics.Arcade.Group | undefined; // Group for projectiles
 
 	// Add chickens group and counter
 	private chickenEntities: Chicken[] = [];
 	private chickenCount: number = 0;
 	private chickenText: Phaser.GameObjects.Text | undefined;
 	private chickenIcon: Phaser.GameObjects.Image | undefined;
+	private chickenCostPerTower: number = 25; // Cost to build a tower
 
 	// UI elements
 	private healthText: Phaser.GameObjects.Text | undefined;
@@ -61,6 +70,12 @@ export class Game extends Scene {
 		this.doors = this.physics.add.staticGroup();
 		this.enemies = this.physics.add.group();
 		this.chickens = this.physics.add.group(); // Changed from staticGroup to group
+		this.buildSpots = this.physics.add.staticGroup();
+		this.towers = this.physics.add.group(); // Use a dynamic group for towers if they might move (unlikely) or need updates
+		this.projectiles = this.physics.add.group({ // Projectiles are dynamic
+			classType: Phaser.Physics.Arcade.Sprite, // Specify class type if needed
+			runChildUpdate: true // Optional: if projectiles have their own update logic
+		});
 
 		// Set world center
 		const centerX = width / 2;
@@ -72,6 +87,8 @@ export class Game extends Scene {
 		// Define basecamp dimensions for clear area calculation
 		const basecampDimensions = this.basecamp.getDimensions();
 		const clearPadding = 32; // Additional clear area around the basecamp
+		// Place initial build spots at basecamp corners
+		this.createBuildSpots(basecampDimensions);
 
 		// Calculate clear area boundaries
 		const clearAreaLeft = centerX - (basecampDimensions.width / 2) - clearPadding;
@@ -110,12 +127,30 @@ export class Game extends Scene {
 			this
 		);
 
+		this.physics.add.overlap(
+			playerSprite,
+			this.buildSpots,
+			this.handleBuildAttempt, // Callback function
+			null, // Process callback (optional)
+			this // Context for the callback
+		);
+
 		// Set up slime collisions
 		this.physics.add.collider(this.enemies, this.trees);
 		this.physics.add.collider(this.enemies, this.rocks);
 		this.physics.add.collider(this.enemies, this.walls);
 		this.physics.add.collider(this.enemies, this.doors);
 		this.physics.add.collider(this.enemies, this.enemies); // Slimes collide with each other
+		this.physics.add.collider(this.enemies, this.towers); // Enemies collide with towers
+
+		// Set up projectile collisions
+		this.physics.add.overlap(
+			this.projectiles,
+			this.enemies,
+			this.handleProjectileHit, // Callback for projectile hitting enemy
+			null,
+			this
+		);
 
 		// Start spawning slimes
 		this.setupSlimeSpawner();
@@ -152,14 +187,11 @@ export class Game extends Scene {
 		});
 
 		this.input.on('pointerup', (pointer: Phaser.Input.Pointer) => {
-
-			console.log('Pointer released', pointer, this.joystick);
 			// If the released pointer is the one the joystick is tracking
-			if (this.joystick?.pointer === pointer) {
-				// Hide and disable the joystick
-				this.joystick.setVisible(false);
-				this.joystick.setEnable(false);
-			}
+			// Hide and disable the joystick
+			this.joystick?.setVisible(false);
+			this.joystick?.setEnable(false);
+
 		});
 		// --- End Joystick Visibility Handling ---
 
@@ -197,7 +229,7 @@ export class Game extends Scene {
 	setupSlimeSpawner() {
 		// Spawn a slime every 10 seconds
 		this.slimeSpawnTimer = this.time.addEvent({
-			delay: 2500, // 10 seconds
+			delay: 1200, // 10 seconds
 			callback: this.spawnSlime,
 			callbackScope: this,
 			loop: true
@@ -216,9 +248,9 @@ export class Game extends Scene {
 		// Define spawn areas near the corners of the map
 		const spawnAreas = [
 			{ x: 50, y: 50, width: 100, height: 100 }, // Top-left
-			{ x: width - 150, y: 50, width: 100, height: 100 }, // Top-right
-			{ x: 50, y: height - 150, width: 100, height: 100 }, // Bottom-left
-			{ x: width - 150, y: height - 150, width: 100, height: 100 } // Bottom-right
+			{ x: width - 50, y: 50, width: 100, height: 100 }, // Top-right
+			{ x: 50, y: height - 50, width: 100, height: 100 }, // Bottom-left
+			{ x: width - 50, y: height - 50, width: 100, height: 100 } // Bottom-right
 		];
 
 		// Select a random spawn area
@@ -233,7 +265,7 @@ export class Game extends Scene {
 		this.slimeEntities.push(slime);
 
 		// Limit the number of slimes to prevent overwhelming the player
-		if (this.slimeEntities.length > 25) {
+		if (this.slimeEntities.length > 40) {
 			const oldestSlime = this.slimeEntities.shift();
 			if (oldestSlime) {
 				oldestSlime.destroy();
@@ -282,7 +314,7 @@ export class Game extends Scene {
 		}
 	}
 
-	update() {
+	update(time: number, delta: number) {
 		// Update the player entity with the controls
 		if (this.playerEntity && this.healthText) {
 			this.playerEntity.update();
@@ -293,6 +325,9 @@ export class Game extends Scene {
 
 		// Update all slimes to move toward the player
 		this.slimeEntities.forEach(slime => slime.update());
+
+		// Update all active towers
+		this.towerEntities.forEach(tower => tower.update(time, delta));
 	}
 
 	handlePlayerAttack(targetSprite: Phaser.Physics.Arcade.Sprite) {
@@ -351,6 +386,113 @@ export class Game extends Scene {
 			this.chickenEntities = this.chickenEntities.filter(
 				chicken => chicken.getSprite() !== chickenSprite
 			);
+
+			this.addChicken(1); // Add 1 chicken when collected
 		}
 	}
+
+	createBuildSpots(basecampDimensions: { width: number, height: number, centerX: number, centerY: number }) {
+		const halfWidth = basecampDimensions.width / 2;
+		const halfHeight = basecampDimensions.height / 2;
+		const cornerOffset = 16; // Offset from the exact corner
+
+		const positions = [
+			{ x: basecampDimensions.centerX - halfWidth - cornerOffset, y: basecampDimensions.centerY - halfHeight - cornerOffset }, // Top-left
+			{ x: basecampDimensions.centerX + halfWidth + cornerOffset, y: basecampDimensions.centerY - halfHeight - cornerOffset }, // Top-right
+			{ x: basecampDimensions.centerX - halfWidth - cornerOffset, y: basecampDimensions.centerY + halfHeight + cornerOffset }, // Bottom-left
+			{ x: basecampDimensions.centerX + halfWidth + cornerOffset, y: basecampDimensions.centerY + halfHeight + cornerOffset }  // Bottom-right
+		];
+
+		positions.forEach(pos => {
+			const spot = this.buildSpots?.create(pos.x, pos.y, 'blue_tile');
+			spot.setData('isBuilt', false); // Mark spot as not built initially
+			spot.refreshBody(); // Apply physics changes
+		});
+	}
+
+	handleBuildAttempt(playerSprite: Phaser.GameObjects.GameObject, buildSpotSprite: Phaser.GameObjects.GameObject) {
+		// Cast to specific types if needed (though GameObject is often sufficient)
+		const spot = buildSpotSprite as Phaser.Physics.Arcade.Sprite;
+
+		// Check if a tower is already built here and if player has enough chickens
+		if (!spot.getData('isBuilt') && this.chickenCount >= this.chickenCostPerTower) {
+			// Deduct cost
+			this.removeChicken(this.chickenCostPerTower);
+
+			// Mark spot as built
+			spot.setData('isBuilt', true);
+			spot.setVisible(false); // Hide the blue tile
+			spot.disableBody(true, true); // Disable physics and hide
+
+			// Create the tower entity
+			const tower = new Tower(this, spot.x, spot.y);
+			this.towerEntities.push(tower); // Add to our list for updates
+
+			// Optional: Add a build sound effect
+			// this.sound.play('build_sound');
+		}
+	}
+
+	handleProjectileHit(projectileSprite: Phaser.GameObjects.GameObject, enemySprite: Phaser.GameObjects.GameObject) {
+		// Find the corresponding Projectile instance (if needed, e.g., to get damage)
+		// This assumes the projectile group contains sprites directly linked to Projectile instances
+		// A more robust way might involve mapping sprites to instances if complex logic is needed.
+		// For now, we'll assume the Projectile class handles its own destruction and damage application logic.
+
+		// Find the Slime instance associated with the enemy sprite
+		const hitSlime = this.slimeEntities.find(slime => slime.getSprite() === enemySprite);
+
+		if (hitSlime && projectileSprite.active) {
+			// Find the projectile instance (might need a better way to link sprite to instance)
+			// For simplicity, let's assume the projectile sprite has damage data or we find the instance
+			// A simple approach: iterate projectiles (less efficient) or use setData on sprite
+			// Let's assume Projectile handles its damage internally for now.
+
+			// We need the Projectile instance to get its damage value.
+			// A simple, less efficient way:
+			// Find the projectile instance that owns this sprite.
+			// This requires Projectile instances to be tracked, e.g., in an array in Game.ts
+			// Let's modify Projectile to store damage on its sprite data for easier access here.
+
+			const damage = projectileSprite.getData('damage') as number || 0; // Retrieve damage
+
+			if (damage > 0) {
+				hitSlime.takeDamage(damage);
+			}
+
+			// Destroy the projectile sprite immediately
+			// Find the Projectile instance and call its destroy method
+			// This is complex without a direct link. Let's modify Projectile.ts to handle this.
+			// For now, just destroy the sprite. The Projectile instance might linger.
+			projectileSprite.destroy(); // Destroy the visual projectile
+		}
+	}
+
+	// --- Chicken Management ---
+	addChicken(amount: number) {
+		this.chickenCount += amount;
+		this.updateChickenUI();
+	}
+
+	removeChicken(amount: number) {
+		this.chickenCount -= amount;
+		if (this.chickenCount < 0) this.chickenCount = 0; // Prevent negative count
+		this.updateChickenUI();
+	}
+
+	getChickenCount(): number {
+		return this.chickenCount;
+	}
+
+	updateChickenUI() {
+		this.chickenText?.setText(`x ${this.chickenCount}`);
+	}
+	// --- End Chicken Management ---
+
+	// --- Helper to get active slimes ---
+	getSlimeEntities(): Slime[] {
+		// Filter out destroyed slimes if necessary, or ensure slimeEntities array is kept clean
+		return this.slimeEntities.filter(slime => slime.getSprite()?.active);
+	}
+	// --- End Helper ---
 }

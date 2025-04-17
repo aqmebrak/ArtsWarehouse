@@ -2,30 +2,50 @@ import type { Game } from '../scenes/Game';
 
 export class Chicken {
     private scene: Game;
-    private chicken: Phaser.Physics.Arcade.Sprite;
+    private chicken: Phaser.Physics.Arcade.Sprite; // Keep type hint for clarity
 
     constructor(scene: Game, x: number, y: number) {
         this.scene = scene;
 
-        // Create the chicken sprite
-        this.chicken = this.scene.physics.add.sprite(x, y, 'chicken');
+        // Create the chicken sprite *without* physics initially
+        // We'll let the static group handle physics body creation
+        const chickenSprite = this.scene.add.sprite(x, y, 'chicken');
 
-        // Add the sprite to the chickens physics group in the scene
-        if (scene.chickens && scene.chickens instanceof Phaser.Physics.Arcade.Group) {
-            scene.chickens.add(this.chicken);
+        // Add the sprite to the chickens static physics group in the scene
+        if (scene.chickens) {
+            scene.chickens.add(chickenSprite); // Add the regular sprite
+            // Cast to Physics Sprite *after* adding, as the group enables physics
+            this.chicken = chickenSprite as Phaser.Physics.Arcade.Sprite;
+        } else {
+            console.warn('Chickens group not found in scene.');
+            // Fallback or error handling if group doesn't exist
+            this.chicken = this.scene.physics.add.sprite(x, y, 'chicken'); // Create with physics as fallback
         }
 
-        this.setupPhysics();
-        this.createAnimations();
+        // Configure physics and animations if the sprite was successfully created/added
+        if (this.chicken) {
+            this.setupPhysics();
+            this.createAnimations();
+        }
     }
 
     setupPhysics() {
-        // Set up physics properties
-        this.chicken.setSize(24, 24);  // Set collision size
-        this.chicken.setOffset(4, 8);  // Adjust collision box position
+        // Check if the body exists (it should have been created by adding to the group)
+        if (!this.chicken.body) {
+            console.error("Chicken sprite body not found after adding to static group.");
+            return;
+        }
+
+        // Cast body to Arcade.StaticBody for type safety
+        const body = this.chicken.body as Phaser.Physics.Arcade.StaticBody;
+
+        // Set up physics properties - setImmovable is inherent to StaticGroup members
+        body.setSize(24, 24);  // Set collision size
+        body.setOffset(4, 8);  // Adjust collision box position relative to sprite origin
         this.chicken.setDepth(0);      // Set depth so it appears under player/slimes
-        this.chicken.setImmovable(true); // Make it immovable so player doesn't push it
-        this.chicken.setBodySize(24, 24); // Ensure body size is properly set
+
+        // Refresh the static body to apply size/offset changes and position
+        body.reset(this.chicken.x, this.chicken.y);
     }
 
     createAnimations() {
