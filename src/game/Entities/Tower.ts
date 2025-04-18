@@ -42,8 +42,11 @@ export class Tower {
         let closestEnemy: Slime | null = null;
         let minDistanceSq = this.range * this.range; // Use squared distance for efficiency
 
-        // Access slimes directly from the Game scene's helper method
-        const enemies = this.scene.getSlimeEntities();
+        // Get enemies from the EnemyManager
+        const enemyManager = this.scene.getEnemyManager();
+        if (!enemyManager) return;
+
+        const enemies = enemyManager.getActiveSlimes();
 
         enemies.forEach(enemy => {
             if (enemy.getSprite().active) {
@@ -68,7 +71,6 @@ export class Tower {
         this.lastFired = time;
 
         // Create a projectile aimed at the target's current position
-        // The projectile will continue in a straight line
         new Projectile(
             this.scene,
             this.towerSprite.x,

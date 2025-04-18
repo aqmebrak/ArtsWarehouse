@@ -39,6 +39,9 @@ export class Preloader extends Scene {
 		// Load game assets
 		this.load.image('grass', 'grass.png');
 		this.load.image('tree', 'oak_tree.png');
+		this.load.image('barrel', 'barrel.png');
+		this.load.image('blue_tile', 'blue_tile.png');
+		this.load.image('kunai', 'kunai.png');
 
 		// Load enemy assets
 		this.load.spritesheet('slime', 'slime.png', {

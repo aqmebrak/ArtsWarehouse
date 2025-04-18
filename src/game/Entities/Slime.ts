@@ -172,7 +172,7 @@ export class Slime {
         if (this.slime.active) {
             const x = this.slime.x;
             const y = this.slime.y;
-            this.scene.dropChicken(x, y);
+            this.scene.getResourceManager()?.dropChicken(x, y);
         }
 
         this.slime.destroy();
