@@ -31,54 +31,37 @@ export class Basecamp {
         const top = this.centerY - this.height / 2;
         const bottom = this.centerY + this.height / 2;
 
-        // Top wall (with door in the middle)
-        // Left section - horizontal wall
-        for (let x = left; x < this.centerX - this.doorWidth / 2; x += 48) {
-            const width = Math.min(48, this.centerX - this.doorWidth / 2 - x);
-            const wall = this.walls.create(x, top, 'wall').setOrigin(0, 0);
-            wall.setSize(width, this.wallThickness);
-            wall.refreshBody();
-        }
+        // Top wall (with door gap)
+        const topWallLeftWidth = this.centerX - this.doorWidth / 2 - left;
+        const topWallRightStart = this.centerX + this.doorWidth / 2;
+        const topWallRightWidth = right - topWallRightStart;
 
-        // Right section - horizontal wall
-        for (let x = this.centerX + this.doorWidth / 2; x < right; x += 48) {
-            const width = Math.min(48, right - x);
-            const wall = this.walls.create(x, top, 'wall').setOrigin(0, 0);
-            wall.setSize(width, this.wallThickness);
-            wall.refreshBody();
-        }
+        if (this.walls) {
+            let wall = this.walls.create(left + topWallLeftWidth / 2, top + this.wallThickness / 2, 'wall');
+            wall.setSize(topWallLeftWidth, this.wallThickness).setOrigin(0.5, 0.5).refreshBody();
 
-        // Bottom wall (with door in the middle)
-        // Left section - horizontal wall
-        for (let x = left; x < this.centerX - this.doorWidth / 2; x += 48) {
-            const width = Math.min(48, this.centerX - this.doorWidth / 2 - x);
-            const wall = this.walls.create(x, bottom - this.wallThickness, 'wall').setOrigin(0, 0);
-            wall.setSize(width, this.wallThickness);
-            wall.refreshBody();
-        }
+            wall = this.walls.create(topWallRightStart + topWallRightWidth / 2, top + this.wallThickness / 2, 'wall');
+            wall.setSize(topWallRightWidth, this.wallThickness).setOrigin(0.5, 0.5).refreshBody();
 
-        // Right section - horizontal wall
-        for (let x = this.centerX + this.doorWidth / 2; x < right; x += 48) {
-            const width = Math.min(48, right - x);
-            const wall = this.walls.create(x, bottom - this.wallThickness, 'wall').setOrigin(0, 0);
-            wall.setSize(width, this.wallThickness);
-            wall.refreshBody();
-        }
+            // Bottom wall (with door gap)
+            const bottomWallLeftWidth = topWallLeftWidth;
+            const bottomWallRightStart = topWallRightStart;
+            const bottomWallRightWidth = topWallRightWidth;
 
-        // Left wall (no door) - vertical wall
-        for (let y = top + this.wallThickness; y < bottom - this.wallThickness; y += 48) {
-            const height = Math.min(48, bottom - this.wallThickness - y);
-            const wall = this.walls.create(left, y, 'wall-vertical').setOrigin(0, 0);
-            wall.setSize(this.wallThickness, height);
-            wall.refreshBody();
-        }
+            wall = this.walls.create(left + bottomWallLeftWidth / 2, bottom - this.wallThickness / 2, 'wall');
+            wall.setSize(bottomWallLeftWidth, this.wallThickness).setOrigin(0.5, 0.5).refreshBody();
 
-        // Right wall (no door) - vertical wall
-        for (let y = top + this.wallThickness; y < bottom - this.wallThickness; y += 48) {
-            const height = Math.min(48, bottom - this.wallThickness - y);
-            const wall = this.walls.create(right - this.wallThickness, y, 'wall-vertical').setOrigin(0, 0);
-            wall.setSize(this.wallThickness, height);
-            wall.refreshBody();
+            wall = this.walls.create(bottomWallRightStart + bottomWallRightWidth / 2, bottom - this.wallThickness / 2, 'wall');
+            wall.setSize(bottomWallRightWidth, this.wallThickness).setOrigin(0.5, 0.5).refreshBody();
+
+            // Left wall (full height)
+            const sideWallHeight = this.height - 2 * this.wallThickness;
+            wall = this.walls.create(left + this.wallThickness / 2, this.centerY, 'wall-vertical');
+            wall.setSize(this.wallThickness, sideWallHeight).setOrigin(0.5, 0.5).refreshBody();
+
+            // Right wall (full height)
+            wall = this.walls.create(right - this.wallThickness / 2, this.centerY, 'wall-vertical');
+            wall.setSize(this.wallThickness, sideWallHeight).setOrigin(0.5, 0.5).refreshBody();
         }
     }
 
@@ -102,5 +85,21 @@ export class Basecamp {
             centerX: this.centerX,
             centerY: this.centerY
         };
+    }
+
+    // Method to get all door instances
+    getDoors(): Door[] {
+        return this.doors;
+    }
+
+    // Method to check if all doors are destroyed
+    areAllDoorsDestroyed(): boolean {
+        if (this.doors.length === 0) return false; // No doors to be destroyed
+        return this.doors.every(door => door.isDestroyed());
+    }
+
+    // Clean up door resources
+    shutdown() {
+        this.doors.forEach(door => door.shutdown());
     }
 }

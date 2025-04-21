@@ -1,10 +1,11 @@
 import type { Game } from '../scenes/Game';
 import type { Player } from './Player';
+import type { Door } from './Door'; // Import Door type
 
 export class Slime {
     private scene: Game;
     private slime: Phaser.Physics.Arcade.Sprite;
-    private target: Player;
+    private target: Player | Door | null = null; // Target can be Player or Door
     private speed: number = 40;
     private health: number = 10; // Initialize slime health to 10 points
 
@@ -15,10 +16,13 @@ export class Slime {
     private canAttack: boolean = true; // Flag to track if slime can attack
     private lastAttackTime: number = 0; // Timestamp of the last attack
     private isAttacking: boolean = false; // Flag to indicate if currently attacking
+    private currentTargetType: 'player' | 'door' | null = null;
 
-    constructor(scene: Game, x: number, y: number, target: Player) {
+    constructor(scene: Game, x: number, y: number, player: Player) {
         this.scene = scene;
-        this.target = target;
+        // Initial target is the player
+        this.target = player;
+        this.currentTargetType = 'player';
 
         // Create the slime sprite
         this.slime = this.scene.physics.add.sprite(x, y, 'slime');
@@ -60,31 +64,90 @@ export class Slime {
     update() {
         if (!this.slime.active || this.health <= 0) return;
 
-        // Get target position
-        const targetSprite = this.target.getSprite();
+        // Determine the primary target (player)
+        const playerEntity = this.scene.getPlayerEntity();
+        if (!playerEntity) return; // Should not happen in Game scene
+        const playerSprite = playerEntity.getSprite();
 
-        // Calculate direction to player
-        const directionX = targetSprite.x - this.slime.x;
-        const directionY = targetSprite.y - this.slime.y;
+        // Find the closest door if any
+        const closestDoor = this.findClosestDoor();
 
-        // Calculate distance to player
-        const distance = Math.sqrt(directionX * directionX + directionY * directionY);
+        // Decide target: Prioritize attacking a close door over the player
+        let targetX: number;
+        let targetY: number;
+        let targetDistance: number;
+        let targetIsDoor = false;
 
-        // Check if within attack range
-        if (distance <= this.attackRange) {
+        if (closestDoor) {
+            const doorSprite = closestDoor.getSprite();
+            const distanceToDoor = Phaser.Math.Distance.Between(this.slime.x, this.slime.y, doorSprite.x, doorSprite.y);
+
+            // If door is within attack range or slightly beyond, target it
+            if (distanceToDoor <= this.attackRange + 5) { // Target door if close
+                targetX = doorSprite.x;
+                targetY = doorSprite.y;
+                targetDistance = distanceToDoor;
+                this.target = closestDoor;
+                this.currentTargetType = 'door';
+                targetIsDoor = true;
+            } else {
+                // Otherwise, target player
+                targetX = playerSprite.x;
+                targetY = playerSprite.y;
+                targetDistance = Phaser.Math.Distance.Between(this.slime.x, this.slime.y, targetX, targetY);
+                this.target = playerEntity;
+                this.currentTargetType = 'player';
+            }
+        } else {
+            // No doors, target player
+            targetX = playerSprite.x;
+            targetY = playerSprite.y;
+            targetDistance = Phaser.Math.Distance.Between(this.slime.x, this.slime.y, targetX, targetY);
+            this.target = playerEntity;
+            this.currentTargetType = 'player';
+        }
+
+        // Calculate direction to target
+        const directionX = targetX - this.slime.x;
+        const directionY = targetY - this.slime.y;
+
+        // Check if within attack range of the current target
+        if (targetDistance <= this.attackRange) {
             this.checkForAttack();
         } else {
-            // Move toward the player if not in attack range
-            this.moveTowardPlayer(directionX, directionY, distance);
+            // Move toward the target if not in attack range
+            this.moveTowardTarget(directionX, directionY, targetDistance);
         }
     }
 
-    private moveTowardPlayer(directionX: number, directionY: number, length: number) {
+    // Helper to find the closest active door
+    private findClosestDoor(): Door | null {
+        const basecamp = this.scene.getBaseCamp();
+        if (!basecamp) return null;
+
+        const doors = basecamp.getDoors();
+        let closestDoor: Door | null = null;
+        let minDistance = Infinity;
+
+        for (const door of doors) {
+            if (!door.isDestroyed()) {
+                const doorSprite = door.getSprite();
+                const distance = Phaser.Math.Distance.Between(this.slime.x, this.slime.y, doorSprite.x, doorSprite.y);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestDoor = door;
+                }
+            }
+        }
+        return closestDoor;
+    }
+
+    private moveTowardTarget(directionX: number, directionY: number, length: number) {
         if (length > 0) {
             const normalizedX = directionX / length;
             const normalizedY = directionY / length;
 
-            // Move toward the player
+            // Move toward the target
             this.slime.setVelocity(
                 normalizedX * this.speed,
                 normalizedY * this.speed
@@ -100,8 +163,8 @@ export class Slime {
     }
 
     private checkForAttack() {
-        // Don't attack if already attacking
-        if (this.isAttacking) return;
+        // Don't attack if already attacking or no target
+        if (this.isAttacking || !this.target) return;
 
         // Check cooldown
         const currentTime = this.scene.time.now;
@@ -116,6 +179,8 @@ export class Slime {
     }
 
     private attack() {
+        if (!this.target) return; // Need a target to attack
+
         // Set attacking state and start cooldown
         this.canAttack = false;
         this.isAttacking = true;
@@ -127,18 +192,32 @@ export class Slime {
         // Stop movement during attack
         this.slime.setVelocity(0, 0);
 
-        // Deal damage to player after a short delay (simulating attack animation)
+        // Deal damage after a short delay
         this.scene.time.delayedCall(300, () => {
-            // Only damage player if still active and in range
-            if (this.slime.active) {
-                const targetSprite = this.target.getSprite();
-                const distance = Phaser.Math.Distance.Between(
-                    this.slime.x, this.slime.y,
-                    targetSprite.x, targetSprite.y
-                );
+            // Only damage if still active and target exists
+            if (this.slime.active && this.target) {
+                let targetSprite: Phaser.GameObjects.Sprite | null = null;
 
-                if (distance <= this.attackRange) {
-                    this.target.takeDamage(this.attackDamage);
+                if (this.currentTargetType === 'player' && this.target instanceof Player) {
+                    targetSprite = this.target.getSprite();
+                } else if (this.currentTargetType === 'door' && this.target instanceof Door) {
+                    targetSprite = this.target.getSprite();
+                }
+
+                if (targetSprite) {
+                    const distance = Phaser.Math.Distance.Between(
+                        this.slime.x, this.slime.y,
+                        targetSprite.x, targetSprite.y
+                    );
+
+                    if (distance <= this.attackRange) {
+                        // Check target type and call appropriate takeDamage method
+                        if (this.currentTargetType === 'player' && this.target instanceof Player) {
+                            this.target.takeDamage(this.attackDamage);
+                        } else if (this.currentTargetType === 'door' && this.target instanceof Door) {
+                            this.target.takeDamage(this.attackDamage);
+                        }
+                    }
                 }
             }
 
@@ -158,11 +237,13 @@ export class Slime {
         // Flash the slime red when damaged
         this.slime.setTint(0xff0000);
         this.scene.time.delayedCall(100, () => {
-            this.slime.clearTint();
+            if (this.slime.active) { // Check if still active before clearing tint
+                this.slime.clearTint();
+            }
         });
 
         // If health drops to zero or below, destroy the slime
-        if (this.health <= 0) {
+        if (this.health <= 0 && this.slime.active) {
             this.destroy();
         }
     }
@@ -173,9 +254,10 @@ export class Slime {
             const x = this.slime.x;
             const y = this.slime.y;
             this.scene.getResourceManager()?.dropChicken(x, y);
+            this.slime.destroy(); // Destroy the sprite
         }
-
-        this.slime.destroy();
+        // Nullify target to prevent further interactions
+        this.target = null;
     }
 
 }

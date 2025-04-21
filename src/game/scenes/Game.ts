@@ -288,4 +288,8 @@ export class Game extends Scene {
 	getResourceManager(): ResourceManager | undefined {
 		return this.resourceManager;
 	}
+
+	getBaseCamp(): Basecamp | undefined {
+		return this.basecamp;
+	}
 }
