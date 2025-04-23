@@ -37,9 +37,15 @@
 					: 'cursor-pointer bg-plumpPurpleLight p-6 py-3'}
 				onclick={() => handleSelection(song, index)}
 			>
-				<div class={$selectedSong === song ? 'text-lg text-white' : 'text-lg'}>{song.title}</div>
-				<div class={$selectedSong === song ? 'text-sm text-white' : 'text-sm'}>{song.artist}</div>
-				<div class={$selectedSong === song ? 'text-sm text-white' : 'text-sm'}>{song.date}</div>
+				<div class={$selectedSong === song ? 'text-lg text-white' : 'text-lg'}>
+					{song.title}
+				</div>
+				<div class={$selectedSong === song ? 'text-sm text-white' : 'text-sm'}>
+					{song.artist}
+				</div>
+				<div class={$selectedSong === song ? 'text-sm text-white' : 'text-sm'}>
+					{song.date}
+				</div>
 			</div>
 			<div class="mb-1"></div>
 		{/each}

@@ -13,15 +13,16 @@
 	injectSpeedInsights();
 </script>
 
-<div class="mt-2 flex flex-col items-center">
+<div class="mt-2 flex w-full flex-col items-center">
 	<div class="flex flex-col items-center">
 		<a class="title" href="/">No1yz.art</a>
 		<div class="line flex-1"></div>
 	</div>
-	<nav class="mt-4">
+	<nav class="mt-4 flex w-full flex-wrap items-center justify-center">
 		<a href="/gallery">Paintings</a>
 		<a href="/music">Music</a>
 		<a href="/respire">Respire</a>
+		<a href="/game">Game</a>
 	</nav>
 </div>
 
