@@ -75,15 +75,19 @@ export class Game extends Scene {
 
 		// Calculate clear area around basecamp
 		const clearPadding = 32;
-		const clearAreaLeft = centerX - (basecampDimensions.width / 2) - clearPadding;
-		const clearAreaRight = centerX + (basecampDimensions.width / 2) + clearPadding;
-		const clearAreaTop = centerY - (basecampDimensions.height / 2) - clearPadding;
-		const clearAreaBottom = centerY + (basecampDimensions.height / 2) + clearPadding;
+		const clearAreaLeft = centerX - basecampDimensions.width / 2 - clearPadding;
+		const clearAreaRight = centerX + basecampDimensions.width / 2 + clearPadding;
+		const clearAreaTop = centerY - basecampDimensions.height / 2 - clearPadding;
+		const clearAreaBottom = centerY + basecampDimensions.height / 2 + clearPadding;
 
 		// Helper function to check if position is in the clear area
 		const isInsideClearArea = (x: number, y: number) => {
-			return x >= clearAreaLeft && x <= clearAreaRight &&
-				y >= clearAreaTop && y <= clearAreaBottom;
+			return (
+				x >= clearAreaLeft &&
+				x <= clearAreaRight &&
+				y >= clearAreaTop &&
+				y <= clearAreaBottom
+			);
 		};
 
 		// Place environment objects
@@ -185,8 +189,12 @@ export class Game extends Scene {
 
 		// Handle joystick visibility
 		this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
-			if (pointer.x >= 0 && pointer.x <= this.cameras.main.width &&
-				pointer.y >= 0 && pointer.y <= this.cameras.main.height) {
+			if (
+				pointer.x >= 0 &&
+				pointer.x <= this.cameras.main.width &&
+				pointer.y >= 0 &&
+				pointer.y <= this.cameras.main.height
+			) {
 				this.joystick?.setPosition(pointer.x, pointer.y);
 				this.joystick?.setVisible(true);
 				this.joystick?.setEnable(true);
@@ -211,7 +219,11 @@ export class Game extends Scene {
 		this.healthText.setDepth(100);
 	}
 
-	createEnvironment(width: number, height: number, isInsideClearArea: (x: number, y: number) => boolean) {
+	createEnvironment(
+		width: number,
+		height: number,
+		isInsideClearArea: (x: number, y: number) => boolean
+	) {
 		// Place trees randomly across the map
 		const numberOfTrees = 25;
 		const worldBoundsX = width;

@@ -23,25 +23,20 @@ const config: Phaser.Types.Core.GameConfig = {
 		mode: Phaser.Scale.FIT,
 		autoCenter: Phaser.Scale.CENTER_BOTH
 	},
-	scene: [
-		Boot,
-		Preloader,
-		MainGame,
-	],
+	scene: [Boot, Preloader, MainGame],
 	plugins: {
-		global: [{
-			key: 'rexVirtualJoystick',
-			plugin: VirtualJoystickPlugin,
-			start: true
-		},
+		global: [
+			{
+				key: 'rexVirtualJoystick',
+				plugin: VirtualJoystickPlugin,
+				start: true
+			}
 		]
 	}
 };
 
 const StartGame = (parent: string) => {
-
 	return new Game({ ...config, parent });
-
 };
 
 export default StartGame;

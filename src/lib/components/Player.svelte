@@ -111,7 +111,9 @@
 
 	const handleNextSong = async () => {
 		const nextPositionToPlay =
-			songs.length === $playerState.currentPosition + 1 ? 0 : $playerState.currentPosition + 1;
+			songs.length === $playerState.currentPosition + 1
+				? 0
+				: $playerState.currentPosition + 1;
 
 		selectedSong.update(() => songs[nextPositionToPlay]);
 		await tick();
@@ -125,7 +127,9 @@
 
 	const handlePreviousSong = async () => {
 		const nextPositionToPlay =
-			$playerState.currentPosition - 1 < 0 ? songs.length - 1 : $playerState.currentPosition - 1;
+			$playerState.currentPosition - 1 < 0
+				? songs.length - 1
+				: $playerState.currentPosition - 1;
 
 		selectedSong.update(() => songs[nextPositionToPlay]);
 		await tick();

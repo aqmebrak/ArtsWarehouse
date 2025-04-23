@@ -12,15 +12,13 @@ export class Preloader extends Scene {
 		const barHeight = 32;
 
 		// The outline of the bar
-		this.add.rectangle(width / 2, height / 2, barWidth, barHeight)
-			.setStrokeStyle(1, 0xffffff);
+		this.add.rectangle(width / 2, height / 2, barWidth, barHeight).setStrokeStyle(1, 0xffffff);
 
 		// Calculate the left edge position of the background bar
 		const barLeft = width / 2 - barWidth / 2;
 
 		// Progress bar with origin set to left center (grows from left to right)
-		const bar = this.add.rectangle(barLeft + 4, height / 2, 0, 28, 0xffffff)
-			.setOrigin(0, 0.5);  // 0 on x-axis means left alignment
+		const bar = this.add.rectangle(barLeft + 4, height / 2, 0, 28, 0xffffff).setOrigin(0, 0.5); // 0 on x-axis means left alignment
 
 		// Update the progress bar width from left to right
 		this.load.on('progress', (progress: number) => {
@@ -32,8 +30,8 @@ export class Preloader extends Scene {
 	preload() {
 		// Load rocks spritesheet - adjust frameWidth and frameHeight to match your spritesheet
 		this.load.spritesheet('rocks', 'Rocks.png', {
-			frameWidth: 16,  // Adjust to match your rock sprite width
-			frameHeight: 16  // Adjust to match your rock sprite height
+			frameWidth: 16, // Adjust to match your rock sprite width
+			frameHeight: 16 // Adjust to match your rock sprite height
 		});
 
 		// Load game assets
@@ -51,13 +49,13 @@ export class Preloader extends Scene {
 
 		// Load basecamp assets
 		this.load.spritesheet('wall', 'walls.png', {
-			frameWidth: 48,  // Width of the largest element in the spritesheet
-			frameHeight: 16,  // Height of the wall elements
-			margin: 16,
+			frameWidth: 48, // Width of the largest element in the spritesheet
+			frameHeight: 16, // Height of the wall elements
+			margin: 16
 		});
 		this.load.spritesheet('wall-vertical', 'walls.png', {
-			frameWidth: 16,  // Width of the largest element in the spritesheet
-			frameHeight: 48  // Height of the wall elements
+			frameWidth: 16, // Width of the largest element in the spritesheet
+			frameHeight: 48 // Height of the wall elements
 		});
 		this.load.spritesheet('door', 'wooden_door.png', {
 			frameWidth: 16,
@@ -83,9 +81,8 @@ export class Preloader extends Scene {
 		// - Row 9 (frames 48-53): Top attack animation
 		this.load.spritesheet('player', 'player.png', {
 			frameWidth: 48,
-			frameHeight: 48,
+			frameHeight: 48
 		});
-
 	}
 
 	create() {
