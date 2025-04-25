@@ -3,11 +3,9 @@
 	import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit';
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
-	interface Props {
-		children?: import('svelte').Snippet;
-	}
+	import type { LayoutProps } from './$types';
 
-	let { children }: Props = $props();
+	let { children }: LayoutProps = $props();
 
 	inject({ mode: dev ? 'development' : 'production' });
 	injectSpeedInsights();
@@ -23,10 +21,13 @@
 		<a href="/music">Music</a>
 		<a href="/respire">Respire</a>
 		<a href="/game">Game</a>
+		<a href="/recipes">Recipes</a>
 	</nav>
 </div>
 
-{@render children?.()}
+<main class="mx-auto w-full max-w-[1440px] px-4 md:px-6 lg:px-8">
+	{@render children?.()}
+</main>
 
 <style>
 	.title {
