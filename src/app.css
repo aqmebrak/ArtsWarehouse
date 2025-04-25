@@ -1,54 +1,54 @@
-/* Write your global styles here, in PostCSS syntax */
 @import 'tailwindcss';
-
+@custom-variant dark (&:where(.dark, .dark *));
 @theme {
+	--color-background-color: #e7e6f7;
 	--color-primary: #322659;
 	--color-secondary: #6b46c1;
 	--color-lavender-web: #e7e6f7ff;
+	--color-lavender: #9d49d6;
 	--color-queen-pink: #e3d0d8ff;
 	--color-heliotrope-gray: #aea3b0ff;
 	--color-periwinkle-crayola: #c6d2edff;
 	--color-plump-purple: #6b46c1ff;
 	--color-plump-purple-light: rgba(107, 70, 193, 0.5);
 	--color-russian-violet: #322659ff;
-}
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
+	--color-scrollbarBG: #cfd8dc;
+	--color-thumbBG: #90a4ae;
 
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-	*,
-	::after,
-	::before,
-	::backdrop,
-	::file-selector-button {
-		border-color: var(--color-gray-200, currentcolor);
-	}
+	--list-style-type: square;
 }
 
 :root {
 	--background-color: #e7e6f7;
-	--font-color: var(--color-primary);
-	--font-color-secondary: var(--color-secondary);
-
-	--lavender-web: #e7e6f7ff;
-	--queen-pink: #e3d0d8ff;
-	--heliotrope-gray: #aea3b0ff;
-	--periwinkle-crayola: #c6d2edff;
-	--plump-purple: #6b46c1ff;
-	--plump-purple-light: rgba(107, 70, 193, 0.5);
-	--russian-violet: #322659ff;
-
-	--scrollbarBG: #cfd8dc;
-	--thumbBG: #90a4ae;
 
 	background-color: var(--background-color);
 	font-size: 16px;
+}
+
+@layer base {
+	
+	body {
+		font-family: 'SF Pro', 'Inter', sans-serif;
+		@apply bg-emerald-50 text-gray-700 dark:bg-emerald-950 dark:text-gray-200;
+	}
+
+	input,
+	textarea {
+		@apply border-2 border-emerald-700 p-2 focus:border-emerald-500 focus-visible:outline-none dark:border-emerald-200 dark:bg-emerald-50 dark:text-gray-700;
+	}
+
+	input {
+		@apply h-[36px];
+	}
+
+	select {
+		@apply h-[36px] min-w-[120px] border-2 border-emerald-700 p-2 focus:border-emerald-500 focus-visible:outline-none dark:border-emerald-200 dark:bg-emerald-50 dark:text-gray-700;
+	}
+
+	button {
+		@apply w-fit rounded-sm bg-emerald-100 p-2 text-gray-700 transition-colors hover:bg-emerald-200 dark:text-gray-700;
+	}
 }
 
 div::-webkit-scrollbar {
