@@ -4,6 +4,9 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
 		extend: {
+			listStyleType: {
+				square: 'square'
+			},
 			colors: {
 				primary: '#322659',
 				secondary: '#6B46C1',
@@ -13,9 +16,12 @@ export default {
 				periwinkleCrayola: '#c6d2edff',
 				plumpPurple: '#6b46c1ff',
 				plumpPurpleLight: 'rgba(107, 70, 193, 0.5)',
-				russianViolet: '#322659ff'
+				russianViolet: '#322659ff',
+				lavender: '#9d49d6'
 			}
 		}
 	},
+	darkMode: 'selector',
+
 	plugins: []
 } satisfies Config;
