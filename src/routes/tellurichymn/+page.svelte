@@ -73,7 +73,7 @@
 		<!-- Header Section -->
 		<header class="space-y-4 text-center text-white">
 			<h1
-				class="text-4xl font-light uppercase tracking-[-8px] text-white sm:text-5xl md:text-6xl"
+				class="text-4xl font-light tracking-[-8px] text-white uppercase sm:text-5xl md:text-6xl"
 			>
 				Telluric Hymn
 			</h1>
@@ -84,7 +84,7 @@
 		<!-- Main Info Section -->
 		<section class="space-y-4 text-center text-2xl">
 			<div
-				class="text-center text-3xl font-light font-semibold uppercase tracking-[1rem] text-white"
+				class="text-center text-3xl font-light font-semibold tracking-[1rem] text-white uppercase"
 			>
 				Gneiss
 			</div>
@@ -156,12 +156,12 @@
 							on:keypress={handleKeyPress}
 							placeholder="Enter password"
 							disabled={isLoading}
-							class="rounded border bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-purple-300 focus:outline-none disabled:opacity-50"
+							class="rounded-sm border bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-purple-300 focus:outline-hidden disabled:opacity-50"
 						/>
 						<button
 							on:click={checkPassword}
 							disabled={isLoading}
-							class="rounded bg-gray-400 px-4 py-2 text-white transition-colors hover:bg-purple-900 disabled:cursor-not-allowed disabled:opacity-50"
+							class="cursor-pointer rounded-sm bg-gray-400 px-4 py-2 text-white transition-colors hover:bg-purple-900 disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							{#if isLoading}
 								Verifying...
@@ -231,9 +231,16 @@
 	#main {
 		font-family: 'Source Code Pro', monospace;
 		color: white !important;
-		background-image: url('epk-background.png');
+		background-image: url('$lib/images/telluric-hymn/epk-background.png');
 		background-color: gray;
 		background-size: cover;
 		background-blend-mode: darken;
+	}
+
+	body,
+	div,
+	p,
+	span {
+		color: white;
 	}
 </style>

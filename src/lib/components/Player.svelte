@@ -148,7 +148,7 @@
 	};
 </script>
 
-<div class="w-96 rounded-r bg-periwinkleCrayola">
+<div class="w-96 rounded-r bg-periwinkle-crayola">
 	<div class="flex flex-col items-start justify-center p-2">
 		<!-- fake progress bar full width to click on it -->
 		<div
@@ -160,7 +160,7 @@
 			bind:this={progressContainer}
 		>
 			<!-- progress bar -->
-			<div class="progress h-4 w-0 rounded bg-secondary" id="progress"></div>
+			<div class="progress h-4 w-0 rounded-sm bg-secondary" id="progress"></div>
 		</div>
 
 		<div class="flex w-full items-center justify-around">
