@@ -24,17 +24,17 @@
 	};
 </script>
 
-<div class="mt-10 flex h-[36rem] justify-center">
+<div class="mt-10 flex h-144 justify-center">
 	<!-- liste des morceaux -->
-	<div class="overflow-auto rounded-l bg-periwinkleCrayola">
+	<div class="overflow-auto rounded-l bg-periwinkle-crayola">
 		{#each songs as song, index}
 			<div
 				tabindex="0"
 				role="button"
 				{...ariaKeyDownA11yHandler(() => handleSelection(song, index))}
 				class={$selectedSong === song
-					? 'cursor-pointer bg-plumpPurple p-6 py-3'
-					: 'cursor-pointer bg-plumpPurpleLight p-6 py-3'}
+					? 'cursor-pointer bg-plump-purple p-6 py-3'
+					: 'cursor-pointer bg-plump-purple-light p-6 py-3'}
 				onclick={() => handleSelection(song, index)}
 			>
 				<div class={$selectedSong === song ? 'text-lg text-white' : 'text-lg'}>
