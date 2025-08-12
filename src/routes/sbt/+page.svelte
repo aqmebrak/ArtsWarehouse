@@ -1,4 +1,6 @@
 <script>
+	import { fade } from 'svelte/transition';
+
 	const importantLinks = [
 		{
 			title: 'Latest Music Video',
@@ -17,6 +19,72 @@
 			url: 'https://storiesbonestell.bandcamp.com/album/stories-bones-tell-demo-mmxxii'
 		}
 	];
+
+	const bandPhotos = [
+		{
+			src: 'sbt/band-cave1.png',
+			alt: 'Stories Bones Tell - Cave Session 1',
+			title: 'Cave Session 1'
+		},
+		{
+			src: 'sbt/band-cave4.png',
+			alt: 'Stories Bones Tell - Cave Session 2',
+			title: 'Cave Session 2'
+		},
+		{
+			src: 'sbt/band-forest1.png',
+			alt: 'Stories Bones Tell - Forest Session 1',
+			title: 'Forest Session 1'
+		},
+		{
+			src: 'sbt/band-forest2.png',
+			alt: 'Stories Bones Tell - Forest Session 2',
+			title: 'Forest Session 2'
+		},
+		{
+			src: 'sbt/band-forest3.png',
+			alt: 'Stories Bones Tell - Forest Session 3',
+			title: 'Forest Session 3'
+		}
+	];
+
+	let selectedPhoto = $state(null);
+	let currentPhotoIndex = $state(0);
+
+	function openPhotoModal(photo, index) {
+		selectedPhoto = photo;
+		currentPhotoIndex = index;
+	}
+
+	function closePhotoModal() {
+		selectedPhoto = null;
+	}
+
+	function nextPhoto() {
+		if (currentPhotoIndex < bandPhotos.length - 1) {
+			currentPhotoIndex += 1;
+			selectedPhoto = bandPhotos[currentPhotoIndex];
+		}
+	}
+
+	function prevPhoto() {
+		if (currentPhotoIndex > 0) {
+			currentPhotoIndex -= 1;
+			selectedPhoto = bandPhotos[currentPhotoIndex];
+		}
+	}
+
+	function handleKeydown(event) {
+		if (!selectedPhoto) return;
+
+		if (event.key === 'Escape') {
+			closePhotoModal();
+		} else if (event.key === 'ArrowLeft') {
+			prevPhoto();
+		} else if (event.key === 'ArrowRight') {
+			nextPhoto();
+		}
+	}
 </script>
 
 <svelte:head>
@@ -29,6 +97,8 @@
 		rel="stylesheet"
 	/>
 </svelte:head>
+
+<svelte:window onkeydown={handleKeydown} />
 
 <div id="main" class="min-h-screen px-4 py-12 text-white sm:px-6 lg:px-8">
 	<div class="mx-auto max-w-5xl space-y-12 px-4 py-8">
@@ -55,42 +125,28 @@
 		<!-- Band Photos Section -->
 		<section class="space-y-6">
 			<h2 class="text-center text-3xl font-medium text-white">Band Photos</h2>
+			<p class="text-center text-sm text-gray-300">Click on any photo to view it larger</p>
 			<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-				<div class="overflow-hidden">
-					<img
-						src="sbt/band-cave1.png"
-						alt="Stories Bones Tell - Cave Session 1"
-						class="h-64 w-full object-contain transition-transform duration-300 hover:scale-105"
-					/>
-				</div>
-				<div class="overflow-hidden">
-					<img
-						src="sbt/band-cave4.png"
-						alt="Stories Bones Tell - Cave Session 2"
-						class="h-64 w-full object-contain transition-transform duration-300 hover:scale-105"
-					/>
-				</div>
-				<div class="overflow-hidden">
-					<img
-						src="sbt/band-forest1.png"
-						alt="Stories Bones Tell - Forest Session 1"
-						class="h-64 w-full object-contain transition-transform duration-300 hover:scale-105"
-					/>
-				</div>
-				<div class="overflow-hidden">
-					<img
-						src="sbt/band-forest2.png"
-						alt="Stories Bones Tell - Forest Session 2"
-						class="h-64 w-full object-contain transition-transform duration-300 hover:scale-105"
-					/>
-				</div>
-				<div class="overflow-hidden">
-					<img
-						src="sbt/band-forest3.png"
-						alt="Stories Bones Tell - Forest Session 3"
-						class="h-64 w-full object-contain transition-transform duration-300 hover:scale-105"
-					/>
-				</div>
+				{#each bandPhotos as photo, index}
+					<div
+						class="group cursor-pointer overflow-hidden"
+						onclick={() => openPhotoModal(photo, index)}
+						onkeydown={(e) => e.key === 'Enter' && openPhotoModal(photo, index)}
+						tabindex="0"
+						role="button"
+					>
+						<img
+							src={photo.src}
+							alt={photo.alt}
+							class="h-64 w-full object-contain transition-all duration-300 group-hover:brightness-110 hover:scale-105"
+						/>
+						<div
+							class="mt-2 text-center text-sm text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+						>
+							{photo.title}
+						</div>
+					</div>
+				{/each}
 			</div>
 		</section>
 
@@ -119,8 +175,8 @@
 					lourd poids des âges passés, dont seuls les os peuvent témoigner.
 				</p>
 				<p class="text-lg leading-relaxed text-gray-200">
-					En concert, STORIES BONES TELL a partagé la scène avec Jours Pales, Nature
-					Morte, Decima, Altair, Tenace, etc.
+					En concert, STORIES BONES TELL a partagé la scène avec Nature Morte, Altair,
+					Tenace, etc.
 				</p>
 			</div>
 		</section>
@@ -208,6 +264,104 @@
 		<hr class="border-gray-600" />
 	</div>
 </div>
+
+<!-- Photo Modal -->
+{#if selectedPhoto}
+	<div
+		class="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+		onclick={closePhotoModal}
+		onkeydown={(e) => e.key === 'Enter' && closePhotoModal()}
+		role="button"
+		tabindex="0"
+		transition:fade={{ duration: 300 }}
+	>
+		<div class="relative max-h-[90vh] max-w-[90vw] p-4">
+			<!-- Close button -->
+			<button
+				class="absolute -top-2 -right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+				onclick={closePhotoModal}
+				aria-label="Close photo"
+			>
+				<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M6 18L18 6M6 6l12 12"
+					/>
+				</svg>
+			</button>
+
+			<!-- Previous button -->
+			{#if currentPhotoIndex > 0}
+				<button
+					class="absolute top-1/2 left-2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+					onclick={(e) => {
+						e.stopPropagation();
+						prevPhoto();
+					}}
+					aria-label="Previous photo"
+				>
+					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M15 19l-7-7 7-7"
+						/>
+					</svg>
+				</button>
+			{/if}
+
+			<!-- Next button -->
+			{#if currentPhotoIndex < bandPhotos.length - 1}
+				<button
+					class="absolute top-1/2 right-2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+					onclick={(e) => {
+						e.stopPropagation();
+						nextPhoto();
+					}}
+					aria-label="Next photo"
+				>
+					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M9 5l7 7-7 7"
+						/>
+					</svg>
+				</button>
+			{/if}
+
+			<!-- Photo -->
+			<div
+				class="flex items-center justify-center"
+				onclick={(e) => e.stopPropagation()}
+				onkeydown={(e) => e.key === 'Enter' && e.stopPropagation()}
+				role="button"
+				tabindex="0"
+			>
+				<img
+					src={selectedPhoto.src}
+					alt={selectedPhoto.alt}
+					class="max-h-[80vh] max-w-full rounded-lg object-contain shadow-2xl"
+				/>
+			</div>
+
+			<!-- Photo title and navigation info -->
+			<div class="mt-4 text-center text-white">
+				<h3 class="text-lg font-medium">{selectedPhoto.title}</h3>
+				<p class="mt-1 text-sm text-gray-300">
+					{currentPhotoIndex + 1} of {bandPhotos.length}
+				</p>
+				<p class="mt-2 text-xs text-gray-400">
+					Use arrow keys to navigate • Press Escape to close
+				</p>
+			</div>
+		</div>
+	</div>
+{/if}
 
 <style>
 	#main {
