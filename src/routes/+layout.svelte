@@ -20,7 +20,7 @@
 		<div class="line flex-1"></div>
 	</div>
 	<!-- hide menu if on /tellurichhymn page -->
-	{#if page.url.pathname !== '/tellurichymn'}
+	{#if page.url.pathname !== '/tellurichymn' && page.url.pathname !== '/sbt'}
 		<nav class="mt-4 flex w-full flex-wrap items-center justify-center">
 			<a href="/gallery">Paintings</a>
 			<a href="/sbt">Stories Bones Tell</a>
