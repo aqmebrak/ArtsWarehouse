@@ -27,7 +27,6 @@
 			<a href="/tellurichymn">Telluric Hymn</a>
 			<!-- <a href="/music">Music</a> -->
 			<!-- <a href="/respire">Respire</a> -->
-			<!-- <a href="/game">Game</a> -->
 		</nav>
 	{/if}
 </div>
