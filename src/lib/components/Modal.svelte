@@ -16,7 +16,6 @@
 	//transition
 	let transitionBg = fade;
 	let transitionBgProps = { duration: 250 };
-	let transitionWindow = transitionBg;
 
 	modals.subscribe((m) => {
 		modalsState = m[id];
@@ -24,7 +23,7 @@
 
 	const close = () => modals.update((modalsPrev) => ({ ...modalsPrev, [id]: false }));
 
-	const handleKeydown = (event: Event) => {
+	const handleKeydown = (event: KeyboardEvent) => {
 		if (event.key === 'Escape') {
 			event.preventDefault();
 			close();
@@ -49,7 +48,7 @@
 	<div
 		role="button"
 		tabindex="0"
-		class="fixed left-0 top-0 z-50 flex h-screen w-screen flex-col justify-center bg-black/85"
+		class="fixed top-0 left-0 z-50 flex h-screen w-screen flex-col justify-center bg-black/85"
 		onmousedown={handleOuterMousedown}
 		onmouseup={handleOuterMouseup}
 		bind:this={background}

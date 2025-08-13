@@ -25,9 +25,7 @@
 		padding: 10px;
 		font-size: 14px;
 	}
-	a svg {
-		margin-bottom: 12px;
-	}
+	/* css_unused_selector: ignore */
 	a span {
 		color: var(--plump-purple);
 	}

@@ -5,16 +5,12 @@
 	import { createDialog, melt } from '@melt-ui/svelte';
 	import { fade } from 'svelte/transition';
 
-	let selectedImage = $state(null);
+	let selectedImage = $state<string | null>(null);
 
 	const {
 		elements: { trigger, portalled, overlay, content, close },
 		states: { open }
 	} = createDialog();
-
-	function handleClickImage(url: string) {
-		modals.update((modalsPrev) => ({ ...modalsPrev, [url]: true }));
-	}
 </script>
 
 <div class="mb-4 flex justify-center sm:mb-0">
@@ -51,9 +47,9 @@
 		></div>
 		<div
 			use:melt={$content}
-			class="fixed left-1/2 top-1/2 z-50 flex max-h-[80vh] w-full -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-white p-6 shadow-lg"
+			class="fixed top-1/2 left-1/2 z-50 flex max-h-[80vh] w-full -translate-x-1/2 -translate-y-1/2 items-center justify-center bg-white p-6 shadow-lg"
 		>
-			<button use:melt={$close} class="absolute right-0 top-0">X</button>
+			<button use:melt={$close} class="absolute top-0 right-0">X</button>
 			<img src={selectedImage} alt="img1" class="h-[80vh]" />
 		</div>
 	</div>

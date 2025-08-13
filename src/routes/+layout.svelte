@@ -4,6 +4,8 @@
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
 	import { page } from '$app/state';
+	import LanguageToggle from '$lib/components/LanguageToggle.svelte';
+	import { t } from '$lib/i18n';
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
@@ -22,12 +24,17 @@
 	<!-- hide menu if on /tellurichhymn page -->
 	{#if page.url.pathname !== '/tellurichymn' && page.url.pathname !== '/sbt'}
 		<nav class="mt-4 flex w-full flex-wrap items-center justify-center">
-			<a href="/gallery">Paintings</a>
-			<a href="/sbt">Stories Bones Tell</a>
-			<a href="/tellurichymn">Telluric Hymn</a>
-			<!-- <a href="/music">Music</a> -->
-			<!-- <a href="/respire">Respire</a> -->
+			<a href="/gallery">{$t('nav.paintings')}</a>
+			<a href="/sbt">{$t('nav.storiesBonesTell')}</a>
+			<a href="/tellurichymn">{$t('nav.telluricHymn')}</a>
+			<!-- <a href="/music">{$t('nav.music')}</a> -->
+			<!-- <a href="/respire">{$t('nav.respire')}</a> -->
 		</nav>
+
+		<!-- Language Toggle - only show on main navigation pages -->
+		<div class="fixed top-4 right-4 z-50">
+			<LanguageToggle />
+		</div>
 	{/if}
 </div>
 

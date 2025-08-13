@@ -1,16 +1,28 @@
 <script>
+	import { t } from '$lib/i18n';
+	import LanguageToggle from '$lib/components/LanguageToggle.svelte';
+
 	const importantLinks = [
 		{
-			title: 'Private Album Stream',
+			title: 'telluricHymn.importantLinks.privateAlbumStream',
 			url: 'https://youtu.be/U5UWTVfgEps'
 		},
-		{ title: 'First Single Visualizer', url: 'https://youtu.be/1xo13MWmqxU' },
+		{
+			title: 'telluricHymn.importantLinks.firstSingleVisualizer',
+			url: 'https://youtu.be/1xo13MWmqxU'
+		},
 		// {
 		// 	title: 'Second Visualizer',
 		// 	url: '[Link to the YouTube video for the second visualizer]'
 		// },
-		{ title: 'Bandcamp Pre-order', url: '[Your Bandcamp Album Link]' },
-		{ title: 'Music on Spotify', url: '[Link to your Spotify Artist Profile]' }
+		{
+			title: 'telluricHymn.importantLinks.bandcampPreorder',
+			url: '[Your Bandcamp Album Link]'
+		},
+		{
+			title: 'telluricHymn.importantLinks.spotifyMusic',
+			url: '[Link to your Spotify Artist Profile]'
+		}
 	];
 
 	// Password protection for important links
@@ -75,7 +87,7 @@
 			<h1
 				class="text-4xl font-light tracking-[-8px] text-white uppercase sm:text-5xl md:text-6xl"
 			>
-				Telluric Hymn
+				{$t('telluricHymn.title')}
 			</h1>
 		</header>
 
@@ -83,36 +95,30 @@
 
 		<!-- Main Info Section -->
 		<section class="space-y-4 text-center text-2xl">
-			<div
-				class="text-center text-3xl font-light font-semibold tracking-[1rem] text-white uppercase"
-			>
-				Gneiss
+			<div class="text-center text-3xl font-semibold tracking-[1rem] text-white uppercase">
+				{$t('telluricHymn.albumTitle')}
 			</div>
-			<div class="pt-4 font-semibold tracking-[12px] text-white">19/09/2025</div>
+			<div class="pt-4 font-semibold tracking-[12px] text-white">
+				{$t('telluricHymn.releaseDate')}
+			</div>
 		</section>
 
 		<hr class="border-gray-700" />
 
 		<!-- Project Description & Bio Section -->
 		<section class="max-w-none space-y-4 text-center text-white">
-			<h3 class="text-3xl">Project Description & Bio</h3>
+			<h3 class="text-3xl">{$t('telluricHymn.projectDescription')}</h3>
 			<p class="text-white">
-				Telluric Hymn is a one man band instrumental post-metal project of No1yz. Following
-				years of sonic exploration, the project culminates in the debut full-length album,
-				Gneiss.
+				{$t('telluricHymn.projectDescriptionText1')}
 			</p>
 			<p class="text-white">
-				This album is a monumental sonic journey, weaving together crushing riffs and
-				expansive soundscapes. The music is a direct reflection of a deep fascination with
-				the raw power and strength of nature, from its unyielding, crushing force to its
-				moments of profound, unmovable calm.
+				{$t('telluricHymn.projectDescriptionText2')}
 			</p>
 			<p class="text-white">
-				This project is a testament to the power of texture and atmosphere, creating an
-				immersive experience for listeners that is both heavy and hauntingly beautiful.
+				{$t('telluricHymn.projectDescriptionText3')}
 			</p>
 			<p class="mt-6 text-white">
-				For Fans Of: 'Russian Circles', 'The Ocean', 'Cult of Luna', 'Bell Witch'
+				{$t('telluricHymn.forFansOf')}
 			</p>
 		</section>
 
@@ -120,20 +126,17 @@
 
 		<!-- Key Points Section -->
 		<section class="max-w-none space-y-4">
-			<h3 class="text-center text-3xl text-white">Key Points</h3>
+			<h3 class="text-center text-3xl text-white">{$t('telluricHymn.keyPoints')}</h3>
 			<ul class="ml-8 list-[georgian] space-y-2 text-white">
-				<li>Genre: Instrumental Post-Metal, Post-Rock, Atmospheric Metal</li>
+				<li>{$t('telluricHymn.keyPoint1')}</li>
 				<li>
-					Unique Theme: A conceptual album inspired by geology, rocks, forces of nature
-					and its beauty.
+					{$t('telluricHymn.keyPoint2')}
 				</li>
 				<li>
-					Visuals: Accompanied by self-made visualizer videos, created using TouchDesigner
-					software.
+					{$t('telluricHymn.keyPoint3')}
 				</li>
 				<li>
-					First Single: The lead single, 'Plagioclase', provides a first glimpse into the
-					album's sound.
+					{$t('telluricHymn.keyPoint4')}
 				</li>
 			</ul>
 		</section>
@@ -142,19 +145,19 @@
 
 		<!-- Important Links Section -->
 		<section class="max-w-none space-y-4 text-center">
-			<h3 class="text-3xl text-white">Links</h3>
+			<h3 class="text-3xl text-white">{$t('telluricHymn.links')}</h3>
 
 			{#if !isLinksUnlocked}
 				<div class="space-y-4">
 					<p class="text-white">
-						This section contains private links for press and curators only.
+						{$t('telluricHymn.linksPrivateMessage')}
 					</p>
 					<div class="flex flex-col items-center space-y-2">
 						<input
 							type="password"
 							bind:value={passwordInput}
 							on:keypress={handleKeyPress}
-							placeholder="Enter password"
+							placeholder={$t('telluricHymn.passwordPlaceholder')}
 							disabled={isLoading}
 							class="rounded-sm border bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-purple-300 focus:outline-hidden disabled:opacity-50"
 						/>
@@ -164,13 +167,13 @@
 							class="cursor-pointer rounded-sm bg-gray-400 px-4 py-2 text-white transition-colors hover:bg-purple-900 disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							{#if isLoading}
-								Verifying...
+								{$t('telluricHymn.verifying')}
 							{:else}
-								Unlock
+								{$t('telluricHymn.unlock')}
 							{/if}
 						</button>
 						{#if passwordError}
-							<p class="text-red-400">Incorrect password. Please try again.</p>
+							<p class="text-red-400">{$t('telluricHymn.incorrectPassword')}</p>
 						{/if}
 					</div>
 				</div>
@@ -183,10 +186,12 @@
 								target="_blank"
 								class="text-white underline transition-colors hover:text-blue-300"
 							>
-								{link.title}
+								{$t(link.title)}
 							</a>
 						{:else}
-							<p class="text-white">{link.title}: (Link Not Provided)</p>
+							<p class="text-white">
+								{$t(link.title)}: {$t('telluricHymn.linkNotProvided')}
+							</p>
 						{/if}
 					{/each}
 				</div>
@@ -197,11 +202,12 @@
 
 		<!-- Contact Information Section -->
 		<section class="max-w-none space-y-4 text-center">
-			<h3 class="text-3xl text-white">Contact Information</h3>
+			<h3 class="text-3xl text-white">{$t('telluricHymn.contactInformation')}</h3>
 			<ul class="list-none space-y-1 text-white">
-				<li class="text-white">Email: tellurichymn.band@gmail.com</li>
+				<li class="text-white">{$t('telluricHymn.email')}</li>
 				<li class="text-white">
-					Instagram: <a
+					{$t('telluricHymn.instagram')}
+					<a
 						href="https://www.instagram.com/tellurichymn.band"
 						target="_blank"
 						class="text-white underline transition-colors hover:text-purple-300"
@@ -215,15 +221,14 @@
 
 		<!-- About the Artist Section -->
 		<section class="max-w-none space-y-4 text-center">
-			<h3 class="text-3xl text-white">About the Artist</h3>
+			<h3 class="text-3xl text-white">{$t('telluricHymn.aboutArtist')}</h3>
 			<p class="text-white">
-				No1yz is a French guy from Lyon, and has played guitar since he was 15. He was
-				always drawn to the atmospheric and melancholic sounds, all genres boundaries aside.
-				Very curious and passionate about creating art, he channels his creativity into
-				various mediums, from music to painting and digital art. With his first self-made
-				project, "Telluric Hymn", No1yz aims to share emotions through music.
+				{$t('telluricHymn.aboutArtistText')}
 			</p>
 		</section>
+	</div>
+	<div class="fixed top-4 right-4 z-50">
+		<LanguageToggle />
 	</div>
 </div>
 

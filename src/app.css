@@ -2,15 +2,15 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-primary: #322659;
-  --color-secondary: #6b46c1;
-  --color-lavender-web: #e7e6f7ff;
-  --color-queen-pink: #e3d0d8ff;
-  --color-heliotrope-gray: #aea3b0ff;
-  --color-periwinkle-crayola: #c6d2edff;
-  --color-plump-purple: #6b46c1ff;
-  --color-plump-purple-light: rgba(107, 70, 193, 0.5);
-  --color-russian-violet: #322659ff;
+	--color-primary: #322659;
+	--color-secondary: #6b46c1;
+	--color-lavender-web: #e7e6f7ff;
+	--color-queen-pink: #e3d0d8ff;
+	--color-heliotrope-gray: #aea3b0ff;
+	--color-periwinkle-crayola: #c6d2edff;
+	--color-plump-purple: #6b46c1ff;
+	--color-plump-purple-light: rgba(107, 70, 193, 0.5);
+	--color-russian-violet: #322659ff;
 }
 
 /*
@@ -22,13 +22,13 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentcolor);
+	}
 }
 
 :root {

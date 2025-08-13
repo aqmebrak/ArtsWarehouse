@@ -1,21 +1,23 @@
 <script>
 	import { fade } from 'svelte/transition';
+	import { t } from '$lib/i18n';
+	import LanguageToggle from '$lib/components/LanguageToggle.svelte';
 
 	const importantLinks = [
 		{
-			title: 'Latest Music Video',
+			title: 'sbt.importantLinks.latestMusicVideo',
 			url: 'https://www.youtube.com/watch?v=KNtUaieVW6Y&t=2358s'
 		},
 		{
-			title: 'Streaming on Spotify',
+			title: 'sbt.importantLinks.streamingSpotify',
 			url: 'https://open.spotify.com/album/67vg4bP7EeIoDFhL18jLZ9?si=nt9QFotwTkWF1JnPPL8xRg'
 		},
 		{
-			title: 'Bandcamp',
+			title: 'sbt.importantLinks.bandcamp',
 			url: 'https://storiesbonestell.bandcamp.com/album/of-worlds-long-gone'
 		},
 		{
-			title: 'Original Demo',
+			title: 'sbt.importantLinks.originalDemo',
 			url: 'https://storiesbonestell.bandcamp.com/album/stories-bones-tell-demo-mmxxii'
 		}
 	];
@@ -24,27 +26,27 @@
 		{
 			src: 'sbt/band-cave1.png',
 			alt: 'Stories Bones Tell - Cave Session 1',
-			title: 'Cave Session 1'
+			title: 'sbt.bandPhotoTitles.caveSession1'
 		},
 		{
 			src: 'sbt/band-cave4.png',
 			alt: 'Stories Bones Tell - Cave Session 2',
-			title: 'Cave Session 2'
+			title: 'sbt.bandPhotoTitles.caveSession2'
 		},
 		{
 			src: 'sbt/band-forest1.png',
 			alt: 'Stories Bones Tell - Forest Session 1',
-			title: 'Forest Session 1'
+			title: 'sbt.bandPhotoTitles.forestSession1'
 		},
 		{
 			src: 'sbt/band-forest2.png',
 			alt: 'Stories Bones Tell - Forest Session 2',
-			title: 'Forest Session 2'
+			title: 'sbt.bandPhotoTitles.forestSession2'
 		},
 		{
 			src: 'sbt/band-forest3.png',
 			alt: 'Stories Bones Tell - Forest Session 3',
-			title: 'Forest Session 3'
+			title: 'sbt.bandPhotoTitles.forestSession3'
 		}
 	];
 
@@ -115,17 +117,17 @@
 				class="text-4xl font-light tracking-wider text-white sm:text-5xl md:text-6xl"
 				style="font-family: 'Crimson Pro', serif;"
 			>
-				Stories Bones Tell
+				{$t('sbt.title')}
 			</h1>
-			<p class="text-xl font-light tracking-wide text-gray-200">Electronic Press Kit</p>
+			<p class="text-xl font-light tracking-wide text-gray-200">{$t('sbt.subtitle')}</p>
 		</header>
 
 		<hr class="border-gray-600" />
 
 		<!-- Band Photos Section -->
 		<section class="space-y-6">
-			<h2 class="text-center text-3xl font-medium text-white">Band Photos</h2>
-			<p class="text-center text-sm text-gray-300">Click on any photo to view it larger</p>
+			<h2 class="text-center text-3xl font-medium text-white">{$t('sbt.bandPhotos')}</h2>
+			<p class="text-center text-sm text-gray-300">{$t('sbt.bandPhotosSubtitle')}</p>
 			<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 				{#each bandPhotos as photo, index}
 					<div
@@ -143,7 +145,7 @@
 						<div
 							class="mt-2 text-center text-sm text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"
 						>
-							{photo.title}
+							{$t(photo.title)}
 						</div>
 					</div>
 				{/each}
@@ -154,29 +156,21 @@
 
 		<!-- Bio Section -->
 		<section class="space-y-6">
-			<h2 class="text-center text-3xl font-medium text-white">About the Band</h2>
+			<h2 class="text-center text-3xl font-medium text-white">{$t('sbt.aboutBand')}</h2>
 			<div
 				class="prose prose-lg prose-invert mx-auto flex max-w-4xl flex-col gap-4 text-center"
 			>
 				<p class="text-lg leading-relaxed text-gray-200">
-					Formé en 2019 à Lyon, STORIES BONES TELL est un quintet de black metal
-					atmosphérique.
+					{$t('sbt.aboutBandText1')}
 				</p>
 				<p class="text-lg leading-relaxed text-gray-200">
-					Ses membres livrent leur propre vision du metal noir: furieux, mélancolique et
-					contemporain. Ils en dévoilent les contours dans une première démo en 2022.
+					{$t('sbt.aboutBandText2')}
 				</p>
 				<p class="text-lg leading-relaxed text-gray-200">
-					En 2023, STORIES BONES TELL délivre son premier album "Of Worlds Long Gone", et
-					persévère dans sa veine d'une musique dense et hypnotique, entre assauts rageurs
-					saturés de blastbeats et abîmes de tristesse qui ne craignent pas la mélodie.
-					Les six titres du disque s'abordent comme autant de chapitres d'une légende
-					hallucinée, faite de batailles cauchemardesques, de deuils indicibles et du
-					lourd poids des âges passés, dont seuls les os peuvent témoigner.
+					{$t('sbt.aboutBandText3')}
 				</p>
 				<p class="text-lg leading-relaxed text-gray-200">
-					En concert, STORIES BONES TELL a partagé la scène avec Nature Morte, Altair,
-					Tenace, etc.
+					{$t('sbt.aboutBandText4')}
 				</p>
 			</div>
 		</section>
@@ -185,23 +179,23 @@
 
 		<!-- Musical Style & Influences Section -->
 		<section class="space-y-6">
-			<h2 class="text-center text-3xl font-medium text-white">Musical Style & Influences</h2>
+			<h2 class="text-center text-3xl font-medium text-white">{$t('sbt.musicalStyle')}</h2>
 			<div class="grid grid-cols-1 gap-8 md:grid-cols-2">
 				<div class="space-y-4">
-					<h3 class="text-xl font-semibold text-white">Genre</h3>
+					<h3 class="text-xl font-semibold text-white">{$t('sbt.genre')}</h3>
 					<ul class="space-y-2 text-gray-200">
-						<li>• Atmospheric Black Metal</li>
-						<li>• Post-Black Metal</li>
+						<li>{$t('sbt.genreItems.atmospheric')}</li>
+						<li>{$t('sbt.genreItems.postBlack')}</li>
 					</ul>
 				</div>
 				<div class="space-y-4">
-					<h3 class="text-xl font-semibold text-white">For Fans Of</h3>
+					<h3 class="text-xl font-semibold text-white">{$t('sbt.forFansOf')}</h3>
 					<ul class="space-y-2 text-gray-200">
-						<li>• Altar of Plagues</li>
-						<li>• Wolves in the Throne Room</li>
-						<li>• Der Weg Einer Freiheit</li>
-						<li>• Fluisteraars</li>
-						<li>• Mgła</li>
+						<li>{$t('sbt.forFansOfItems.altarOfPlagues')}</li>
+						<li>{$t('sbt.forFansOfItems.wolvesInThrone')}</li>
+						<li>{$t('sbt.forFansOfItems.derWeg')}</li>
+						<li>{$t('sbt.forFansOfItems.fluisteraars')}</li>
+						<li>{$t('sbt.forFansOfItems.mgla')}</li>
 					</ul>
 				</div>
 			</div>
@@ -211,7 +205,7 @@
 
 		<!-- Important Links Section -->
 		<section class="space-y-6 text-center">
-			<h2 class="text-3xl font-medium text-white">Press Links</h2>
+			<h2 class="text-3xl font-medium text-white">{$t('sbt.pressLinks')}</h2>
 
 			<div class="space-y-3">
 				{#each importantLinks as link}
@@ -222,11 +216,11 @@
 							rel="noopener noreferrer"
 							class="block rounded-lg bg-gray-800/50 px-6 py-3 text-white transition-colors hover:bg-gray-700/70 hover:text-blue-300"
 						>
-							{link.title}
+							{$t(link.title)}
 						</a>
 					{:else}
 						<div class="rounded-lg bg-gray-800/30 px-6 py-3 text-gray-400">
-							{link.title}: (Coming Soon)
+							{$t(link.title)}: {$t('sbt.comingSoon')}
 						</div>
 					{/if}
 				{/each}
@@ -237,14 +231,14 @@
 
 		<!-- Contact Information Section -->
 		<section class="space-y-6 text-center">
-			<h2 class="text-3xl font-medium text-white">Contact Information</h2>
+			<h2 class="text-3xl font-medium text-white">{$t('sbt.contactInformation')}</h2>
 			<div class="mx-auto max-w-md space-y-4">
 				<div class="rounded-lg bg-gray-800/50 p-4 backdrop-blur-sm">
-					<h3 class="mb-2 text-lg font-semibold text-white">Booking & Press</h3>
+					<h3 class="mb-2 text-lg font-semibold text-white">{$t('sbt.bookingPress')}</h3>
 					<p class="text-gray-200">storiesbonestell.band@gmail.com</p>
 				</div>
 				<div class="rounded-lg bg-gray-800/50 p-4 backdrop-blur-sm">
-					<h3 class="mb-2 text-lg font-semibold text-white">Social Media</h3>
+					<h3 class="mb-2 text-lg font-semibold text-white">{$t('sbt.socialMedia')}</h3>
 					<div class="space-y-1 text-gray-200">
 						<p>
 							Instagram: <a href="https://instagram.com/stories_bones_tell"
@@ -262,6 +256,10 @@
 		</section>
 
 		<hr class="border-gray-600" />
+
+		<div class="fixed top-4 right-4 z-50">
+			<LanguageToggle />
+		</div>
 	</div>
 </div>
 
@@ -280,7 +278,7 @@
 			<button
 				class="absolute -top-2 -right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
 				onclick={closePhotoModal}
-				aria-label="Close photo"
+				aria-label={$t('sbt.photoModal.closePhoto')}
 			>
 				<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
@@ -300,7 +298,7 @@
 						e.stopPropagation();
 						prevPhoto();
 					}}
-					aria-label="Previous photo"
+					aria-label={$t('sbt.photoModal.previousPhoto')}
 				>
 					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
@@ -321,7 +319,7 @@
 						e.stopPropagation();
 						nextPhoto();
 					}}
-					aria-label="Next photo"
+					aria-label={$t('sbt.photoModal.nextPhoto')}
 				>
 					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path
@@ -351,12 +349,14 @@
 
 			<!-- Photo title and navigation info -->
 			<div class="mt-4 text-center text-white">
-				<h3 class="text-lg font-medium">{selectedPhoto.title}</h3>
+				<h3 class="text-lg font-medium">{$t(selectedPhoto.title)}</h3>
 				<p class="mt-1 text-sm text-gray-300">
-					{currentPhotoIndex + 1} of {bandPhotos.length}
+					{currentPhotoIndex + 1}
+					{$t('sbt.photoModal.of')}
+					{bandPhotos.length}
 				</p>
 				<p class="mt-2 text-xs text-gray-400">
-					Use arrow keys to navigate • Press Escape to close
+					{$t('sbt.photoModal.navigationHelp')}
 				</p>
 			</div>
 		</div>
@@ -369,7 +369,6 @@
 		color: white !important;
 		background-image: url('$lib/images/sbt/sbt-background.png');
 	}
-
 	body,
 	div,
 	p,
