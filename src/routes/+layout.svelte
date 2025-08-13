@@ -16,17 +16,15 @@
 	injectSpeedInsights();
 </script>
 
-<div class="my-2 flex w-full flex-col items-center">
-	<div class="flex flex-col items-center">
-		<a class="title" href="/">No1yz.art</a>
-		<div class="line flex-1"></div>
-	</div>
+<div class="my-2 flex w-full justify-center">
+	<a class="title mr-8" href="/">No1yz.art</a>
 	<!-- hide menu if on /tellurichhymn page -->
 	{#if page.url.pathname !== '/tellurichymn' && page.url.pathname !== '/sbt'}
-		<nav class="mt-4 flex w-full flex-wrap items-center justify-center">
+		<nav class="mt-4 flex flex-wrap items-end justify-center">
 			<a href="/gallery">{$t('nav.paintings')}</a>
 			<a href="/sbt">{$t('nav.storiesBonesTell')}</a>
 			<a href="/tellurichymn">{$t('nav.telluricHymn')}</a>
+			<a href="/audio-training">{$t('nav.audioTraining')}</a>
 			<!-- <a href="/music">{$t('nav.music')}</a> -->
 			<!-- <a href="/respire">{$t('nav.respire')}</a> -->
 		</nav>

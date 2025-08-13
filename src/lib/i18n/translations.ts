@@ -12,7 +12,8 @@ export const translations = {
 			storiesBonesTell: 'Stories Bones Tell',
 			telluricHymn: 'Telluric Hymn',
 			music: 'Music',
-			respire: 'Respire'
+			respire: 'Respire',
+			audioTraining: 'Audio Training'
 		},
 
 		// Telluric Hymn page
@@ -111,6 +112,28 @@ export const translations = {
 				forestSession2: 'Forest Session 2',
 				forestSession3: 'Forest Session 3'
 			}
+		},
+
+		// Audio Training section
+		audioTraining: {
+			title: 'Audio Engineer Training',
+			subtitle: 'Improve your audio engineering skills',
+			exerciseSelection: 'Exercise Selection',
+			panning: {
+				title: 'Panning Exercise',
+				description: 'Listen to the audio and identify the panning position',
+				instructions: 'Click on the grid to guess the panning position. You have a 5% margin of error.',
+				startExercise: 'Start Exercise',
+				stopExercise: 'Stop Exercise',
+				correctGuess: 'Correct! Well done!',
+				incorrectGuess: 'Incorrect. The correct position was',
+				panningPosition: 'Panning Position',
+				left: 'Left',
+				right: 'Right',
+				center: 'Center',
+				clickToGuess: 'Click on the grid to make your guess',
+				marginError: '±5% margin of error'
+			}
 		}
 	},
 
@@ -127,7 +150,8 @@ export const translations = {
 			storiesBonesTell: 'Stories Bones Tell',
 			telluricHymn: 'Telluric Hymn',
 			music: 'Musique',
-			respire: 'Respire'
+			respire: 'Respire',
+			audioTraining: 'Formation Audio'
 		},
 
 		// Telluric Hymn page
@@ -227,6 +251,28 @@ export const translations = {
 				forestSession1: 'Session Forêt 1',
 				forestSession2: 'Session Forêt 2',
 				forestSession3: 'Session Forêt 3'
+			}
+		},
+
+		// Audio Training section
+		audioTraining: {
+			title: 'Formation Ingénieur du Son',
+			subtitle: 'Améliorez vos compétences en ingénierie audio',
+			exerciseSelection: 'Sélection d\'Exercices',
+			panning: {
+				title: 'Exercice de Panoramique',
+				description: 'Écoutez l\'audio et identifiez la position du panoramique',
+				instructions: 'Cliquez sur la grille pour deviner la position du panoramique. Vous avez une marge d\'erreur de 5%.',
+				startExercise: 'Commencer l\'Exercice',
+				stopExercise: 'Arrêter l\'Exercice',
+				correctGuess: 'Correct ! Bien joué !',
+				incorrectGuess: 'Incorrect. La position correcte était',
+				panningPosition: 'Position du Panoramique',
+				left: 'Gauche',
+				right: 'Droite',
+				center: 'Centre',
+				clickToGuess: 'Cliquez sur la grille pour faire votre supposition',
+				marginError: 'Marge d\'erreur de ±5%'
 			}
 		}
 	}
