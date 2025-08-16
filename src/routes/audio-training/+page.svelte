@@ -59,25 +59,42 @@
 					></div>
 				</a>
 
-				<!-- Placeholder for future exercises -->
-				<div
-					class="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-600 to-gray-700 p-6 opacity-50 shadow-lg"
+				<!-- EQ Exercise Card -->
+				<a
+					href="/audio-training/eq"
+					class="group relative overflow-hidden rounded-xl bg-gradient-to-br from-green-600 to-teal-700 p-6 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl"
 				>
 					<div class="relative z-10">
 						<div class="mb-4 text-4xl">🎚️</div>
-						<h3 class="mb-3 text-2xl font-bold text-white">EQ Exercise</h3>
-						<p class="text-gray-200">Coming Soon - Identify frequency changes</p>
+						<h3 class="mb-3 text-2xl font-bold text-white">
+							{$t('audioTraining.eq.title')}
+						</h3>
+						<p class="text-green-100">{$t('audioTraining.eq.description')}</p>
 
-						<div
-							class="mt-4 inline-flex items-center text-sm font-semibold text-gray-300"
-						>
-							Coming Soon
+						<div class="mt-4 inline-flex items-center text-sm font-semibold text-white">
+							Start Exercise
+							<svg
+								class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M9 5l7 7-7 7"
+								></path>
+							</svg>
 						</div>
 					</div>
 
-					<div class="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/5"></div>
-					<div class="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-black/5"></div>
-				</div>
+					<!-- Background decoration -->
+					<div class="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/10"></div>
+					<div
+						class="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-black/10"
+					></div>
+				</a>
 
 				<div
 					class="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-600 to-gray-700 p-6 opacity-50 shadow-lg"

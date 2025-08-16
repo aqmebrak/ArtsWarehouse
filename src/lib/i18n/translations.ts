@@ -133,6 +133,22 @@ export const translations = {
 				center: 'Center',
 				clickToGuess: 'Click on the grid to make your guess',
 				marginError: '±5% margin of error'
+			},
+			eq: {
+				title: 'EQ Exercise',
+				description: 'Listen to the audio and identify the boosted frequency',
+				instructions: 'Click on the frequency you think is boosted. You have a ±100Hz margin of error.',
+				startExercise: 'Start Exercise',
+				stopExercise: 'Stop Exercise',
+				correctGuess: 'Correct! Well done!',
+				incorrectGuess: 'Incorrect. The boosted frequency was',
+				frequency: 'Frequency',
+				hz: 'Hz',
+				clickToGuess: 'Click on the frequency spectrum to make your guess',
+				marginError: '±100Hz margin of error',
+				lowFreq: 'Low',
+				midFreq: 'Mid',
+				highFreq: 'High'
 			}
 		}
 	},
@@ -273,6 +289,22 @@ export const translations = {
 				center: 'Centre',
 				clickToGuess: 'Cliquez sur la grille pour faire votre supposition',
 				marginError: 'Marge d\'erreur de ±5%'
+			},
+			eq: {
+				title: 'Exercice d\'Égaliseur',
+				description: 'Écoutez l\'audio et identifiez la fréquence boostée',
+				instructions: 'Cliquez sur la fréquence que vous pensez être boostée. Vous avez une marge d\'erreur de ±100Hz.',
+				startExercise: 'Commencer l\'Exercice',
+				stopExercise: 'Arrêter l\'Exercice',
+				correctGuess: 'Correct ! Bien joué !',
+				incorrectGuess: 'Incorrect. La fréquence boostée était',
+				frequency: 'Fréquence',
+				hz: 'Hz',
+				clickToGuess: 'Cliquez sur le spectre de fréquence pour faire votre supposition',
+				marginError: 'Marge d\'erreur de ±100Hz',
+				lowFreq: 'Grave',
+				midFreq: 'Médium',
+				highFreq: 'Aigu'
 			}
 		}
 	}
