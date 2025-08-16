@@ -137,7 +137,7 @@ export const translations = {
 			eq: {
 				title: 'EQ Exercise',
 				description: 'Listen to the audio and identify the boosted frequency',
-				instructions: 'Click on the frequency you think is boosted. You have a ±100Hz margin of error.',
+				instructions: 'Click on the frequency you think is boosted. The tolerance margin scales logarithmically (15% of the target frequency) to provide consistent difficulty across the spectrum.',
 				startExercise: 'Start Exercise',
 				stopExercise: 'Stop Exercise',
 				correctGuess: 'Correct! Well done!',
@@ -293,7 +293,7 @@ export const translations = {
 			eq: {
 				title: 'Exercice d\'Égaliseur',
 				description: 'Écoutez l\'audio et identifiez la fréquence boostée',
-				instructions: 'Cliquez sur la fréquence que vous pensez être boostée. Vous avez une marge d\'erreur de ±100Hz.',
+				instructions: 'Cliquez sur la fréquence que vous pensez être boostée. La marge de tolérance est logarithmique (15% de la fréquence cible) pour une difficulté cohérente sur tout le spectre.',
 				startExercise: 'Commencer l\'Exercice',
 				stopExercise: 'Arrêter l\'Exercice',
 				correctGuess: 'Correct ! Bien joué !',

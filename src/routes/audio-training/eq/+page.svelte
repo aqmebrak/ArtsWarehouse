@@ -41,7 +41,7 @@
 	const CANVAS_HEIGHT = 120;
 	const MIN_FREQUENCY = 100; // Hz
 	const MAX_FREQUENCY = 8000; // Hz
-	const MARGIN_ERROR = 200; // 200Hz margin of error
+	const BASE_MARGIN_PERCENT = 0.15; // 15% margin for logarithmic scaling
 
 	// Common frequencies to choose from for more realistic EQ training
 	const EQ_FREQUENCIES = [
@@ -149,6 +149,30 @@
 
 		// Show result if available
 		if (showResult && userGuess !== null) {
+			// Show tolerance range around the actual frequency
+			const toleranceHz = getLogarithmicMargin(currentFrequency);
+			const minToleranceFreq = Math.max(MIN_FREQUENCY, currentFrequency - toleranceHz);
+			const maxToleranceFreq = Math.min(MAX_FREQUENCY, currentFrequency + toleranceHz);
+
+			const minToleranceX = freqToX(minToleranceFreq);
+			const maxToleranceX = freqToX(maxToleranceFreq);
+
+			// Draw tolerance range as a semi-transparent rectangle
+			ctx.fillStyle = 'rgba(139, 92, 246, 0.2)'; // Purple with low opacity
+			ctx.fillRect(minToleranceX, 25, maxToleranceX - minToleranceX, CANVAS_HEIGHT - 50);
+
+			// Draw tolerance range borders
+			ctx.strokeStyle = '#8b5cf6';
+			ctx.lineWidth = 1;
+			ctx.setLineDash([3, 3]);
+			ctx.beginPath();
+			ctx.moveTo(minToleranceX, 25);
+			ctx.lineTo(minToleranceX, CANVAS_HEIGHT - 25);
+			ctx.moveTo(maxToleranceX, 25);
+			ctx.lineTo(maxToleranceX, CANVAS_HEIGHT - 25);
+			ctx.stroke();
+			ctx.setLineDash([]);
+
 			// User guess line
 			const userX = freqToX(userGuess);
 			ctx.strokeStyle = isCorrect ? '#10b981' : '#ef4444';
@@ -270,12 +294,15 @@
 		currentFrequency = EQ_FREQUENCIES[randomIndex];
 	}
 
-	function calculatePoints(difference: number): number {
-		// Perfect accuracy (0Hz difference): 100 points
-		// 50Hz difference: 50 points
-		// 100Hz difference: 0 points
-		// Beyond 100Hz: 0 points
-		const maxDifference = MARGIN_ERROR;
+	function getLogarithmicMargin(frequency: number): number {
+		// Calculate margin as a percentage of the frequency for logarithmic scaling
+		// This ensures consistent perceptual accuracy across the frequency spectrum
+		return frequency * BASE_MARGIN_PERCENT;
+	}
+
+	function calculatePoints(difference: number, targetFrequency: number): number {
+		// Use logarithmic margin based on the target frequency
+		const maxDifference = getLogarithmicMargin(targetFrequency);
 		if (difference > maxDifference) return 0;
 
 		const accuracy = 1 - difference / maxDifference;
@@ -469,12 +496,13 @@
 		// Convert click position to frequency
 		userGuess = xToFreq(x);
 
-		// Check if guess is correct (within margin of error)
+		// Check if guess is correct (within logarithmic margin of error)
 		const difference = Math.abs(userGuess - currentFrequency);
-		isCorrect = difference <= MARGIN_ERROR;
+		const allowedMargin = getLogarithmicMargin(currentFrequency);
+		isCorrect = difference <= allowedMargin;
 
-		// Calculate points based on accuracy
-		const points = calculatePoints(difference);
+		// Calculate points based on accuracy with logarithmic scaling
+		const points = calculatePoints(difference, currentFrequency);
 		score += points;
 
 		// Add to round history
@@ -486,13 +514,16 @@
 		});
 
 		if (isCorrect) {
-			resultMessage = `${$t('audioTraining.eq.correctGuess')} (+${points} points)`;
+			const marginHz = Math.round(allowedMargin);
+			resultMessage = `${$t('audioTraining.eq.correctGuess')} (+${points} points) [±${marginHz}Hz tolerance]`;
 		} else {
 			const freqLabel =
 				currentFrequency < 1000
 					? `${currentFrequency}Hz`
 					: `${(currentFrequency / 1000).toFixed(1)}kHz`;
-			resultMessage = `${$t('audioTraining.eq.incorrectGuess')} ${freqLabel} (+${points} points)`;
+			const marginHz = Math.round(allowedMargin);
+			const diffHz = Math.round(difference);
+			resultMessage = `${$t('audioTraining.eq.incorrectGuess')} ${freqLabel} (+${points} points) [±${marginHz}Hz tolerance, you were ${diffHz}Hz off]`;
 		}
 
 		showResult = true;
@@ -721,6 +752,16 @@
 							class="h-3 w-3 rounded border-2 border-dashed border-white bg-purple-500"
 						></div>
 						<span>Boosted Frequency</span>
+					</div>
+					<div class="flex items-center gap-2">
+						<div
+							class="h-3 w-3 rounded border border-dashed border-purple-400 bg-purple-500/20"
+						></div>
+						<span
+							>Tolerance Range (±{Math.round(
+								getLogarithmicMargin(currentFrequency)
+							)}Hz)</span
+						>
 					</div>
 				{/if}
 			</div>
