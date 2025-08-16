@@ -96,6 +96,43 @@
 					></div>
 				</a>
 
+				<!-- EQ Mirror Exercise Card -->
+				<a
+					href="/audio-training/eq-mirror"
+					class="group relative overflow-hidden rounded-xl bg-gradient-to-br from-orange-600 to-red-700 p-6 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+				>
+					<div class="relative z-10">
+						<div class="mb-4 text-4xl">🎛️</div>
+						<h3 class="mb-3 text-2xl font-bold text-white">EQ Mirror</h3>
+						<p class="text-orange-100">
+							Match target EQ settings using a 4-band equalizer interface
+						</p>
+
+						<div class="mt-4 inline-flex items-center text-sm font-semibold text-white">
+							Start Exercise
+							<svg
+								class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M9 5l7 7-7 7"
+								></path>
+							</svg>
+						</div>
+					</div>
+
+					<!-- Background decoration -->
+					<div class="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-white/10"></div>
+					<div
+						class="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-black/10"
+					></div>
+				</a>
+
 				<div
 					class="relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-600 to-gray-700 p-6 opacity-50 shadow-lg"
 				>
