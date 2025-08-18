@@ -156,13 +156,13 @@
 						<input
 							type="password"
 							bind:value={passwordInput}
-							on:keypress={handleKeyPress}
+							onkeypress={handleKeyPress}
 							placeholder={$t('telluricHymn.passwordPlaceholder')}
 							disabled={isLoading}
 							class="rounded-sm border bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-purple-300 focus:outline-hidden disabled:opacity-50"
 						/>
 						<button
-							on:click={checkPassword}
+							onclick={checkPassword}
 							disabled={isLoading}
 							class="cursor-pointer rounded-sm bg-gray-400 px-4 py-2 text-white transition-colors hover:bg-purple-900 disabled:cursor-not-allowed disabled:opacity-50"
 						>
