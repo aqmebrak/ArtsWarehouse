@@ -547,7 +547,7 @@
 					Back to Exercises
 				</a>
 			</nav>
-			<h1 class="mb-4 text-4xl font-bold text-white">EQ Mirror</h1>
+			<h1 class="mb-4 text-4xl font-bold">EQ Mirror</h1>
 			<p class="text-xl text-indigo-200">
 				Match the target EQ curve using the 4-band equalizer
 			</p>
@@ -575,7 +575,7 @@
 		</GameControls>
 		<!-- EQ Visualization -->
 		<section class="mb-8">
-			<h3 class="mb-4 text-center text-xl font-semibold text-white">EQ Response Curve</h3>
+			<h3 class="mb-4 text-center text-xl font-semibold">EQ Response Curve</h3>
 
 			<div class="flex justify-center">
 				<div class="relative">
@@ -612,7 +612,7 @@
 		<!-- EQ Controls -->
 		{#if isAudioPlaying && !gameState.showResult}
 			<section class="mb-8">
-				<h3 class="mb-4 text-center text-xl font-semibold text-white">4-Band Equalizer</h3>
+				<h3 class="mb-4 text-center text-xl font-semibold">4-Band Equalizer</h3>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
 					{#each userEQ as band, i}

@@ -26,6 +26,13 @@ export class FrequencyUtils {
 	}
 
 	static formatFrequency(frequency: number): string {
-		return frequency < 1000 ? `${frequency}Hz` : `${(frequency / 1000).toFixed(1)}kHz`;
+		const roundedFreq = Math.round(frequency);
+		if (roundedFreq < 1000) {
+			return `${roundedFreq}Hz`;
+		} else {
+			const kHz = roundedFreq / 1000;
+			// If it's a whole number of kHz, don't show decimal
+			return kHz % 1 === 0 ? `${Math.round(kHz)}kHz` : `${kHz.toFixed(1)}kHz`;
+		}
 	}
 }

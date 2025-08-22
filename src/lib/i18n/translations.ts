@@ -122,7 +122,8 @@ export const translations = {
 			panning: {
 				title: 'Panning Exercise',
 				description: 'Listen to the audio and identify the panning position',
-				instructions: 'Click on the grid to guess the panning position. You have a 5% margin of error.',
+				instructions:
+					'Click on the grid to guess the panning position. You have a 5% margin of error.',
 				startExercise: 'Start Exercise',
 				stopExercise: 'Stop Exercise',
 				correctGuess: 'Correct! Well done!',
@@ -137,7 +138,8 @@ export const translations = {
 			eq: {
 				title: 'EQ Exercise',
 				description: 'Listen to the audio and identify the boosted frequency',
-				instructions: 'Click on the frequency you think is boosted. The tolerance margin scales logarithmically (15% of the target frequency) to provide consistent difficulty across the spectrum.',
+				instructions:
+					'Click on the frequency you think is boosted. The tolerance margin scales logarithmically (15% of the target frequency) to provide consistent difficulty across the spectrum.',
 				startExercise: 'Start Exercise',
 				stopExercise: 'Stop Exercise',
 				correctGuess: 'Correct! Well done!',
@@ -274,13 +276,14 @@ export const translations = {
 		audioTraining: {
 			title: 'Formation Ingénieur du Son',
 			subtitle: 'Améliorez vos compétences en ingénierie audio',
-			exerciseSelection: 'Sélection d\'Exercices',
+			exerciseSelection: "Sélection d'Exercices",
 			panning: {
 				title: 'Exercice de Panoramique',
-				description: 'Écoutez l\'audio et identifiez la position du panoramique',
-				instructions: 'Cliquez sur la grille pour deviner la position du panoramique. Vous avez une marge d\'erreur de 5%.',
-				startExercise: 'Commencer l\'Exercice',
-				stopExercise: 'Arrêter l\'Exercice',
+				description: "Écoutez l'audio et identifiez la position du panoramique",
+				instructions:
+					"Cliquez sur la grille pour deviner la position du panoramique. Vous avez une marge d'erreur de 5%.",
+				startExercise: "Commencer l'Exercice",
+				stopExercise: "Arrêter l'Exercice",
 				correctGuess: 'Correct ! Bien joué !',
 				incorrectGuess: 'Incorrect. La position correcte était',
 				panningPosition: 'Position du Panoramique',
@@ -288,20 +291,21 @@ export const translations = {
 				right: 'Droite',
 				center: 'Centre',
 				clickToGuess: 'Cliquez sur la grille pour faire votre supposition',
-				marginError: 'Marge d\'erreur de ±5%'
+				marginError: "Marge d'erreur de ±5%"
 			},
 			eq: {
-				title: 'Exercice d\'Égaliseur',
-				description: 'Écoutez l\'audio et identifiez la fréquence boostée',
-				instructions: 'Cliquez sur la fréquence que vous pensez être boostée. La marge de tolérance est logarithmique (15% de la fréquence cible) pour une difficulté cohérente sur tout le spectre.',
-				startExercise: 'Commencer l\'Exercice',
-				stopExercise: 'Arrêter l\'Exercice',
+				title: "Exercice d'Égaliseur",
+				description: "Écoutez l'audio et identifiez la fréquence boostée",
+				instructions:
+					'Cliquez sur la fréquence que vous pensez être boostée. La marge de tolérance est logarithmique (15% de la fréquence cible) pour une difficulté cohérente sur tout le spectre.',
+				startExercise: "Commencer l'Exercice",
+				stopExercise: "Arrêter l'Exercice",
 				correctGuess: 'Correct ! Bien joué !',
 				incorrectGuess: 'Incorrect. La fréquence boostée était',
 				frequency: 'Fréquence',
 				hz: 'Hz',
 				clickToGuess: 'Cliquez sur le spectre de fréquence pour faire votre supposition',
-				marginError: 'Marge d\'erreur de ±100Hz',
+				marginError: "Marge d'erreur de ±100Hz",
 				lowFreq: 'Grave',
 				midFreq: 'Médium',
 				highFreq: 'Aigu'

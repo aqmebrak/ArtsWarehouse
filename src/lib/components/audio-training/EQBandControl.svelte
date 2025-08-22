@@ -29,8 +29,11 @@
 
 	<!-- Frequency -->
 	<div class="mb-4">
-		<label class="mb-2 block text-sm font-semibold text-gray-300"> Frequency </label>
+		<label for="frequency" class="mb-2 block text-sm font-semibold text-gray-300">
+			Frequency
+		</label>
 		<select
+			id="frequency"
 			value={band.frequency}
 			onchange={(e) => updateFrequency(Number(e.currentTarget.value))}
 			class="w-full rounded-lg bg-gray-700 px-3 py-2 text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
@@ -45,10 +48,11 @@
 
 	<!-- Gain -->
 	<div class="mb-4">
-		<label class="mb-2 block text-sm font-semibold text-gray-300">
+		<label for="gain" class="mb-2 block text-sm font-semibold text-gray-300">
 			Gain: {band.gain > 0 ? '+' : ''}{band.gain} dB
 		</label>
 		<input
+			id="gain"
 			type="range"
 			min={gainRange.min}
 			max={gainRange.max}
@@ -61,8 +65,9 @@
 
 	<!-- Q -->
 	<div>
-		<label class="mb-2 block text-sm font-semibold text-gray-300"> Q Factor </label>
+		<label for="q" class="mb-2 block text-sm font-semibold text-gray-300"> Q Factor </label>
 		<select
+			id="q"
 			value={band.q}
 			onchange={(e) => updateQ(Number(e.currentTarget.value))}
 			class="w-full rounded-lg bg-gray-700 px-3 py-2 text-white focus:ring-2 focus:ring-purple-500 focus:outline-none"

@@ -39,19 +39,12 @@
 {@render children?.()}
 
 <style>
+	div {
+		color: var(--font-color);
+	}
 	.title {
 		font-size: 3rem;
 	}
-
-	.line {
-		height: 1px;
-		width: 100%;
-		border-top: 1px;
-		border-color: var(--font-color-secondary);
-		border-style: solid;
-		margin-top: -4px;
-	}
-
 	nav > a {
 		font-size: 1.4rem;
 		letter-spacing: 4px;

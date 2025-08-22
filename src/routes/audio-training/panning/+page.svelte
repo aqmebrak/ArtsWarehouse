@@ -4,7 +4,6 @@
 	import GameControls from '$lib/components/audio-training/GameControls.svelte';
 	import ScoreScreen from '$lib/components/audio-training/ScoreScreen.svelte';
 	import InteractiveCanvas from '$lib/components/audio-training/InteractiveCanvas.svelte';
-	import sampleFiles from '$lib/audio-training/samples';
 	import { AudioManager } from '$lib/components/audio-training/AudioManager.svelte';
 	import { GameManager } from '$lib/components/audio-training/GameManager.svelte';
 	import type { GameState, RoundResult } from '$lib/components/audio-training/types';
@@ -370,7 +369,7 @@
 					Back to Exercises
 				</a>
 			</nav>
-			<h1 class="mb-4 text-4xl font-bold text-white">{$t('audioTraining.panning.title')}</h1>
+			<h1 class="mb-4 text-4xl font-bold">{$t('audioTraining.panning.title')}</h1>
 			<p class="text-xl text-blue-200">{$t('audioTraining.panning.description')}</p>
 		</header>
 
@@ -379,12 +378,11 @@
 
 		<!-- Canvas Section -->
 		<section class="mb-8">
-			<h3 class="mb-4 text-center text-xl font-semibold text-white">
+			<h3 class="mb-4 text-center text-xl font-semibold">
 				{$t('audioTraining.panning.clickToGuess')}
 			</h3>
 
 			<div class="flex justify-center">
-				{isAudioPlaying}
 				<div class="relative">
 					<InteractiveCanvas
 						bind:this={canvas}
@@ -453,19 +451,6 @@
 		font-family: 'Inter', sans-serif;
 		color: white !important;
 	}
-
-	#main {
-		font-family: 'Inter', monospace;
-		color: white !important;
-		background-image: url('$lib/images/sbt/sbt-background.png');
-	}
-	body,
-	div,
-	p,
-	span {
-		color: white;
-	}
-
 	a {
 		text-decoration: none;
 	}

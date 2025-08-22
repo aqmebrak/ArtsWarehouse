@@ -17,6 +17,7 @@ export interface RoundResult {
 	points: number;
 	actualValue: number;
 	userGuess: number;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	additionalData?: Record<string, any>;
 }
 

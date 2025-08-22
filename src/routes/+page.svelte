@@ -2,7 +2,7 @@
 	import ButtonSocial from '$lib/components/ButtonSocial.svelte';
 </script>
 
-<div class="mt-12 flex flex-col items-center">
+<div class="text-primary mt-12 flex flex-col items-center">
 	<div class="text-center">Here you can find all my creations, from music to paintings</div>
 
 	<div class="button-spacer mt-4 flex flex-col items-center">

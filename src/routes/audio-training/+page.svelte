@@ -11,13 +11,13 @@
 	<div class="mx-auto max-w-4xl">
 		<!-- Header -->
 		<header class="mb-12 text-center">
-			<h1 class="mb-4 text-5xl font-bold text-white">{$t('audioTraining.title')}</h1>
-			<p class="text-xl text-purple-200">{$t('audioTraining.subtitle')}</p>
+			<h1 class="mb-4 text-5xl font-bold">{$t('audioTraining.title')}</h1>
+			<p class="text-xl">{$t('audioTraining.subtitle')}</p>
 		</header>
 
 		<!-- Exercise Selection -->
 		<section class="mb-12">
-			<h2 class="mb-8 text-center text-3xl font-semibold text-white">
+			<h2 class="mb-8 text-center text-3xl font-semibold">
 				{$t('audioTraining.exerciseSelection')}
 			</h2>
 
@@ -29,12 +29,12 @@
 				>
 					<div class="relative z-10">
 						<div class="mb-4 text-4xl">🎧</div>
-						<h3 class="mb-3 text-2xl font-bold text-white">
+						<h3 class="mb-3 text-2xl font-bold">
 							{$t('audioTraining.panning.title')}
 						</h3>
 						<p class="text-blue-100">{$t('audioTraining.panning.description')}</p>
 
-						<div class="mt-4 inline-flex items-center text-sm font-semibold text-white">
+						<div class="mt-4 inline-flex items-center text-sm font-semibold">
 							Start Exercise
 							<svg
 								class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
@@ -66,12 +66,12 @@
 				>
 					<div class="relative z-10">
 						<div class="mb-4 text-4xl">🎚️</div>
-						<h3 class="mb-3 text-2xl font-bold text-white">
+						<h3 class="mb-3 text-2xl font-bold">
 							{$t('audioTraining.eq.title')}
 						</h3>
 						<p class="text-green-100">{$t('audioTraining.eq.description')}</p>
 
-						<div class="mt-4 inline-flex items-center text-sm font-semibold text-white">
+						<div class="mt-4 inline-flex items-center text-sm font-semibold">
 							Start Exercise
 							<svg
 								class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
@@ -103,12 +103,12 @@
 				>
 					<div class="relative z-10">
 						<div class="mb-4 text-4xl">🎛️</div>
-						<h3 class="mb-3 text-2xl font-bold text-white">EQ Mirror</h3>
+						<h3 class="mb-3 text-2xl font-bold">EQ Mirror</h3>
 						<p class="text-orange-100">
 							Match target EQ settings using a 4-band equalizer interface
 						</p>
 
-						<div class="mt-4 inline-flex items-center text-sm font-semibold text-white">
+						<div class="mt-4 inline-flex items-center text-sm font-semibold">
 							Start Exercise
 							<svg
 								class="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1"
@@ -138,7 +138,7 @@
 				>
 					<div class="relative z-10">
 						<div class="mb-4 text-4xl">🎵</div>
-						<h3 class="mb-3 text-2xl font-bold text-white">Compression</h3>
+						<h3 class="mb-3 text-2xl font-bold">Compression</h3>
 						<p class="text-gray-200">Coming Soon - Detect compression settings</p>
 
 						<div
@@ -155,21 +155,3 @@
 		</section>
 	</div>
 </div>
-
-<style>
-	#main {
-		font-family: 'Inter', monospace;
-		color: white !important;
-		background-image: url('$lib/images/sbt/sbt-background.png');
-	}
-	body,
-	div,
-	p,
-	span {
-		color: white;
-	}
-
-	a {
-		text-decoration: none;
-	}
-</style>

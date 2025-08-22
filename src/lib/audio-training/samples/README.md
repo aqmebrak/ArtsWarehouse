@@ -15,6 +15,7 @@ These samples are loaded randomly during the EQ exercise to provide realistic au
 ## Adding New Samples
 
 To add new samples:
+
 1. Place WAV files in this directory
 2. Update the `sampleFiles` array in `/src/routes/audio-training/eq/+page.svelte`
 3. Ensure samples are between 2-5 seconds long for optimal training experience

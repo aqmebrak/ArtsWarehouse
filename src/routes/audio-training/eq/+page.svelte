@@ -364,7 +364,7 @@
 		const x = event.clientX - rect.left;
 
 		// Convert click position to frequency
-		userGuess = FrequencyUtils.xToFreq(x, MIN_FREQUENCY, MAX_FREQUENCY, CANVAS_WIDTH);
+		userGuess = FrequencyUtils.xToFreq(x, CANVAS_WIDTH, MIN_FREQUENCY, MAX_FREQUENCY);
 
 		// Check if guess is correct
 		const toleranceHz = FrequencyUtils.getLogarithmicMargin(
@@ -410,7 +410,7 @@
 		mouseY = y;
 
 		// Convert mouse position to frequency
-		const frequency = FrequencyUtils.xToFreq(x, MIN_FREQUENCY, MAX_FREQUENCY, CANVAS_WIDTH);
+		const frequency = FrequencyUtils.xToFreq(x, CANVAS_WIDTH, MIN_FREQUENCY, MAX_FREQUENCY);
 		hoveredFrequency = FrequencyUtils.formatFrequency(frequency);
 		drawFrequencySpectrum();
 	}
@@ -496,7 +496,7 @@
 					Back to Exercises
 				</a>
 			</nav>
-			<h1 class="mb-4 text-4xl font-bold text-white">{$t('audioTraining.eq.title')}</h1>
+			<h1 class="mb-4 text-4xl font-bold">{$t('audioTraining.eq.title')}</h1>
 			<p class="text-xl text-purple-200">{$t('audioTraining.eq.description')}</p>
 		</header>
 
@@ -514,7 +514,7 @@
 
 		<!-- Canvas Section -->
 		<section class="mb-8">
-			<h3 class="mb-4 text-center text-xl font-semibold text-white">
+			<h3 class="mb-4 text-center text-xl font-semibold">
 				{$t('audioTraining.eq.clickToGuess')}
 			</h3>
 
@@ -596,17 +596,6 @@
 	:global(body) {
 		font-family: 'Inter', sans-serif;
 		color: white !important;
-	}
-	#main {
-		font-family: 'Inter', monospace;
-		color: white !important;
-		background-image: url('$lib/images/sbt/sbt-background.png');
-	}
-	body,
-	div,
-	p,
-	span {
-		color: white;
 	}
 
 	a {
