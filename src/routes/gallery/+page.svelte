@@ -1,6 +1,5 @@
 <script lang="ts">
 	import images from '$lib/images';
-	import { modals } from '$lib/store/modals';
 	import ButtonSocial from '$lib/components/ButtonSocial.svelte';
 	import { createDialog, melt } from '@melt-ui/svelte';
 	import { fade } from 'svelte/transition';

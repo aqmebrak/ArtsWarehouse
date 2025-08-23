@@ -300,14 +300,14 @@
 		<button
 			class="rounded-sm bg-blue-500 px-4 py-2 text-white transition-colors hover:bg-blue-600"
 			disabled={isComplete}
-			on:click={togglePlayPause}
+			onclick={togglePlayPause}
 		>
 			{isPlaying ? 'Pause' : 'Play'}
 		</button>
 
 		<button
 			class="rounded-sm bg-red-500 px-4 py-2 text-white transition-colors hover:bg-red-600"
-			on:click={stopAndReset}
+			onclick={stopAndReset}
 		>
 			Reset
 		</button>

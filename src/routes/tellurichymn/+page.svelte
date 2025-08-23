@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { t } from '$lib/i18n';
 	import LanguageToggle from '$lib/components/LanguageToggle.svelte';
 
@@ -66,7 +66,7 @@
 		}
 	}
 
-	function handleKeyPress(event) {
+	function handleKeyPress(event: KeyboardEvent) {
 		if (event.key === 'Enter' && !isLoading) {
 			checkPassword();
 		}
@@ -74,7 +74,7 @@
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 <link
 	href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Tektur:wght@400..900&display=swap"
 	rel="stylesheet"
@@ -156,13 +156,13 @@
 						<input
 							type="password"
 							bind:value={passwordInput}
-							on:keypress={handleKeyPress}
+							onkeypress={handleKeyPress}
 							placeholder={$t('telluricHymn.passwordPlaceholder')}
 							disabled={isLoading}
 							class="rounded-sm border bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-purple-300 focus:outline-hidden disabled:opacity-50"
 						/>
 						<button
-							on:click={checkPassword}
+							onclick={checkPassword}
 							disabled={isLoading}
 							class="cursor-pointer rounded-sm bg-gray-400 px-4 py-2 text-white transition-colors hover:bg-purple-900 disabled:cursor-not-allowed disabled:opacity-50"
 						>
@@ -242,10 +242,8 @@
 		background-blend-mode: darken;
 	}
 
-	body,
 	div,
-	p,
-	span {
+	p {
 		color: white;
 	}
 </style>

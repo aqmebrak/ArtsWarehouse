@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { fade } from 'svelte/transition';
 	import { t } from '$lib/i18n';
 	import LanguageToggle from '$lib/components/LanguageToggle.svelte';
@@ -50,10 +50,16 @@
 		}
 	];
 
-	let selectedPhoto = $state(null);
+	type Photo = {
+		src: string;
+		alt: string;
+		title: string;
+	};
+
+	let selectedPhoto: Photo | null = $state(null);
 	let currentPhotoIndex = $state(0);
 
-	function openPhotoModal(photo, index) {
+	function openPhotoModal(photo: Photo, index: number) {
 		selectedPhoto = photo;
 		currentPhotoIndex = index;
 	}
@@ -76,7 +82,7 @@
 		}
 	}
 
-	function handleKeydown(event) {
+	function handleKeydown(event: KeyboardEvent) {
 		if (!selectedPhoto) return;
 
 		if (event.key === 'Escape') {
@@ -369,10 +375,8 @@
 		color: white !important;
 		background-image: url('$lib/images/sbt/sbt-background.png');
 	}
-	body,
 	div,
-	p,
-	span {
+	p {
 		color: white;
 	}
 </style>

@@ -33,8 +33,8 @@
 
 :root {
 	--background-color: #e7e6f7;
-	--font-color: #322659;
-	--font-color-secondary: #6b46c1;
+	--font-color: var(--color-primary);
+	--font-color-secondary: var(--color-secondary);
 
 	--lavender-web: #e7e6f7ff;
 	--queen-pink: #e3d0d8ff;
@@ -49,13 +49,6 @@
 
 	background-color: var(--background-color);
 	font-size: 16px;
-}
-
-body,
-div,
-p,
-span {
-	color: var(--font-color);
 }
 
 div::-webkit-scrollbar {
