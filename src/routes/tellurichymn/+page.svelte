@@ -11,17 +11,17 @@
 			title: 'telluricHymn.importantLinks.firstSingleVisualizer',
 			url: 'https://youtu.be/1xo13MWmqxU'
 		},
-		// {
-		// 	title: 'Second Visualizer',
-		// 	url: '[Link to the YouTube video for the second visualizer]'
-		// },
+		{
+			title: 'telluricHymn.importantLinks.secondSingleVisualizer',
+			url: ' https://www.youtube.com/watch?v=PdIhQrSwe2U'
+		},
 		{
 			title: 'telluricHymn.importantLinks.bandcampPreorder',
-			url: '[Your Bandcamp Album Link]'
+			url: 'https://tellurichymn.bandcamp.com/'
 		},
 		{
 			title: 'telluricHymn.importantLinks.spotifyMusic',
-			url: '[Link to your Spotify Artist Profile]'
+			url: 'https://open.spotify.com/artist/5A8hUh932ljfSQ0Eg3C8kN?si=NWdCgQ2TRFeQrnI4_QukjA'
 		}
 	];
 

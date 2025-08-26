@@ -53,7 +53,8 @@ export const translations = {
 			importantLinks: {
 				privateAlbumStream: 'Private Album Stream',
 				firstSingleVisualizer: 'First Single Visualizer',
-				bandcampPreorder: 'Bandcamp Pre-order',
+				secondSingleVisualizer: 'Second Single Visualizer',
+				bandcampPreorder: 'Bandcamp',
 				spotifyMusic: 'Music on Spotify'
 			}
 		},
@@ -211,7 +212,8 @@ export const translations = {
 			importantLinks: {
 				privateAlbumStream: "Stream Privé de l'Album",
 				firstSingleVisualizer: 'Visualiseur du Premier Single',
-				bandcampPreorder: 'Pré-commande Bandcamp',
+				secondSingleVisualizer: 'Visualiseur du Deuxième Single',
+				bandcampPreorder: 'Bandcamp',
 				spotifyMusic: 'Musique sur Spotify'
 			}
 		},
