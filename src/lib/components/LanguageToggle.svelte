@@ -4,7 +4,7 @@
 </script>
 
 <button
-	class="flex cursor-pointer items-center space-x-2 rounded-md bg-white/10 px-3 py-2 text-sm !text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+	class="flex cursor-pointer items-center space-x-2 rounded-md bg-white p-1 px-2 text-xs !text-black backdrop-blur-sm transition-colors hover:bg-white/20"
 	onclick={() => language.toggle()}
 	aria-label="Toggle language"
 >
@@ -16,7 +16,7 @@
 			d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
 		/>
 	</svg>
-	<span class="!text-white"
+	<span class="!text-black"
 		>{$language === 'en' ? $t('language.french') : $t('language.english')}</span
 	>
 </button>
