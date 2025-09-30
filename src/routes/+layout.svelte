@@ -6,11 +6,13 @@
 	import { page } from '$app/state';
 	import LanguageToggle from '$lib/components/LanguageToggle.svelte';
 	import { t } from '$lib/i18n';
+	import type { LayoutProps } from './$types';
+
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
 
-	let { children }: Props = $props();
+	let { children }: LayoutProps = $props();
 
 	inject({ mode: dev ? 'development' : 'production' });
 	injectSpeedInsights();
@@ -25,7 +27,7 @@
 			<a href="/sbt">{$t('nav.storiesBonesTell')}</a>
 			<a href="/tellurichymn">{$t('nav.telluricHymn')}</a>
 			<a href="/audio-training">{$t('nav.audioTraining')}</a>
-			<!-- <a href="/music">{$t('nav.music')}</a> -->
+			<a href="/recipes">Recipes</a>
 			<!-- <a href="/respire">{$t('nav.respire')}</a> -->
 		</nav>
 
@@ -36,7 +38,9 @@
 	{/if}
 </div>
 
-{@render children?.()}
+<main class="mx-auto w-full max-w-[1440px] px-4 md:px-6 lg:px-8">
+	{@render children?.()}
+</main>
 
 <style>
 	div {
