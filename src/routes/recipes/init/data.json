@@ -143,5 +143,152 @@
 		"vodka",
 		"yaourt nature",
 		"zeste citron"
+	],
+	"recipes": [
+		{
+			"name": "Gâteau au Chocolat",
+			"prepTime": 20,
+			"cookTime": 45,
+			"servings": 8,
+			"notes": "Un délicieux gâteau au chocolat moelleux",
+			"ingredients": [
+				{
+					"name": "chocolat noir",
+					"quantity": "200",
+					"unit": "g",
+					"notes": "70% de cacao"
+				},
+				{
+					"name": "beurre",
+					"quantity": "150",
+					"unit": "g"
+				},
+				{
+					"name": "sucre",
+					"quantity": "150",
+					"unit": "g"
+				},
+				{
+					"name": "oeuf",
+					"quantity": "3",
+					"unit": "(empty)"
+				},
+				{
+					"name": "farine",
+					"quantity": "100",
+					"unit": "g"
+				}
+			],
+			"instructions": [
+				"Préchauffer le four à 180°C",
+				"Faire fondre le chocolat et le beurre au bain-marie",
+				"Battre les œufs avec le sucre jusqu'à ce que le mélange blanchisse",
+				"Incorporer le mélange chocolat-beurre refroidi",
+				"Ajouter la farine tamisée et mélanger délicatement",
+				"Verser dans un moule beurré et cuire 45 minutes"
+			]
+		},
+		{
+			"name": "Salade de Lentilles",
+			"prepTime": 15,
+			"cookTime": 25,
+			"servings": 4,
+			"notes": "Une salade nutritive et savoureuse",
+			"ingredients": [
+				{
+					"name": "lentilles vertes",
+					"quantity": "250",
+					"unit": "g"
+				},
+				{
+					"name": "carotte",
+					"quantity": "2",
+					"unit": "(empty)"
+				},
+				{
+					"name": "oignon",
+					"quantity": "1",
+					"unit": "(empty)"
+				},
+				{
+					"name": "huile d'olive",
+					"quantity": "3",
+					"unit": "cas"
+				},
+				{
+					"name": "vinaigre de cidre",
+					"quantity": "2",
+					"unit": "cas"
+				},
+				{
+					"name": "sel",
+					"quantity": "1",
+					"unit": "pincée"
+				},
+				{
+					"name": "poivre",
+					"quantity": "1",
+					"unit": "pincée"
+				}
+			],
+			"instructions": [
+				"Rincer les lentilles et les cuire dans de l'eau bouillante salée pendant 25 minutes",
+				"Éplucher et couper les carottes en dés",
+				"Émincer finement l'oignon",
+				"Égoutter les lentilles et les laisser tiédir",
+				"Mélanger les lentilles avec les légumes",
+				"Préparer la vinaigrette avec l'huile, le vinaigre, sel et poivre",
+				"Assaisonner la salade et laisser reposer 30 minutes avant de servir"
+			]
+		},
+		{
+			"name": "Risotto aux Champignons",
+			"prepTime": 10,
+			"cookTime": 30,
+			"servings": 4,
+			"notes": "Un risotto crémeux aux champignons",
+			"ingredients": [
+				{
+					"name": "riz rond",
+					"quantity": "300",
+					"unit": "g"
+				},
+				{
+					"name": "bouillon de légumes",
+					"quantity": "1",
+					"unit": "L"
+				},
+				{
+					"name": "oignon",
+					"quantity": "1",
+					"unit": "(empty)"
+				},
+				{
+					"name": "huile d'olive",
+					"quantity": "2",
+					"unit": "cas"
+				},
+				{
+					"name": "parmesan",
+					"quantity": "100",
+					"unit": "g"
+				},
+				{
+					"name": "beurre",
+					"quantity": "30",
+					"unit": "g"
+				}
+			],
+			"instructions": [
+				"Faire chauffer le bouillon de légumes",
+				"Émincer l'oignon et le faire revenir dans l'huile d'olive",
+				"Ajouter le riz et le nacrer 2 minutes",
+				"Verser une louche de bouillon chaud et mélanger",
+				"Continuer à ajouter le bouillon louche par louche en remuant constamment",
+				"Cuire environ 18-20 minutes jusqu'à ce que le riz soit crémeux",
+				"Incorporer le parmesan râpé et le beurre",
+				"Servir immédiatement"
+			]
+		}
 	]
 }

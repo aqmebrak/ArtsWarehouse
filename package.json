@@ -18,7 +18,10 @@
 		"db:migrate": "drizzle-kit migrate",
 		"db:migrate-prod": "dotenv -e .env.prod drizzle-kit migrate",
 		"db:studio": "drizzle-kit studio",
-		"db:studio-prod": "dotenv -e .env.prod drizzle-kit studio"
+		"db:studio-prod": "dotenv -e .env.prod drizzle-kit studio",
+		"db:seed": "npx tsx src/lib/server/db/seed.ts",
+		"db:verify": "npx tsx src/lib/server/db/verify.ts",
+		"db:reset": "npm run db:push && npm run db:seed"
 	},
 	"devDependencies": {
 		"@melt-ui/pp": "^0.3.2",
@@ -53,6 +56,7 @@
 		"sveltekit-superforms": "^2.22.1",
 		"tailwind-merge": "^2.5.5",
 		"tailwindcss": "^4.1.13",
+		"tsx": "^4.20.6",
 		"typescript": "5.8.2",
 		"typescript-eslint": "8.28.0",
 		"vite": "7.0.0",

@@ -21,10 +21,10 @@
 <div class="flex flex-col gap-2">
 	<h3 class="text-xl font-semibold tracking-widest">Instructions</h3>
 	<ol>
-		{#each instructions as instruction}
+		{#each instructions as instruction (instruction.id)}
 			<li
 				class={cn(
-					'pointer-cursor relative ml-8 w-fit list-decimal p-1 py-1 pl-2 transition-colors duration-500 hover:bg-emerald-100 hover:text-gray-700',
+					'relative ml-8 w-fit cursor-pointer list-decimal p-1 py-1 pl-2 transition-colors duration-500 hover:bg-emerald-100 hover:text-gray-700',
 					isInstructionChecked(instruction.id) &&
 						'list-none bg-emerald-100 text-gray-700 line-through'
 				)}

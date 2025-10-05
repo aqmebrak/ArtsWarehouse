@@ -39,9 +39,10 @@ export const actions: Actions = {
 		if (!form.valid) {
 			return fail(400, { form });
 		}
+		let result = null;
 
 		try {
-			const result = await db.transaction(async (tx) => {
+			result = await db.transaction(async (tx) => {
 				// 1. Insert the recipe
 				const [insertedRecipe] = await tx
 					.insert(recipes)
@@ -54,7 +55,7 @@ export const actions: Actions = {
 					})
 					.returning();
 
-				// 3. Link the ingredient to the recipe
+				// 2. Link the ingredient to the recipe
 				const insertedIngredients = await Promise.all(
 					form.data.ingredients.map(
 						async (ingr) =>
@@ -87,8 +88,6 @@ export const actions: Actions = {
 
 				return { insertedRecipe, insertedIngredients, insertedInstructions };
 			});
-			// If we get here, the transaction succeeded
-			throw redirect(302, `/recipes/${result.insertedRecipe.id}`);
 		} catch (error) {
 			console.error('Transaction failed:', error);
 			// Provide more specific error messages based on error type
@@ -108,5 +107,8 @@ export const actions: Actions = {
 				error: errorMessage ? `Failed to create recipe: ${errorMessage}` : undefined
 			});
 		}
+		// If we get here, the transaction succeeded
+		if(result)
+			throw redirect(302, `/recipes/${result.insertedRecipe.id}`);
 	}
 } satisfies Actions;

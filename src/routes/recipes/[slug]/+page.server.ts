@@ -26,6 +26,7 @@ export const load = (async ({ params }) => {
 					.where(eq(recipes.id, Number(params.slug))),
 				db
 					.select({
+						id: ingredients.id,
 						quantity: recipeIngredients.quantity,
 						unit: units.name,
 						notes: recipeIngredients.notes,

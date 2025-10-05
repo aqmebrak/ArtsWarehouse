@@ -14,7 +14,8 @@
 			document.documentElement.classList.toggle(
 				'dark',
 				localStorage.theme === 'dark' ||
-					(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+					(!('theme' in localStorage) &&
+						window.matchMedia('(prefers-color-scheme: dark)').matches)
 			);
 		}
 	};
@@ -26,7 +27,8 @@
 			document.documentElement.classList.toggle(
 				'dark',
 				localStorage.theme === 'dark' ||
-					(!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+					(!('theme' in localStorage) &&
+						window.matchMedia('(prefers-color-scheme: dark)').matches)
 			);
 		}
 	});
@@ -60,15 +62,15 @@
 <style lang="postcss">
 	.toggle {
 		height: 25px;
-		width: 50px;
-		border-radius: 50px;
-		background-image: linear-gradient(aqua, skyblue);
+		width: 50px !important;
+		border-radius: 50px !important;
+		background-image: linear-gradient(aqua, skyblue) !important;
 		position: relative;
 		cursor: pointer;
 	}
 
 	.toggle.night {
-		background-image: linear-gradient(midnightblue, rebeccapurple);
+		background-image: linear-gradient(midnightblue, rebeccapurple) !important;
 	}
 
 	.notch {

@@ -1,12 +1,11 @@
 <script lang="ts">
 	import IngredientsPicker from './IngredientsPicker.svelte';
-	import type { FormValues } from './types';
 	import { superForm } from 'sveltekit-superforms';
 
 	let { data } = $props();
 
 	// Client API:
-	const { form, errors, constraints, message, validate, enhance } = superForm(data.form, {
+	const { form, errors, constraints, message, enhance } = superForm(data.form, {
 		dataType: 'json'
 	});
 
@@ -50,7 +49,8 @@
 					bind:value={$form.prepTime}
 					aria-invalid={$errors.prepTime ? 'true' : undefined}
 				/>
-				{#if $errors.prepTime}<span class="text-xs text-red-400">{$errors.prepTime}</span>{/if}
+				{#if $errors.prepTime}<span class="text-xs text-red-400">{$errors.prepTime}</span
+					>{/if}
 			</div>
 			<div class="flex w-full flex-1 flex-col gap-2 text-sm sm:w-1/4">
 				<label for="cookTime">Temps de cuisson (min):</label>
@@ -61,7 +61,8 @@
 					bind:value={$form.cookTime}
 					aria-invalid={$errors.cookTime ? 'true' : undefined}
 				/>
-				{#if $errors.cookTime}<span class="text-xs text-red-400">{$errors.cookTime}</span>{/if}
+				{#if $errors.cookTime}<span class="text-xs text-red-400">{$errors.cookTime}</span
+					>{/if}
 			</div>
 			<div class="flex w-full flex-1 flex-col gap-2 text-sm sm:w-1/4">
 				<label for="servings">Portions:</label>
@@ -72,7 +73,8 @@
 					bind:value={$form.servings}
 					aria-invalid={$errors.servings ? 'true' : undefined}
 				/>
-				{#if $errors.servings}<span class="text-xs text-red-400">{$errors.servings}</span>{/if}
+				{#if $errors.servings}<span class="text-xs text-red-400">{$errors.servings}</span
+					>{/if}
 			</div>
 		</div>
 		<div class="flex flex-col gap-2">
@@ -109,7 +111,7 @@
 		</div>
 
 		<ol>
-			{#each $form.instructions as instruction, index}
+			{#each $form.instructions as instruction, index (index)}
 				<li>
 					{instruction}
 					<button type="button" onclick={() => removeInstruction(index)}>X</button>
@@ -126,6 +128,7 @@
 	<input name="ingredients" value={$form.ingredients} type="hidden" />
 	<input name="steps" value={$form.instructions} type="hidden" />
 </form>
+
 <div class="sticky bottom-0 left-0 -mx-4">
 	<div class="bg-emerald-900/75 p-4 backdrop-blur-xl sm:bg-inherit sm:backdrop-blur-none">
 		<button class="w-full" type="submit" form="recipe">Save</button>

@@ -127,7 +127,7 @@
 					class="flex w-full items-center justify-between px-3"
 					placeholder="Choisir un ingrédient"
 				/>
-				<div class="absolute right-2 top-1/2 z-10 -translate-y-1/2">
+				<div class="absolute top-1/2 right-2 z-10 -translate-y-1/2">
 					{#if $open}
 						<ChevronUp class="size-4" />
 					{:else}
@@ -150,10 +150,10 @@
 					{#each filtreredIngredients as ingredient, index (index)}
 						<li
 							use:melt={$option({ value: ingredient.id, label: ingredient.name })}
-							class="hover:bg-magnum-100 data-[highlighted]:bg-magnum-200 data-[highlighted]:text-magnum-900 relative cursor-pointer scroll-my-2 py-2 pl-4 pr-4 data-[disabled]:opacity-50"
+							class="hover:bg-magnum-100 data-[highlighted]:bg-magnum-200 data-[highlighted]:text-magnum-900 relative cursor-pointer scroll-my-2 py-2 pr-4 pl-4 data-[disabled]:opacity-50"
 						>
 							{#if $isSelected(ingredient)}
-								<div class="check text-magnum-900 absolute left-2 top-1/2 z-10">
+								<div class="check text-magnum-900 absolute top-1/2 left-2 z-10">
 									<Check class="size-4" />
 								</div>
 							{/if}
@@ -187,7 +187,7 @@
 					class="flex w-full items-center justify-between px-3"
 					placeholder="Choisir une unité"
 				/>
-				<div class="absolute right-2 top-1/2 z-10 -translate-y-1/2">
+				<div class="absolute top-1/2 right-2 z-10 -translate-y-1/2">
 					{#if $openUnits}
 						<ChevronUp class="size-4" />
 					{:else}
@@ -210,10 +210,10 @@
 					{#each filteredUnits as unit, index (index)}
 						<li
 							use:melt={$optionUnits({ value: unit.id, label: unit.name })}
-							class="hover:bg-magnum-100 data-[highlighted]:bg-magnum-200 data-[highlighted]:text-magnum-900 relative cursor-pointer scroll-my-2 py-2 pl-4 pr-4 data-[disabled]:opacity-50"
+							class="hover:bg-magnum-100 data-[highlighted]:bg-magnum-200 data-[highlighted]:text-magnum-900 relative cursor-pointer scroll-my-2 py-2 pr-4 pl-4 data-[disabled]:opacity-50"
 						>
 							{#if $isSelectedUnits(unit)}
-								<div class="check text-magnum-900 absolute left-2 top-1/2 z-10">
+								<div class="check text-magnum-900 absolute top-1/2 left-2 z-10">
 									<Check class="size-4" />
 								</div>
 							{/if}

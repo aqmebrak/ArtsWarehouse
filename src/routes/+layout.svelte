@@ -18,11 +18,13 @@
 	injectSpeedInsights();
 </script>
 
-<div class="my-2 flex flex-col md:flex-row w-full justify-center">
+<div class="flex w-full flex-col justify-center py-2 md:flex-row">
 	<a class="title text-center md:mr-8" href="/">No1yz.art</a>
 	<!-- hide menu if on /tellurichhymn page -->
 	{#if page.url.pathname !== '/tellurichymn' && page.url.pathname !== '/sbt'}
-		<nav class="mt-4 flex flex-col md:flex-row flex-wrap items-center text-xl md:text-2xl md:items-end justify-center gap-1 md:gap-4">
+		<nav
+			class="mt-4 flex flex-col flex-wrap items-center justify-center gap-1 text-xl md:flex-row md:items-end md:gap-4 md:text-2xl"
+		>
 			<a href="/gallery">{$t('nav.paintings')}</a>
 			<a href="/sbt">{$t('nav.storiesBonesTell')}</a>
 			<a href="/tellurichymn">{$t('nav.telluricHymn')}</a>
@@ -49,5 +51,4 @@
 	.title {
 		font-size: 3rem;
 	}
-
 </style>
