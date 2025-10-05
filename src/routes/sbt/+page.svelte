@@ -135,7 +135,7 @@
 			<h2 class="text-center text-3xl font-medium text-white">{$t('sbt.bandPhotos')}</h2>
 			<p class="text-center text-sm text-gray-300">{$t('sbt.bandPhotosSubtitle')}</p>
 			<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-				{#each bandPhotos as photo, index}
+				{#each bandPhotos as photo, index (photo.src)}
 					<div
 						class="group cursor-pointer overflow-hidden"
 						onclick={() => openPhotoModal(photo, index)}
@@ -214,7 +214,7 @@
 			<h2 class="text-3xl font-medium text-white">{$t('sbt.pressLinks')}</h2>
 
 			<div class="space-y-3">
-				{#each importantLinks as link}
+				{#each importantLinks as link (link.url)}
 					{#if link.url && !link.url.includes('[Link')}
 						<a
 							href={link.url}

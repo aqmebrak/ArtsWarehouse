@@ -12,5 +12,6 @@
 				"parser": "svelte"
 			}
 		}
-	]
+	],
+	"ignorePath": ["src/lib/songs/"]
 }
