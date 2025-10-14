@@ -1,25 +1,9 @@
 <script lang="ts">
-	import { createMenubar, melt } from '@melt-ui/svelte';
+	import * as Menubar from '$lib/components/ui/menubar';
 	import { ThemeSwitch } from '$lib/index';
 	import type { LayoutProps } from './$types';
 
 	let { children, data }: LayoutProps = $props();
-
-	// foodyz
-	const {
-		elements: { menubar },
-		builders: { createMenu }
-	} = createMenubar();
-	const {
-		elements: { menu, item, trigger }
-	} = createMenu();
-
-	const {
-		elements: { menu: menuA, item: itemA, trigger: triggerA }
-	} = createMenu();
-	const {
-		elements: { menu: menuB, item: itemB, trigger: triggerB }
-	} = createMenu();
 </script>
 
 <header
@@ -36,22 +20,21 @@
 		</h1>
 	</div>
 	<!-- MENU -->
-	<div class="order-1 text-base md:order-2" use:melt={$menubar}>
-		<button use:melt={$trigger} class="">|||</button>
-		<div
-			use:melt={$menu}
-			class="flex flex-col border border-solid border-emerald-500 bg-emerald-100 dark:bg-emerald-900"
-		>
-			{#each data.recipes as recipe}
-				<a
-					{...$item}
-					use:item
-					class="cursor-pointer border-b border-emerald-500 p-2 hover:bg-white dark:hover:bg-emerald-800"
-					href={`/recipes/${recipe.id}`}>{recipe.name}</a
-				>
-			{/each}
-		</div>
-	</div>
+	<Menubar.Root>
+		<Menubar.Menu>
+			<Menubar.Trigger>Recettes</Menubar.Trigger>
+			<Menubar.Content>
+				{#each data.recipes as recipe (recipe.id)}
+					<Menubar.Item>
+						<a class="" href={`/recipes/${recipe.id}`}>
+							{recipe.name}
+						</a>
+					</Menubar.Item>
+				{/each}
+			</Menubar.Content>
+		</Menubar.Menu>
+	</Menubar.Root>
+
 	<a class="order-4" href="/recipes/add">Ajouter</a>
 
 	<!--  TOGGLE DARK MODE  -->

@@ -7,7 +7,10 @@ const config = {
 	// for more information about preprocessors
 	preprocess: sequence([vitePreprocess(), preprocessMeltUI()]),
 	kit: {
-		adapter: adapter()
+		adapter: adapter(),
+		alias: {
+			 "@/*": "./src/lib/*",
+		}
 	}
 };
 export default config;
