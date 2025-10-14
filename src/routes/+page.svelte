@@ -1,5 +1,4 @@
 <script lang="ts">
-	import ButtonSocial from '$lib/components/ButtonSocial.svelte';
 </script>
 
 <div class="text-primary mt-12 flex flex-col items-center">

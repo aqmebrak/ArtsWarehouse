@@ -7,10 +7,7 @@
 	import LanguageToggle from '$lib/components/LanguageToggle.svelte';
 	import { t } from '$lib/i18n';
 	import type { LayoutProps } from './$types';
-
-	interface Props {
-		children?: import('svelte').Snippet;
-	}
+	import { resolve } from '$app/paths';
 
 	let { children }: LayoutProps = $props();
 
@@ -19,18 +16,18 @@
 </script>
 
 <div class="flex w-full flex-col justify-center py-2 md:flex-row">
-	<a class="title text-center md:mr-8" href="/">No1yz.art</a>
+	<a class="title text-center md:mr-8" href={resolve('/')}>No1yz.art</a>
 	<!-- hide menu if on /tellurichhymn page -->
 	{#if page.url.pathname !== '/tellurichymn' && page.url.pathname !== '/sbt'}
 		<nav
 			class="mt-4 flex flex-col flex-wrap items-center justify-center gap-1 text-xl md:flex-row md:items-end md:gap-4 md:text-2xl"
 		>
-			<a href="/gallery">{$t('nav.paintings')}</a>
-			<a href="/sbt">{$t('nav.storiesBonesTell')}</a>
-			<a href="/tellurichymn">{$t('nav.telluricHymn')}</a>
-			<a href="/audio-training">{$t('nav.audioTraining')}</a>
-			<a href="/recipes">Recipes</a>
-			<!-- <a href="/respire">{$t('nav.respire')}</a> -->
+			<a href={resolve('/gallery')}>{$t('nav.paintings')}</a>
+			<a href={resolve('/sbt')}>{$t('nav.storiesBonesTell')}</a>
+			<a href={resolve('/tellurichymn')}>{$t('nav.telluricHymn')}</a>
+			<a href={resolve('/audio-training')}>{$t('nav.audioTraining')}</a>
+			<a href={resolve('/recipes')}>Recipes</a>
+			<!-- <a href={resolve("/respire")}>{$t('nav.respire')}</a> -->
 		</nav>
 
 		<!-- Language Toggle - only show on main navigation pages -->

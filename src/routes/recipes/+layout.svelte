@@ -2,6 +2,7 @@
 	import * as Menubar from '$lib/components/ui/menubar';
 	import { ThemeSwitch } from '$lib/index';
 	import type { LayoutProps } from './$types';
+	import { resolve } from '$app/paths';
 
 	let { children, data }: LayoutProps = $props();
 </script>
@@ -16,7 +17,7 @@
 			class="h-full w-1/4 object-contain md:max-h-[52px] md:w-full md:max-w-[300px]"
 		/>
 		<h1 class="text-center text-xl font-semibold md:text-4xl md:whitespace-nowrap">
-			<a href="/recipes">Les recettes de la Barnière</a>
+			<a href={resolve('/recipes')}>Les recettes de la Barnière</a>
 		</h1>
 	</div>
 	<!-- MENU -->
@@ -26,7 +27,7 @@
 			<Menubar.Content>
 				{#each data.recipes as recipe (recipe.id)}
 					<Menubar.Item>
-						<a class="" href={`/recipes/${recipe.id}`}>
+						<a class="" href={resolve(`/recipes/${recipe.id}`)}>
 							{recipe.name}
 						</a>
 					</Menubar.Item>
@@ -35,7 +36,7 @@
 		</Menubar.Menu>
 	</Menubar.Root>
 
-	<a class="order-4" href="/recipes/add">Ajouter</a>
+	<a class="order-4" href={resolve('/recipes/add')}>Ajouter</a>
 
 	<!--  TOGGLE DARK MODE  -->
 	<div class="order-4 ml-auto">

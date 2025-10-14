@@ -11,6 +11,7 @@
 	import type { GameState, RoundResult } from '$lib/components/audio-training/types';
 	import { EQUtils } from '$lib/utils/audio-training/eq-utils';
 	import { FrequencyUtils } from '$lib/utils/audio-training/frenquency-utils';
+	import { resolve } from '$app/paths';
 
 	let canvas: InteractiveCanvas;
 	let gainNode: GainNode | null;
@@ -533,7 +534,7 @@
 		<header class="mb-8 text-center">
 			<nav class="mb-4">
 				<a
-					href="/audio-training"
+					href={resolve('/audio-training')}
 					class="inline-flex items-center text-indigo-300 hover:text-indigo-200"
 				>
 					<svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
