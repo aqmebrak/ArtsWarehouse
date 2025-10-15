@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '$lib/styles/themes/recipes.css';
 	import * as Menubar from '$lib/components/ui/menubar';
 	import { ThemeSwitch } from '$lib/index';
 	import type { LayoutProps } from './$types';
@@ -20,7 +21,6 @@
 			<a href={resolve('/recipes')}>Les recettes de la Barnière</a>
 		</h1>
 	</div>
-	<!-- MENU -->
 	<Menubar.Root>
 		<Menubar.Menu>
 			<Menubar.Trigger>Recettes</Menubar.Trigger>
@@ -38,7 +38,6 @@
 
 	<a class="order-4" href={resolve('/recipes/add')}>Ajouter</a>
 
-	<!--  TOGGLE DARK MODE  -->
 	<div class="order-4 ml-auto">
 		<ThemeSwitch />
 	</div>
@@ -49,59 +48,3 @@
 >
 	{@render children?.()}
 </main>
-
-<style lang="postcss">
-	@reference "../../app.css";
-	main,
-	header {
-		font-family: 'SF Pro', 'Inter', sans-serif;
-	}
-
-	:global(input),
-	:global(textarea) {
-		border: 2px solid theme(colors.emerald.700);
-		padding: 0.5rem;
-		background-color: white;
-
-		&:focus {
-			border-color: theme(colors.emerald.500);
-			outline: none;
-		}
-
-		&:focus-visible {
-			outline: none !important;
-		}
-
-		:global(.dark) & {
-			border: 2px solid theme(colors.emerald.200);
-			background-color: theme(colors.emerald.50);
-			color: theme(colors.gray.700);
-		}
-	}
-
-	:global(input) {
-		height: 36px;
-	}
-
-	:global(input[aria-autocomplete='list']) {
-		height: 36px;
-		min-width: 120px;
-	}
-
-	:global(button) {
-		width: fit-content;
-		border-radius: 0.125rem;
-		background-color: theme(colors.emerald.100);
-		padding: 0.5rem;
-		color: theme(colors.gray.700);
-		transition: colors 150ms ease;
-
-		&:hover {
-			background-color: theme(colors.emerald.200);
-		}
-
-		:global(.dark) & {
-			color: theme(colors.gray.700);
-		}
-	}
-</style>

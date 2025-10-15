@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@config "../../../../tailwind.tellurichymn.config.ts";
+
+@layer base {
+	html[data-app='tellurichymn'] body {
+		min-height: 100vh;
+		font-family: 'Source Code Pro', 'Tektur', monospace;
+		background: radial-gradient(circle at top, #2d1b69 0%, #05010d 65%);
+		color: theme('colors.slate.100');
+	}
+
+	html[data-app='tellurichymn'] a {
+		@apply text-purple-300;
+	}
+
+	html[data-app='tellurichymn'] a:hover {
+		@apply text-purple-200;
+	}
+}
