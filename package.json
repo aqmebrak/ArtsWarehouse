@@ -82,6 +82,6 @@
 		"phaser": "^3.88.2",
 		"phaser3-rex-plugins": "^1.80.15",
 		"postgres": "^3.4.4",
-		"runed": "^0.34.0"
+		"runed": "^0.35.0"
 	}
 }
