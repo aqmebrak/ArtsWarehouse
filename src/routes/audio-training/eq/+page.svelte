@@ -11,6 +11,7 @@
 	import { CanvasUtils } from '$lib/utils/audio-training/canvas-utils';
 	import { FrequencyUtils } from '$lib/utils/audio-training/frenquency-utils';
 	import { ScoringUtils } from '$lib/utils/audio-training/scoring-utils';
+	import { resolve } from '$app/paths';
 
 	let canvas: InteractiveCanvas;
 	let eqFilter: BiquadFilterNode | null;
@@ -482,7 +483,7 @@
 		<header class="mb-8 text-center">
 			<nav class="mb-4">
 				<a
-					href="/audio-training"
+					href={resolve('/audio-training')}
 					class="inline-flex items-center text-purple-300 hover:text-purple-200"
 				>
 					<svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

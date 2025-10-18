@@ -23,7 +23,7 @@
 
 <div class="m-1 sm:m-4 lg:m-8 xl:m-12">
 	<div class="grid grid-cols-1 gap-4 px-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-		{#each images as image}
+		{#each images as image (image)}
 			<div class="flex items-center justify-center">
 				<button
 					use:melt={$trigger}

@@ -1,0 +1,44 @@
+@import "tailwindcss";
+@config "../../../../tailwind.recipes.config.ts";
+
+@layer base {
+	html[data-app='recipes'] body {
+		font-family: 'SF Pro', 'Inter', sans-serif;
+		background-color: theme('colors.emerald.50');
+		color: theme('colors.gray.700');
+	}
+
+	html[data-app='recipes'].dark body {
+		background-color: theme('colors.emerald.950');
+		color: theme('colors.gray.200');
+	}
+
+	html[data-app='recipes'] input,
+	html[data-app='recipes'] textarea {
+		@apply border-2 border-emerald-700 bg-white p-2 text-gray-700 outline-none;
+	}
+
+	html[data-app='recipes'] input:focus,
+	html[data-app='recipes'] textarea:focus {
+		border-color: theme('colors.emerald.500');
+	}
+
+	html[data-app='recipes'].dark input,
+	html[data-app='recipes'].dark textarea {
+		border-color: theme('colors.emerald.200');
+		background-color: theme('colors.emerald.50');
+		color: theme('colors.gray.700');
+	}
+
+	html[data-app='recipes'] button {
+		@apply w-fit rounded-sm bg-emerald-100 px-2 py-2 text-gray-700 transition-colors;
+	}
+
+	html[data-app='recipes'] button:hover {
+		@apply bg-emerald-200;
+	}
+
+	html[data-app='recipes'].dark button {
+		color: theme('colors.gray.700');
+	}
+}

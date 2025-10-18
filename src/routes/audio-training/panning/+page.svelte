@@ -9,6 +9,7 @@
 	import type { GameState, RoundResult } from '$lib/components/audio-training/types';
 	import { CanvasUtils } from '$lib/utils/audio-training/canvas-utils';
 	import { ScoringUtils } from '$lib/utils/audio-training/scoring-utils';
+	import { resolve } from '$app/paths';
 
 	let canvas: InteractiveCanvas;
 	let pannerNode: StereoPannerNode | null;
@@ -355,7 +356,7 @@
 		<header class="mb-8 text-center">
 			<nav class="mb-4">
 				<a
-					href="/audio-training"
+					href={resolve('/audio-training')}
 					class="inline-flex items-center text-blue-300 hover:text-blue-200"
 				>
 					<svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

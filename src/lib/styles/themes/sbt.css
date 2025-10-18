@@ -1,0 +1,19 @@
+@import "tailwindcss";
+@config "../../../../tailwind.sbt.config.ts";
+
+@layer base {
+	html[data-app='sbt'] body {
+		min-height: 100vh;
+		font-family: 'Crimson Pro', 'Inter', serif;
+		background: radial-gradient(circle at top, #1f2937 0%, #030712 60%);
+		color: theme('colors.gray.100');
+	}
+
+	html[data-app='sbt'] a {
+		@apply text-blue-300;
+	}
+
+	html[data-app='sbt'] a:hover {
+		@apply text-blue-200;
+	}
+}

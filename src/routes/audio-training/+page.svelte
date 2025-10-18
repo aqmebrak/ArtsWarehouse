@@ -1,5 +1,6 @@
 <script>
 	import { t } from '$lib/i18n';
+	import { resolve } from '$app/paths';
 </script>
 
 <svelte:head>
@@ -24,7 +25,7 @@
 			<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 				<!-- Panning Exercise Card -->
 				<a
-					href="/audio-training/panning"
+					href={resolve('/audio-training/panning')}
 					class="group relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 to-purple-700 p-6 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl"
 				>
 					<div class="relative z-10">
@@ -61,7 +62,7 @@
 
 				<!-- EQ Exercise Card -->
 				<a
-					href="/audio-training/eq"
+					href={resolve('/audio-training/eq')}
 					class="group relative overflow-hidden rounded-xl bg-gradient-to-br from-green-600 to-teal-700 p-6 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl"
 				>
 					<div class="relative z-10">
@@ -98,7 +99,7 @@
 
 				<!-- EQ Mirror Exercise Card -->
 				<a
-					href="/audio-training/eq-mirror"
+					href={resolve('/audio-training/eq-mirror')}
 					class="group relative overflow-hidden rounded-xl bg-gradient-to-br from-orange-600 to-red-700 p-6 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl"
 				>
 					<div class="relative z-10">
