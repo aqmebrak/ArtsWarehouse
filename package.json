@@ -41,7 +41,7 @@
 		"@typescript-eslint/eslint-plugin": "^8.15.0",
 		"@typescript-eslint/parser": "^8.15.0",
 		"@vercel/postgres": "^0.10.0",
-		"autoprefixer": "10.4.16",
+		"autoprefixer": "10.4.21",
 		"axios": "^1.12.2",
 		"bits-ui": "^2.11.5",
 		"cheerio": "^1.1.2",
