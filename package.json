@@ -76,7 +76,7 @@
 		"@vercel/speed-insights": "1.2.0",
 		"dotenv": "^16.4.7",
 		"drizzle-orm": "^0.36.4",
-		"drizzle-zod": "^0.6.1",
+		"drizzle-zod": "^0.8.0",
 		"lucide-svelte": "^0.468.0",
 		"p5": "1.11.11",
 		"phaser": "^3.88.2",
