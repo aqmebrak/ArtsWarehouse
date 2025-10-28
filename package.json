@@ -48,7 +48,7 @@
 		"clsx": "^2.1.1",
 		"dotenv-cli": "^10.0.0",
 		"drizzle-kit": "^0.28.1",
-		"drizzle-seed": "^0.1.2",
+		"drizzle-seed": "^0.3.0",
 		"eslint": "9.34.0",
 		"eslint-config-prettier": "10.1.8",
 		"eslint-plugin-svelte": "3.12.5",
