@@ -17,7 +17,7 @@ jobs:
             NEW_VERSION: ${{ steps.NewVersion.outputs.NEW_VERSION }}
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
 
             - name: export new version (+commit package.json bump)
               id: NewVersion
@@ -49,7 +49,7 @@ jobs:
         timeout-minutes: 50
         needs: NpmVersionUpdate
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
 
             # Git pull in case of npm version update before. To be sure to get the very last version of the source code
             - name: Pull
