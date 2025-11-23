@@ -22,39 +22,38 @@
 		}
 	];
 
-	const bandPhotos = [
-		{
-			src: 'sbt/band-cave1.png',
-			alt: 'Stories Bones Tell - Cave Session 1',
-			title: 'sbt.bandPhotoTitles.caveSession1'
-		},
-		{
-			src: 'sbt/band-cave4.png',
-			alt: 'Stories Bones Tell - Cave Session 2',
-			title: 'sbt.bandPhotoTitles.caveSession2'
-		},
-		{
-			src: 'sbt/band-forest1.png',
-			alt: 'Stories Bones Tell - Forest Session 1',
-			title: 'sbt.bandPhotoTitles.forestSession1'
-		},
-		{
-			src: 'sbt/band-forest2.png',
-			alt: 'Stories Bones Tell - Forest Session 2',
-			title: 'sbt.bandPhotoTitles.forestSession2'
-		},
-		{
-			src: 'sbt/band-forest3.png',
-			alt: 'Stories Bones Tell - Forest Session 3',
-			title: 'sbt.bandPhotoTitles.forestSession3'
-		}
-	];
-
 	type Photo = {
 		src: string;
 		alt: string;
-		title: string;
 	};
+
+	const bandPhotos: Photo[] = [
+		{
+			src: 'sbt/bandbanner.jpg',
+			alt: 'Stories Bones Tell - Session 4'
+		},
+		{
+			src: 'sbt/grndz01.jpeg',
+			alt: 'Stories Bones Tell - Session 1'
+		},
+		{
+			src: 'sbt/drums.jpg',
+			alt: 'Stories Bones Tell - Cave Session 1'
+		},
+		{
+			src: 'sbt/bandcavecolor.jpg',
+			alt: 'Stories Bones Tell - Cave Session 2'
+		},
+
+		{
+			src: 'sbt/concert.jpg',
+			alt: 'Stories Bones Tell - Session 2'
+		},
+		{
+			src: 'sbt/sbt2.jpg',
+			alt: 'Stories Bones Tell - Session 3'
+		}
+	];
 
 	let selectedPhoto: Photo | null = $state(null);
 	let currentPhotoIndex = $state(0);
@@ -133,8 +132,7 @@
 		<!-- Band Photos Section -->
 		<section class="space-y-6">
 			<h2 class="text-center text-3xl font-medium text-white">{$t('sbt.bandPhotos')}</h2>
-			<p class="text-center text-sm text-gray-300">{$t('sbt.bandPhotosSubtitle')}</p>
-			<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+			<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
 				{#each bandPhotos as photo, index (photo.src)}
 					<div
 						class="group cursor-pointer overflow-hidden"
@@ -146,13 +144,8 @@
 						<img
 							src={photo.src}
 							alt={photo.alt}
-							class="h-64 w-full object-contain transition-all duration-300 group-hover:brightness-110 hover:scale-105"
+							class="h-128 w-full object-contain transition-all duration-300 group-hover:brightness-110 hover:scale-105"
 						/>
-						<div
-							class="mt-2 text-center text-sm text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-						>
-							{$t(photo.title)}
-						</div>
 					</div>
 				{/each}
 			</div>
@@ -282,7 +275,8 @@
 		<div class="relative max-h-[90vh] max-w-[90vw] p-4">
 			<!-- Close button -->
 			<button
-				class="absolute -top-2 -right-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+				type="button"
+				class="absolute -top-2 -right-2 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
 				onclick={closePhotoModal}
 				aria-label={$t('sbt.photoModal.closePhoto')}
 			>
@@ -299,7 +293,8 @@
 			<!-- Previous button -->
 			{#if currentPhotoIndex > 0}
 				<button
-					class="absolute top-1/2 left-2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+					type="button"
+					class="absolute top-1/2 left-2 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
 					onclick={(e) => {
 						e.stopPropagation();
 						prevPhoto();
@@ -320,7 +315,8 @@
 			<!-- Next button -->
 			{#if currentPhotoIndex < bandPhotos.length - 1}
 				<button
-					class="absolute top-1/2 right-2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+					type="button"
+					class="absolute top-1/2 right-2 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
 					onclick={(e) => {
 						e.stopPropagation();
 						nextPhoto();
@@ -355,14 +351,10 @@
 
 			<!-- Photo title and navigation info -->
 			<div class="mt-4 text-center text-white">
-				<h3 class="text-lg font-medium">{$t(selectedPhoto.title)}</h3>
 				<p class="mt-1 text-sm text-gray-300">
 					{currentPhotoIndex + 1}
 					{$t('sbt.photoModal.of')}
 					{bandPhotos.length}
-				</p>
-				<p class="mt-2 text-xs text-gray-400">
-					{$t('sbt.photoModal.navigationHelp')}
 				</p>
 			</div>
 		</div>

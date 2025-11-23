@@ -64,7 +64,6 @@ export const translations = {
 			title: 'Stories Bones Tell',
 			subtitle: 'Electronic Press Kit',
 			bandPhotos: 'Band Photos',
-			bandPhotosSubtitle: 'Click on any photo to view it larger',
 			aboutBand: 'About the Band',
 			aboutBandText1:
 				'Formed in 2019 in Lyon, STORIES BONES TELL is an atmospheric black metal quintet.',
@@ -103,8 +102,7 @@ export const translations = {
 				closePhoto: 'Close photo',
 				previousPhoto: 'Previous photo',
 				nextPhoto: 'Next photo',
-				of: 'of',
-				navigationHelp: 'Use arrow keys to navigate • Press Escape to close'
+				of: 'of'
 			},
 			bandPhotoTitles: {
 				caveSession1: 'Cave Session 1',
@@ -223,7 +221,6 @@ export const translations = {
 			title: 'Stories Bones Tell',
 			subtitle: 'Kit de Presse Électronique',
 			bandPhotos: 'Photos du Groupe',
-			bandPhotosSubtitle: "Cliquez sur n'importe quelle photo pour la voir plus grande",
 			aboutBand: 'À Propos du Groupe',
 			aboutBandText1:
 				'Formé en 2019 à Lyon, STORIES BONES TELL est un quintet de black metal atmosphérique.',
@@ -262,8 +259,7 @@ export const translations = {
 				closePhoto: 'Fermer la photo',
 				previousPhoto: 'Photo précédente',
 				nextPhoto: 'Photo suivante',
-				of: 'de',
-				navigationHelp: 'Utilisez les flèches pour naviguer • Appuyez sur Échap pour fermer'
+				of: 'de'
 			},
 			bandPhotoTitles: {
 				caveSession1: 'Session Grotte 1',
