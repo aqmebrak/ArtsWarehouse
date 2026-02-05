@@ -5,15 +5,38 @@
 	import ScoreScreen from '$lib/components/audio-training/ScoreScreen.svelte';
 	import InteractiveCanvas from '$lib/components/audio-training/InteractiveCanvas.svelte';
 	import EQBandControl from '$lib/components/audio-training/EQBandControl.svelte';
+	import PlayerBar from '$lib/components/audio-training/PlayerBar.svelte';
+	import GameContainer from '$lib/components/audio-training/GameContainer.svelte';
+	import ToastContainer from '$lib/components/audio-training/ToastContainer.svelte';
 	import sampleFiles from '$lib/audio-training/samples';
 	import { AudioManager } from '$lib/components/audio-training/AudioManager.svelte';
-	import { GameManager } from '$lib/components/audio-training/GameManager.svelte';
-	import type { GameState, RoundResult } from '$lib/components/audio-training/types';
+	import { createGameManager } from '$lib/utils/audio-training/game-manager-setup.svelte';
+	import type { RoundResult } from '$lib/components/audio-training/types';
+	import type { GameSession } from '$lib/types/audio-training';
 	import { EQUtils } from '$lib/utils/audio-training/eq-utils';
 	import { FrequencyUtils } from '$lib/utils/audio-training/frenquency-utils';
-	import { resolve } from '$app/paths';
 
-	let canvas: InteractiveCanvas;
+	let toastContainer: ToastContainer;
+
+	const game = createGameManager({
+		exerciseId: 'eq-mirror',
+		difficulty: 'beginner',
+		onGameComplete: (session: GameSession) => {
+			console.log('Game completed!', session);
+		}
+	});
+
+	// Override totalRounds to 5 for this exercise
+	game.gameState.totalRounds = 5;
+
+	// Bind toast container
+	$effect(() => {
+		if (toastContainer) {
+			game.setToastContainer(toastContainer);
+		}
+	});
+
+	let canvas = $state<InteractiveCanvas>();
 	let gainNode: GainNode | null;
 	let eqFilters: BiquadFilterNode[] = [];
 	let targetFilters: BiquadFilterNode[] = [];
@@ -40,18 +63,6 @@
 		{ frequency: 8000, gain: 0, q: 1 }
 	]);
 
-	// Game management
-	let gameState: GameState = $state({
-		currentRound: 0,
-		totalRounds: 5,
-		score: 0,
-		gameCompleted: false,
-		gameStarted: false,
-		showResult: false,
-		resultMessage: ''
-	});
-	let roundHistory: RoundResult[] = $state([]);
-
 	// Canvas settings
 	const CANVAS_WIDTH = 800;
 	const CANVAS_HEIGHT = 300;
@@ -60,15 +71,6 @@
 
 	// Initialize managers
 	const audioManager = new AudioManager();
-	const gameManager = new GameManager(
-		5,
-		(state) => {
-			gameState = state;
-		},
-		(result) => {
-			roundHistory = [...roundHistory, result];
-		}
-	);
 
 	// Create reactive derived state for audio playing status
 	let isAudioPlaying = $derived(audioManager.isPlaying);
@@ -191,6 +193,7 @@
 	}
 
 	function drawResponseCurve(eqBands: EQBand[], color: string, lineWidth: number) {
+		if (!canvas) return;
 		const ctx = canvas.getContext();
 		if (!ctx) return;
 
@@ -444,7 +447,7 @@
 
 		showTarget = true; // Show target for comparison
 		stopExercise();
-		gameManager.submitRound(result);
+		game.manager.submitRound(result);
 		drawEQCurve();
 	}
 
@@ -486,8 +489,8 @@
 	}
 
 	function startNewGame() {
-		gameManager.startNewGame();
-		roundHistory = [];
+		game.manager.startNewGame();
+		game.resetRoundHistory();
 		showTarget = false;
 		startExercise();
 	}
@@ -496,13 +499,13 @@
 		const message = 'Round skipped! Target EQ revealed.';
 		showTarget = true;
 		stopExercise();
-		gameManager.skipRound(0, message);
+		game.manager.skipRound(0, message);
 		drawEQCurve();
 	}
 
 	function playAgain() {
-		gameManager.startNewGame();
-		roundHistory = [];
+		game.manager.startNewGame();
+		game.resetRoundHistory();
 		showTarget = false;
 		loadRandomSample();
 	}
@@ -510,10 +513,10 @@
 	// Auto-start next round
 	$effect(() => {
 		if (
-			gameState.gameStarted &&
-			!gameState.gameCompleted &&
-			!gameState.showResult &&
-			gameState.currentRound > 0
+			game.gameState.gameStarted &&
+			!game.gameState.gameCompleted &&
+			!game.gameState.showResult &&
+			game.gameState.currentRound > 0
 		) {
 			loadRandomSample().then(() => startExercise());
 		}
@@ -528,133 +531,125 @@
 	/>
 </svelte:head>
 
-<div class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-slate-900 px-4 py-12">
-	<div class="mx-auto max-w-6xl">
-		<!-- Header -->
-		<header class="mb-8 text-center">
-			<nav class="mb-4">
-				<a
-					href={resolve('/audio-training')}
-					class="inline-flex items-center text-indigo-300 hover:text-indigo-200"
+<!-- Player Bar -->
+<PlayerBar
+	userProgress={game.userProgress}
+	showXPNotification={game.showXPNotification}
+	xpEarned={game.xpEarned}
+	leveledUp={game.leveledUp}
+	newLevel={game.newLevel}
+/>
+
+<!-- Toast Container -->
+<ToastContainer bind:this={toastContainer} />
+
+<!-- Game Container -->
+<GameContainer
+	title="EQ Mirror"
+	description="Match the target EQ curve using the 4-band equalizer"
+	gradient="from-slate-900/50 via-slate-800/50 to-slate-900/50"
+>
+	<!-- Game Controls -->
+	<GameControls
+		gameState={game.gameState}
+		showABToggle={true}
+		abState={showTarget}
+		onStartGame={startNewGame}
+		onSkipRound={skipRound}
+		onABToggle={toggleTarget}
+		customActions={isAudioPlaying && !game.gameState.showResult
+			? [
+					{
+						label: 'Submit Match',
+						onClick: submitGuess,
+						variant: 'primary'
+					}
+				]
+			: []}
+	>
+		{#snippet startButton()}Start 5-Round Challenge{/snippet}
+	</GameControls>
+
+	<!-- EQ Visualization -->
+	<section class="mb-8">
+		<h3 class="mb-4 text-center text-xl font-semibold">EQ Response Curve</h3>
+
+		<div class="flex justify-center">
+			<div class="relative">
+				<InteractiveCanvas
+					bind:this={canvas}
+					width={CANVAS_WIDTH}
+					height={CANVAS_HEIGHT}
+					disabled={!isAudioPlaying}
 				>
-					<svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M15 19l-7-7 7-7"
-						></path>
-					</svg>
-					Back to Exercises
-				</a>
-			</nav>
-			<h1 class="mb-4 text-4xl font-bold">EQ Mirror</h1>
-			<p class="text-xl text-indigo-200">
-				Match the target EQ curve using the 4-band equalizer
-			</p>
-		</header>
-
-		<!-- Game Controls -->
-		<GameControls
-			{gameState}
-			showABToggle={true}
-			abState={showTarget}
-			onStartGame={startNewGame}
-			onSkipRound={skipRound}
-			onABToggle={toggleTarget}
-			customActions={isAudioPlaying && !gameState.showResult
-				? [
-						{
-							label: 'Submit Match',
-							onClick: submitGuess,
-							variant: 'primary'
-						}
-					]
-				: []}
-		>
-			<span slot="start-button">Start 5-Round Challenge</span>
-		</GameControls>
-		<!-- EQ Visualization -->
-		<section class="mb-8">
-			<h3 class="mb-4 text-center text-xl font-semibold">EQ Response Curve</h3>
-
-			<div class="flex justify-center">
-				<div class="relative">
-					<InteractiveCanvas
-						bind:this={canvas}
-						width={CANVAS_WIDTH}
-						height={CANVAS_HEIGHT}
-						disabled={!isAudioPlaying}
-					>
-						<span slot="disabled-overlay">Start the exercise to begin</span>
-					</InteractiveCanvas>
-				</div>
+					{#snippet disabledOverlay()}Start the exercise to begin{/snippet}
+				</InteractiveCanvas>
 			</div>
+		</div>
 
-			<!-- Legend -->
-			<div class="mt-4 flex justify-center gap-6 text-sm text-gray-300">
+		<!-- Legend -->
+		<div class="mt-4 flex justify-center gap-6 text-sm text-gray-300">
+			<div class="flex items-center gap-2">
+				<div class="h-3 w-3 rounded bg-green-500"></div>
+				<span>Your EQ</span>
+			</div>
+			{#if showTarget}
 				<div class="flex items-center gap-2">
-					<div class="h-3 w-3 rounded bg-green-500"></div>
-					<span>Your EQ</span>
+					<div class="h-3 w-3 rounded bg-slate-400"></div>
+					<span>Target EQ</span>
 				</div>
-				{#if showTarget}
-					<div class="flex items-center gap-2">
-						<div class="h-3 w-3 rounded bg-red-500"></div>
-						<span>Target EQ</span>
-					</div>
-				{/if}
-				<div class="flex items-center gap-2">
-					<div class="h-3 w-3 rounded bg-yellow-400"></div>
-					<span>0dB Reference</span>
-				</div>
+			{/if}
+			<div class="flex items-center gap-2">
+				<div class="h-3 w-3 rounded bg-white"></div>
+				<span>0dB Reference</span>
+			</div>
+		</div>
+	</section>
+
+	<!-- EQ Controls -->
+	{#if isAudioPlaying && !game.gameState.showResult}
+		<section class="mb-8">
+			<h3 class="mb-4 text-center text-xl font-semibold">4-Band Equalizer</h3>
+
+			<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+				{#each userEQ as band, i}
+					<EQBandControl {band} bandIndex={i} onUpdate={updateEQBand} />
+				{/each}
 			</div>
 		</section>
+	{/if}
 
-		<!-- EQ Controls -->
-		{#if isAudioPlaying && !gameState.showResult}
-			<section class="mb-8">
-				<h3 class="mb-4 text-center text-xl font-semibold">4-Band Equalizer</h3>
+	<!-- Score Screen -->
+	{#if game.gameState.gameCompleted}
+		<ScoreScreen
+			gameState={game.gameState}
+			roundHistory={game.roundHistory}
+			onPlayAgain={playAgain}
+			customStats={[
+				{
+					label: 'Perfect Matches',
+					value: `${game.roundHistory.filter((r) => r.points === 100).length}/${game.gameState.totalRounds}`
+				},
+				{
+					label: 'Average Accuracy',
+					value: `${Math.round(game.roundHistory.reduce((sum, r) => sum + (r.additionalData?.accuracy || 0), 0) / game.roundHistory.length)}%`
+				}
+			]}
+		/>
+	{/if}
 
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-					{#each userEQ as band, i}
-						<EQBandControl {band} bandIndex={i} onUpdate={updateEQBand} />
-					{/each}
-				</div>
-			</section>
-		{/if}
-
-		<!-- Score Screen -->
-		{#if gameState.gameCompleted}
-			<ScoreScreen
-				{gameState}
-				{roundHistory}
-				onPlayAgain={playAgain}
-				customStats={[
-					{
-						label: 'Perfect Matches',
-						value: `${roundHistory.filter((r) => r.points === 100).length}/${gameState.totalRounds}`
-					},
-					{
-						label: 'Average Accuracy',
-						value: `${Math.round(roundHistory.reduce((sum, r) => sum + (r.additionalData?.accuracy || 0), 0) / roundHistory.length)}%`
-					}
-				]}
-			/>
-		{/if}
-
-		<!-- Audio Status -->
-		{#if isAudioPlaying}
-			<section class="text-center">
-				<div
-					class="inline-flex items-center gap-2 rounded-full border border-green-500 bg-green-600/20 px-4 py-2 text-green-200"
-				>
-					<div class="h-2 w-2 animate-pulse rounded-full bg-green-500"></div>
-					<span>Audio Playing - {showTarget ? 'Target EQ' : 'Your EQ'}</span>
-				</div>
-			</section>
-		{/if}
-	</div>
-</div>
+	<!-- Audio Status -->
+	{#if isAudioPlaying}
+		<section class="text-center">
+			<div
+				class="inline-flex items-center gap-2 rounded-full border border-green-500 bg-green-600/20 px-4 py-2 text-green-200"
+			>
+				<div class="h-2 w-2 animate-pulse rounded-full bg-green-500"></div>
+				<span>Audio Playing - {showTarget ? 'Target EQ' : 'Your EQ'}</span>
+			</div>
+		</section>
+	{/if}
+</GameContainer>
 
 <style>
 	:global(body) {

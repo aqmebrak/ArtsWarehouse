@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { CanvasUtils } from '$lib/utils/audio-training/canvas-utils';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
 		width: number;
@@ -9,6 +10,8 @@
 		onCanvasMouseLeave?: () => void;
 		disabled?: boolean;
 		className?: string;
+		disabledOverlay?: Snippet;
+		overlay?: Snippet;
 	}
 
 	let {
@@ -18,7 +21,9 @@
 		onCanvasMouseMove,
 		onCanvasMouseLeave,
 		disabled = false,
-		className = ''
+		className = '',
+		disabledOverlay,
+		overlay
 	}: Props = $props();
 
 	let canvas: HTMLCanvasElement;
@@ -105,13 +110,17 @@
 
 		{#if disabled}
 			<div class="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
-				<slot name="disabled-overlay">
+				{#if disabledOverlay}
+					{@render disabledOverlay()}
+				{:else}
 					<p class="font-semibold text-white">Start the exercise to begin</p>
-				</slot>
+				{/if}
 			</div>
 		{/if}
 
 		<!-- Custom overlay content -->
-		<slot name="overlay" />
+		{#if overlay}
+			{@render overlay()}
+		{/if}
 	</div>
 </div>

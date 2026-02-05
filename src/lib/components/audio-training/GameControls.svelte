@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { GameState } from './types';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
 		gameState: GameState;
@@ -14,6 +15,7 @@
 			variant?: 'primary' | 'secondary' | 'danger';
 			disabled?: boolean;
 		}>;
+		startButton?: Snippet;
 	}
 
 	let {
@@ -23,7 +25,8 @@
 		showABToggle = false,
 		abState = false,
 		onABToggle,
-		customActions = []
+		customActions = [],
+		startButton
 	}: Props = $props();
 </script>
 
@@ -99,7 +102,11 @@
 			onclick={onStartGame}
 			class="rounded-xl bg-gradient-to-r from-green-500 to-teal-500 px-8 py-4 text-xl font-bold text-white shadow-lg transition-all hover:scale-105"
 		>
-			<slot name="start-button">Start Challenge</slot>
+			{#if startButton}
+				{@render startButton()}
+			{:else}
+				Start Challenge
+			{/if}
 		</button>
 	</section>
 {/if}

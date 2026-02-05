@@ -4,32 +4,23 @@
 	import GameControls from '$lib/components/audio-training/GameControls.svelte';
 	import ScoreScreen from '$lib/components/audio-training/ScoreScreen.svelte';
 	import InteractiveCanvas from '$lib/components/audio-training/InteractiveCanvas.svelte';
+	import PlayerBar from '$lib/components/audio-training/PlayerBar.svelte';
+	import GameContainer from '$lib/components/audio-training/GameContainer.svelte';
+	import ToastContainer from '$lib/components/audio-training/ToastContainer.svelte';
 	import { AudioManager } from '$lib/components/audio-training/AudioManager.svelte';
-	import { GameManager } from '$lib/components/audio-training/GameManager.svelte';
-	import type { GameState, RoundResult } from '$lib/components/audio-training/types';
+	import { createGameManager } from '$lib/utils/audio-training/game-manager-setup.svelte';
+	import type { RoundResult } from '$lib/components/audio-training/types';
 	import { CanvasUtils } from '$lib/utils/audio-training/canvas-utils';
 	import { ScoringUtils } from '$lib/utils/audio-training/scoring-utils';
-	import { resolve } from '$app/paths';
 
-	let canvas: InteractiveCanvas;
-	let pannerNode: StereoPannerNode | null;
+	let canvas = $state<InteractiveCanvas>();
+	let pannerNode = $state<StereoPannerNode | null>(null);
 	let currentPanning = 0; // -1 to 1 (left to right)
 	let userGuess: number | null = null;
 	let hoveredPercentage: string | null = null;
 	let mouseX = 0;
 	let mouseY = 0;
-
-	// Game management
-	let gameState: GameState = $state({
-		currentRound: 0,
-		totalRounds: 10,
-		score: 0,
-		gameCompleted: false,
-		gameStarted: false,
-		showResult: false,
-		resultMessage: ''
-	});
-	let roundHistory: RoundResult[] = $state([]);
+	let toastContainer: ToastContainer;
 
 	const CANVAS_WIDTH = 600;
 	const CANVAS_HEIGHT = 100;
@@ -37,22 +28,19 @@
 
 	// Initialize managers
 	const audioManager = new AudioManager();
-	const gameManager = new GameManager(
-		10,
-		(state) => {
-			gameState = state;
-		},
-		(result) => {
-			roundHistory = [...roundHistory, result];
-		}
-	);
-
-	// Create reactive derived state for audio playing status
-	let isAudioPlaying = $derived(audioManager.isPlaying);
-
-	$effect(() => {
-		console.log(isAudioPlaying);
+	const game = createGameManager({
+		exerciseId: 'panning',
+		difficulty: 'beginner'
 	});
+
+	// Bind toast container
+	$effect(() => {
+		if (toastContainer) {
+			game.setToastContainer(toastContainer);
+		}
+	});
+
+	let isAudioPlaying = $derived(audioManager.isPlaying);
 
 	onMount(() => {
 		(async () => {
@@ -64,7 +52,6 @@
 			}, 100);
 		})();
 
-		// Handle page visibility changes and navigation
 		const handleVisibilityChange = () => {
 			if (document.hidden) {
 				stopExercise();
@@ -164,7 +151,7 @@
 		}
 
 		// Show result if available
-		if (gameState.showResult && userGuess !== null) {
+		if (game.gameState.showResult && userGuess !== null) {
 			// User guess line
 			const userX = ((userGuess + 1) / 2) * CANVAS_WIDTH;
 			const isCorrect = Math.abs(userGuess - currentPanning) <= MARGIN_ERROR;
@@ -223,8 +210,6 @@
 
 		// Start audio using AudioManager method
 		audioManager.startSource();
-
-		console.log(audioManager.isPlaying);
 	}
 
 	function stopExercise() {
@@ -245,7 +230,7 @@
 	}
 
 	function handleCanvasClick(event: MouseEvent) {
-		if (!isAudioPlaying) return;
+		if (!isAudioPlaying || !canvas) return;
 
 		const canvasElement = canvas.getCanvas();
 		const rect = canvasElement.getBoundingClientRect();
@@ -282,11 +267,12 @@
 		}
 
 		stopExercise();
-		gameManager.submitRound(result);
+		game.manager.submitRound(result);
 		drawGrid();
 	}
 
 	function handleCanvasMouseMove(event: MouseEvent) {
+		if (!canvas) return;
 		const canvasElement = canvas.getCanvas();
 		const rect = canvasElement.getBoundingClientRect();
 		const x = event.clientX - rect.left;
@@ -312,8 +298,8 @@
 	}
 
 	function startNewGame() {
-		gameManager.startNewGame();
-		roundHistory = [];
+		game.manager.startNewGame();
+		game.resetRoundHistory();
 		startExercise();
 	}
 
@@ -323,22 +309,22 @@
 		}`;
 
 		stopExercise();
-		gameManager.skipRound(currentPanning, message);
+		game.manager.skipRound(currentPanning, message);
 		drawGrid();
 	}
 
 	function playAgain() {
-		gameManager.startNewGame();
-		roundHistory = [];
+		game.manager.startNewGame();
+		game.resetRoundHistory();
 	}
 
 	// Auto-start next round
 	$effect(() => {
 		if (
-			gameState.gameStarted &&
-			!gameState.gameCompleted &&
-			!gameState.showResult &&
-			gameState.currentRound > 0
+			game.gameState.gameStarted &&
+			!game.gameState.gameCompleted &&
+			!game.gameState.showResult &&
+			game.gameState.currentRound > 0
 		) {
 			startExercise();
 		}
@@ -350,35 +336,34 @@
 	<meta name="description" content={$t('audioTraining.panning.description')} />
 </svelte:head>
 
-<div class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 px-4 py-12">
-	<div class="mx-auto max-w-4xl">
-		<!-- Header -->
-		<header class="mb-8 text-center">
-			<nav class="mb-4">
-				<a
-					href={resolve('/audio-training')}
-					class="inline-flex items-center text-blue-300 hover:text-blue-200"
-				>
-					<svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M15 19l-7-7 7-7"
-						></path>
-					</svg>
-					Back to Exercises
-				</a>
-			</nav>
-			<h1 class="mb-4 text-4xl font-bold">{$t('audioTraining.panning.title')}</h1>
-			<p class="text-xl text-blue-200">{$t('audioTraining.panning.description')}</p>
-		</header>
+<!-- Player Bar -->
+<PlayerBar
+	userProgress={game.userProgress}
+	showXPNotification={game.showXPNotification}
+	xpEarned={game.xpEarned}
+	leveledUp={game.leveledUp}
+	newLevel={game.newLevel}
+/>
 
+<!-- Toast Container -->
+<ToastContainer bind:this={toastContainer} />
+
+<!-- Game Container -->
+<GameContainer
+	title={$t('audioTraining.panning.title')}
+	description={$t('audioTraining.panning.description')}
+	gradient="from-slate-900/50 via-slate-800/50 to-slate-900/50"
+>
+	{#if !game.gameState.gameCompleted}
 		<!-- Game Controls -->
-		<GameControls {gameState} onStartGame={startNewGame} onSkipRound={skipRound} />
+		<GameControls
+			gameState={game.gameState}
+			onStartGame={startNewGame}
+			onSkipRound={skipRound}
+		/>
 
 		<!-- Canvas Section -->
-		<section class="mb-8">
+		<div class="mb-8">
 			<h3 class="mb-4 text-center text-xl font-semibold">
 				{$t('audioTraining.panning.clickToGuess')}
 			</h3>
@@ -400,10 +385,10 @@
 			<!-- Legend -->
 			<div class="mt-4 flex justify-center gap-6 text-sm text-gray-300">
 				<div class="flex items-center gap-2">
-					<div class="h-3 w-3 rounded bg-yellow-400"></div>
+					<div class="h-3 w-3 rounded bg-white"></div>
 					<span>Center (0%)</span>
 				</div>
-				{#if gameState.showResult}
+				{#if game.gameState.showResult}
 					<div class="flex items-center gap-2">
 						<div class="h-3 w-3 rounded bg-green-500"></div>
 						<span>Your Guess</span>
@@ -416,43 +401,31 @@
 					</div>
 				{/if}
 			</div>
-		</section>
-
-		<!-- Score Screen -->
-		{#if gameState.gameCompleted}
-			<ScoreScreen
-				{gameState}
-				{roundHistory}
-				onPlayAgain={playAgain}
-				customStats={[
-					{
-						label: 'Perfect Guesses',
-						value: `${roundHistory.filter((r) => r.points === 100).length}/${gameState.totalRounds}`
-					}
-				]}
-			/>
-		{/if}
+		</div>
 
 		<!-- Audio Status -->
 		{#if isAudioPlaying}
-			<section class="text-center">
+			<div class="text-center">
 				<div
 					class="inline-flex items-center gap-2 rounded-full border border-green-500 bg-green-600/20 px-4 py-2 text-green-200"
 				>
 					<div class="h-2 w-2 animate-pulse rounded-full bg-green-500"></div>
 					<span>Audio Playing</span>
 				</div>
-			</section>
+			</div>
 		{/if}
-	</div>
-</div>
-
-<style>
-	:global(body) {
-		font-family: 'Inter', sans-serif;
-		color: white !important;
-	}
-	a {
-		text-decoration: none;
-	}
-</style>
+	{:else}
+		<!-- Score Screen -->
+		<ScoreScreen
+			gameState={game.gameState}
+			roundHistory={game.roundHistory}
+			onPlayAgain={playAgain}
+			customStats={[
+				{
+					label: 'Perfect Guesses',
+					value: `${game.roundHistory.filter((r) => r.points === 100).length}/${game.gameState.totalRounds}`
+				}
+			]}
+		/>
+	{/if}
+</GameContainer>

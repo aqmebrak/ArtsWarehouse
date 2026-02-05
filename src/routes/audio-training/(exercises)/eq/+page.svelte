@@ -4,16 +4,36 @@
 	import GameControls from '$lib/components/audio-training/GameControls.svelte';
 	import ScoreScreen from '$lib/components/audio-training/ScoreScreen.svelte';
 	import InteractiveCanvas from '$lib/components/audio-training/InteractiveCanvas.svelte';
+	import PlayerBar from '$lib/components/audio-training/PlayerBar.svelte';
+	import GameContainer from '$lib/components/audio-training/GameContainer.svelte';
+	import ToastContainer from '$lib/components/audio-training/ToastContainer.svelte';
 	import sampleFiles from '$lib/audio-training/samples';
 	import { AudioManager } from '$lib/components/audio-training/AudioManager.svelte';
-	import { GameManager } from '$lib/components/audio-training/GameManager.svelte';
-	import type { GameState, RoundResult } from '$lib/components/audio-training/types';
+	import { createGameManager } from '$lib/utils/audio-training/game-manager-setup.svelte';
+	import type { RoundResult } from '$lib/components/audio-training/types';
+	import type { GameSession } from '$lib/types/audio-training';
 	import { CanvasUtils } from '$lib/utils/audio-training/canvas-utils';
 	import { FrequencyUtils } from '$lib/utils/audio-training/frenquency-utils';
 	import { ScoringUtils } from '$lib/utils/audio-training/scoring-utils';
-	import { resolve } from '$app/paths';
 
-	let canvas: InteractiveCanvas;
+	let toastContainer: ToastContainer;
+
+	const game = createGameManager({
+		exerciseId: 'eq',
+		difficulty: 'beginner',
+		onGameComplete: (session: GameSession) => {
+			console.log('Game completed!', session);
+		}
+	});
+
+	// Bind toast container
+	$effect(() => {
+		if (toastContainer) {
+			game.setToastContainer(toastContainer);
+		}
+	});
+
+	let canvas = $state<InteractiveCanvas>();
 	let eqFilter: BiquadFilterNode | null;
 	let highShelf: BiquadFilterNode | null;
 	let lowShelf: BiquadFilterNode | null;
@@ -24,18 +44,6 @@
 	let hoveredFrequency: string | null = null;
 	let mouseX = 0;
 	let mouseY = 0;
-
-	// Game management
-	let gameState: GameState = $state({
-		currentRound: 0,
-		totalRounds: 10,
-		score: 0,
-		gameCompleted: false,
-		gameStarted: false,
-		showResult: false,
-		resultMessage: ''
-	});
-	let roundHistory: RoundResult[] = $state([]);
 
 	const CANVAS_WIDTH = 800;
 	const CANVAS_HEIGHT = 120;
@@ -51,15 +59,6 @@
 
 	// Initialize managers
 	const audioManager = new AudioManager();
-	const gameManager = new GameManager(
-		10,
-		(state) => {
-			gameState = state;
-		},
-		(result) => {
-			roundHistory = [...roundHistory, result];
-		}
-	);
 
 	// Create reactive derived state for audio playing status
 	let isAudioPlaying = $derived(audioManager.isPlaying);
@@ -166,7 +165,7 @@
 		}
 
 		// Show result if available
-		if (gameState.showResult && userGuess !== null) {
+		if (game.gameState.showResult && userGuess !== null) {
 			// Show tolerance range around the actual frequency
 			const toleranceHz = FrequencyUtils.getLogarithmicMargin(
 				currentFrequency,
@@ -358,7 +357,7 @@
 	}
 
 	function handleCanvasClick(event: MouseEvent) {
-		if (!isAudioPlaying) return;
+		if (!isAudioPlaying || !canvas) return;
 
 		const canvasElement = canvas.getCanvas();
 		const rect = canvasElement.getBoundingClientRect();
@@ -397,11 +396,12 @@
 		}
 
 		stopExercise();
-		gameManager.submitRound(result);
+		game.manager.submitRound(result);
 		drawFrequencySpectrum();
 	}
 
 	function handleCanvasMouseMove(event: MouseEvent) {
+		if (!canvas) return;
 		const canvasElement = canvas.getCanvas();
 		const rect = canvasElement.getBoundingClientRect();
 		const x = event.clientX - rect.left;
@@ -440,8 +440,8 @@
 	}
 
 	function startNewGame() {
-		gameManager.startNewGame();
-		roundHistory = [];
+		game.manager.startNewGame();
+		game.resetRoundHistory();
 		startExercise();
 	}
 
@@ -449,23 +449,23 @@
 		const message = `Skipped! The boosted frequency was ${FrequencyUtils.formatFrequency(currentFrequency)}`;
 
 		stopExercise();
-		gameManager.skipRound(currentFrequency, message);
+		game.manager.skipRound(currentFrequency, message);
 		drawFrequencySpectrum();
 	}
 
 	function playAgain() {
-		gameManager.startNewGame();
-		roundHistory = [];
+		game.manager.startNewGame();
+		game.resetRoundHistory();
 		loadRandomSample(); // Load new sample for next game
 	}
 
 	// Auto-start next round
 	$effect(() => {
 		if (
-			gameState.gameStarted &&
-			!gameState.gameCompleted &&
-			!gameState.showResult &&
-			gameState.currentRound > 0
+			game.gameState.gameStarted &&
+			!game.gameState.gameCompleted &&
+			!game.gameState.showResult &&
+			game.gameState.currentRound > 0
 		) {
 			loadRandomSample().then(() => startExercise());
 		}
@@ -477,121 +477,114 @@
 	<meta name="description" content={$t('audioTraining.eq.description')} />
 </svelte:head>
 
-<div class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 px-4 py-12">
-	<div class="mx-auto max-w-4xl">
-		<!-- Header -->
-		<header class="mb-8 text-center">
-			<nav class="mb-4">
-				<a
-					href={resolve('/audio-training')}
-					class="inline-flex items-center text-purple-300 hover:text-purple-200"
+<!-- Player Bar -->
+<PlayerBar
+	userProgress={game.userProgress}
+	showXPNotification={game.showXPNotification}
+	xpEarned={game.xpEarned}
+	leveledUp={game.leveledUp}
+	newLevel={game.newLevel}
+/>
+
+<!-- Toast Container -->
+<ToastContainer bind:this={toastContainer} />
+
+<!-- Game Container -->
+<GameContainer
+	title={$t('audioTraining.eq.title')}
+	description={$t('audioTraining.eq.description')}
+	gradient="from-slate-900/50 via-slate-800/50 to-slate-900/50"
+>
+	<!-- Game Controls -->
+	<GameControls
+		gameState={game.gameState}
+		showABToggle={true}
+		abState={eqBypass}
+		onStartGame={startNewGame}
+		onSkipRound={skipRound}
+		onABToggle={toggleBypass}
+	>
+		{#snippet startButton()}Start 10-Round Challenge{/snippet}
+	</GameControls>
+
+	<!-- Canvas Section -->
+	<section class="mb-8">
+		<h3 class="mb-4 text-center text-xl font-semibold">
+			{$t('audioTraining.eq.clickToGuess')}
+		</h3>
+
+		<div class="flex justify-center">
+			<div class="relative">
+				<InteractiveCanvas
+					bind:this={canvas}
+					width={CANVAS_WIDTH}
+					height={CANVAS_HEIGHT}
+					disabled={!isAudioPlaying}
+					onCanvasClick={handleCanvasClick}
+					onCanvasMouseMove={handleCanvasMouseMove}
+					onCanvasMouseLeave={handleCanvasMouseLeave}
 				>
-					<svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M15 19l-7-7 7-7"
-						></path>
-					</svg>
-					Back to Exercises
-				</a>
-			</nav>
-			<h1 class="mb-4 text-4xl font-bold">{$t('audioTraining.eq.title')}</h1>
-			<p class="text-xl text-purple-200">{$t('audioTraining.eq.description')}</p>
-		</header>
-
-		<!-- Game Controls -->
-		<GameControls
-			{gameState}
-			showABToggle={true}
-			abState={eqBypass}
-			onStartGame={startNewGame}
-			onSkipRound={skipRound}
-			onABToggle={toggleBypass}
-		>
-			<span slot="start-button">Start 10-Round Challenge</span>
-		</GameControls>
-
-		<!-- Canvas Section -->
-		<section class="mb-8">
-			<h3 class="mb-4 text-center text-xl font-semibold">
-				{$t('audioTraining.eq.clickToGuess')}
-			</h3>
-
-			<div class="flex justify-center">
-				<div class="relative">
-					<InteractiveCanvas
-						bind:this={canvas}
-						width={CANVAS_WIDTH}
-						height={CANVAS_HEIGHT}
-						disabled={!isAudioPlaying}
-						onCanvasClick={handleCanvasClick}
-						onCanvasMouseMove={handleCanvasMouseMove}
-						onCanvasMouseLeave={handleCanvasMouseLeave}
-					>
-						<span slot="disabled-overlay">Start the exercise to begin</span>
-					</InteractiveCanvas>
-				</div>
+					{#snippet disabledOverlay()}Start the exercise to begin{/snippet}
+				</InteractiveCanvas>
 			</div>
+		</div>
 
-			<!-- Legend -->
-			<div class="mt-4 flex justify-center gap-6 text-sm text-gray-300">
+		<!-- Legend -->
+		<div class="mt-4 flex justify-center gap-6 text-sm text-gray-300">
+			<div class="flex items-center gap-2">
+				<div class="h-3 w-3 rounded bg-slate-400"></div>
+				<span>Frequency Grid</span>
+			</div>
+			{#if game.gameState.showResult}
 				<div class="flex items-center gap-2">
-					<div class="h-3 w-3 rounded bg-blue-400"></div>
-					<span>Frequency Grid</span>
+					<div class="h-3 w-3 rounded bg-green-500"></div>
+					<span>Your Guess</span>
 				</div>
-				{#if gameState.showResult}
-					<div class="flex items-center gap-2">
-						<div class="h-3 w-3 rounded bg-green-500"></div>
-						<span>Your Guess</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<div
-							class="h-3 w-3 rounded border-2 border-dashed border-white bg-purple-500"
-						></div>
-						<span>Boosted Frequency</span>
-					</div>
-					<div class="flex items-center gap-2">
-						<div class="h-3 w-3 rounded bg-purple-300 opacity-50"></div>
-						<span>Tolerance Range</span>
-					</div>
-				{/if}
+				<div class="flex items-center gap-2">
+					<div
+						class="h-3 w-3 rounded border-2 border-dashed border-white bg-purple-500"
+					></div>
+					<span>Boosted Frequency</span>
+				</div>
+				<div class="flex items-center gap-2">
+					<div class="h-3 w-3 rounded bg-purple-300 opacity-50"></div>
+					<span>Tolerance Range</span>
+				</div>
+			{/if}
+		</div>
+	</section>
+
+	<!-- Score Screen -->
+	{#if game.gameState.gameCompleted}
+		<ScoreScreen
+			gameState={game.gameState}
+			roundHistory={game.roundHistory}
+			onPlayAgain={playAgain}
+			customStats={[
+				{
+					label: 'Perfect Identifications',
+					value: `${game.roundHistory.filter((r) => r.points === 100).length}/${game.gameState.totalRounds}`
+				},
+				{
+					label: 'Average Frequency Error',
+					value: `${Math.round(game.roundHistory.reduce((sum, r) => sum + Math.abs((r.userGuess || 0) - r.actualValue), 0) / game.roundHistory.length)}Hz`
+				}
+			]}
+		/>
+	{/if}
+
+	<!-- Audio Status -->
+	{#if isAudioPlaying}
+		<section class="text-center">
+			<div
+				class="inline-flex items-center gap-2 rounded-full border border-green-500 bg-green-600/20 px-4 py-2 text-green-200"
+			>
+				<div class="h-2 w-2 animate-pulse rounded-full bg-green-500"></div>
+				<span>Audio Playing - {eqBypass ? 'Bypass' : 'EQ Active'}</span>
 			</div>
 		</section>
-
-		<!-- Score Screen -->
-		{#if gameState.gameCompleted}
-			<ScoreScreen
-				{gameState}
-				{roundHistory}
-				onPlayAgain={playAgain}
-				customStats={[
-					{
-						label: 'Perfect Identifications',
-						value: `${roundHistory.filter((r) => r.points === 100).length}/${gameState.totalRounds}`
-					},
-					{
-						label: 'Average Frequency Error',
-						value: `${Math.round(roundHistory.reduce((sum, r) => sum + Math.abs((r.userGuess || 0) - r.actualValue), 0) / roundHistory.length)}Hz`
-					}
-				]}
-			/>
-		{/if}
-
-		<!-- Audio Status -->
-		{#if isAudioPlaying}
-			<section class="text-center">
-				<div
-					class="inline-flex items-center gap-2 rounded-full border border-green-500 bg-green-600/20 px-4 py-2 text-green-200"
-				>
-					<div class="h-2 w-2 animate-pulse rounded-full bg-green-500"></div>
-					<span>Audio Playing - {eqBypass ? 'Bypass' : 'EQ Active'}</span>
-				</div>
-			</section>
-		{/if}
-	</div>
-</div>
+	{/if}
+</GameContainer>
 
 <style>
 	:global(body) {
